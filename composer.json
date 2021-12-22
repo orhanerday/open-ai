@@ -1,21 +1,23 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "orhanerday/open-ai",
+    "description": "OpenAI GPT-3 Api Client in PHP",
     "keywords": [
-        ":vendor_name",
-        ":package_slug"
+        "orhanerday",
+        "open-ai"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/orhanerday/open-ai",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Orhan Erday",
+            "email": "orhanerday@gmail.com",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": "^8.0"
+        "php": "^7.4",
+      "ext-curl": "*",
+        "ext-json": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
@@ -24,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src"
+            "Orhanerday\\OpenAi\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Orhanerday\\OpenAi\\Tests\\": "tests"
         }
     },
     "scripts": {
