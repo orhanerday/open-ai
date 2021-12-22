@@ -5,6 +5,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
 
 OpenAI GPT-3 Api Client in PHP
+
 ## Installation
 
 You can install the package via composer:
@@ -16,21 +17,80 @@ composer require orhanerday/open-ai
 ## Usage
 
 ```php
-
 use Orhanerday\OpenAi\OpenAi;
+// Load your key from an environment variable
+$open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
 
-$open_ai = new Orhanerday\OpenAi('OPEN-AI-KEY');
+/**Completions
+ * Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of alternative tokens at each position.
+ * */
+$complete = $open_ai->complete([
+    'engine' => 'davinci',
+    'prompt' => "Hello",
+    'temperature' => 0.9,
+    "max_tokens" => 150,
+    "frequency_penalty" => 0,
+    "presence_penalty" => 0.6,
+]);
 
-$result = $open_ai->complete([
-        'engine' => 'davinci',
-        'prompt' => "Hello",
-        'temperature' => 0.9,
-        "max_tokens" => 150,
-        "frequency_penalty" => 0,
-        "presence_penalty" => 0.6,
-    ]);
+/** Searches
+ *
+ * Given a query and a set of documents or labels, the model ranks each document based on its semantic similarity to the provided query.
+ * */
+$search = $open_ai->search([
+    'engine' => 'ada',
+    'documents' => ["White House", "hospital", "school"],
+    'query' => "the president",
+]);
 
-dd($result)
+/** Answers
+ *
+ * Given a question, a set of documents, and some examples,
+ * the API generates an answer to the question based on the information in the set of documents.
+ *This is useful for question-answering applications on sources of truth, like company documentation or a knowledge base.
+ * */
+$answer = $open_ai->answer([
+    "documents" => ["Puppy A is happy.", "Puppy B is sad."],
+    "question" => "which puppy is happy?",
+    "search_model" => "ada",
+    "model" => "curie",
+    "examples_context" => "In 2017, U.S. life expectancy was 78.6 years.",
+    "examples" => [["What is human life expectancy in the United States?", "78 years."]],
+    "max_tokens" => 5,
+    "stop" => ["\n", "<|endoftext|>"],
+]);
+
+/** Classifications
+ *
+ * Given a query and a set of labeled examples, the model will predict the most likely label
+ * for the query. Useful as a drop-in replacement for any ML classification or text-to-label task.
+ * */
+$classification = $open_ai->classification([
+    'examples' => [
+        ["A happy moment", "Positive"],
+        ["I am sad.", "Negative"],
+        ["I am feeling awesome", "Positive"],
+    ],
+    'labels' => ["Positive", "Negative", "Neutral"],
+    'query' => "It is a raining day =>(",
+    'search_model' => "ada",
+    'model' => "curie",
+]);
+
+/** List engines
+ *
+ * Lists the currently available engines, and provides basic information about each one such as the owner and availability.
+ */
+$engines = $open_ai->engines();
+
+/** Retrieve engine
+ *
+ * Retrieves an engine instance, providing basic information about the engine such as the owner and availability.
+ */
+$engine = $open_ai->engine('davinci');
+
+// this will return json
+return response()->json(json_decode($search));
 ```
 
 ## Testing
