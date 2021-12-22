@@ -2,7 +2,6 @@
 
 namespace Orhanerday\OpenAi;
 
-
 class OpenAi
 {
     private string $engine = "davinci";
@@ -10,7 +9,6 @@ class OpenAi
 
     public function __construct($OPENAI_API_KEY)
     {
-
         $this->headers = [
             "Content-Type: application/json",
             "Authorization: Bearer $OPENAI_API_KEY",
@@ -23,8 +21,6 @@ class OpenAi
      */
     public function complete($opts)
     {
-
-
         $engine = $opts['engine'] ?? $this->engine;
         $url = Url::completionURL($engine);
         unset($opts['engine']);
@@ -63,6 +59,7 @@ class OpenAi
     public function classification($opts)
     {
         $url = Url::classificationsUrl();
+
         return $this->sendRequest($url, 'POST', $opts);
     }
 
@@ -73,6 +70,7 @@ class OpenAi
     public function engines()
     {
         $url = Url::enginesUrl();
+
         return $this->sendRequest($url, 'GET');
     }
 
@@ -83,9 +81,9 @@ class OpenAi
     public function engine($engine)
     {
         $url = Url::engineUrl($engine);
+
         return $this->sendRequest($url, 'GET');
     }
-
 
     /**
      * @param string $url
@@ -93,7 +91,6 @@ class OpenAi
      * @param array $opts
      * @return bool|string
      */
-
     private function sendRequest(string $url, string $method, array $opts = null)
     {
         $curl_info = [
@@ -108,17 +105,16 @@ class OpenAi
             CURLOPT_POSTFIELDS => json_encode($opts),
             CURLOPT_HTTPHEADER => $this->headers,
         ];
-        if ($opts == null)
+        if ($opts == null) {
             unset($curl_info[CURLOPT_POSTFIELDS]);
+        }
 
         $curl = curl_init();
 
-        curl_setopt_array($curl,$curl_info);
+        curl_setopt_array($curl, $curl_info);
         $response = curl_exec($curl);
         curl_close($curl);
 
         return $response;
-
     }
-
 }

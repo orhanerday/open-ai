@@ -24,7 +24,7 @@ it('should handle search', function () use ($open_ai) {
     $result = $open_ai->search([
         'engine' => 'ada',
         'documents' => ["White House", "hospital", "school"],
-        'query' => "the president"
+        'query' => "the president",
     ]);
     $this->assertStringContainsString('data', $result);
 });
@@ -59,7 +59,6 @@ it('should handle classification', function () use ($open_ai) {
     ]);
 
     $this->assertStringContainsString('selected_examples', $result);
-
 });
 
 it('should handle engines', function () use ($open_ai) {
@@ -71,6 +70,5 @@ it('should handle engines', function () use ($open_ai) {
 it('should handle engine', function () use ($open_ai) {
     $engine_id = 'davinci';
     $result = $open_ai->engine($engine_id);
-    $this->assertStringContainsString($engine_id,$result);
+    $this->assertStringContainsString($engine_id, $result);
 });
-

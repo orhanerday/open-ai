@@ -4,16 +4,16 @@ namespace Orhanerday\OpenAi;
 
 class Url
 {
-
-    const ORIGIN = 'https://api.openai.com';
-    const API_VERSION = 'v1';
-    const OPEN_AI_URL = self::ORIGIN ."/". self::API_VERSION;
+    public const ORIGIN = 'https://api.openai.com';
+    public const API_VERSION = 'v1';
+    public const OPEN_AI_URL = self::ORIGIN ."/". self::API_VERSION;
 
     /**
      * @param string $engine
      * @return string
      */
-    public static function completionURL(string $engine) {
+    public static function completionURL(string $engine)
+    {
         return self::OPEN_AI_URL."/engines/$engine/completions";
     }
 
@@ -21,7 +21,8 @@ class Url
      * @param string $engine
      * @return string
      */
-    public static function searchURL(string $engine) {
+    public static function searchURL(string $engine)
+    {
         return self::OPEN_AI_URL."/engines/$engine/search";
     }
 
@@ -34,7 +35,8 @@ class Url
      * @param string $engine
      * @return string
      */
-    public static function engineUrl(string $engine) {
+    public static function engineUrl(string $engine)
+    {
         return self::OPEN_AI_URL."/engines/$engine";
     }
 
@@ -52,6 +54,4 @@ class Url
     {
         return self::OPEN_AI_URL."/answers";
     }
-
-
 }
