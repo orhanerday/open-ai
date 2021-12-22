@@ -10,7 +10,7 @@ jobs:
       matrix:
         os: [windows-latest]
         php: [7.4]
-        stability: [prefer-lowest, prefer-stable]
+        stability: [prefer-lowest]
 
     name: P${{ matrix.php }} - ${{ matrix.stability }} - ${{ matrix.os }}
 

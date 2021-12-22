@@ -1,6 +1,7 @@
 # OpenAI GPT-3 Api Client in PHP
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
+[![Tests](https://github.com/orhanerday/open-ai/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/orhanerday/open-ai/actions/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
 
 OpenAI GPT-3 Api Client in PHP
