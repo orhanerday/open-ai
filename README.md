@@ -21,7 +21,8 @@ use Orhanerday\OpenAi\OpenAi;
 $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
 
 /**Completions
- * Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of alternative tokens at each position.
+ * Given a prompt, the model will return one or more predicted completions, 
+ * and can also return the probabilities of alternative tokens at each position.
  * */
 $complete = $open_ai->complete([
     'engine' => 'davinci',
@@ -34,7 +35,9 @@ $complete = $open_ai->complete([
 
 /** Searches
  *
- * Given a query and a set of documents or labels, the model ranks each document based on its semantic similarity to the provided query.
+ * Given a query and a set of documents or labels,
+ * the model ranks each document based on its semantic 
+ * similarity to the provided query.
  * */
 $search = $open_ai->search([
     'engine' => 'ada',
@@ -46,7 +49,8 @@ $search = $open_ai->search([
  *
  * Given a question, a set of documents, and some examples,
  * the API generates an answer to the question based on the information in the set of documents.
- *This is useful for question-answering applications on sources of truth, like company documentation or a knowledge base.
+ * This is useful for question-answering applications on sources of truth,
+ * like company documentation or a knowledge base.
  * */
 $answer = $open_ai->answer([
     "documents" => ["Puppy A is happy.", "Puppy B is sad."],
@@ -61,8 +65,9 @@ $answer = $open_ai->answer([
 
 /** Classifications
  *
- * Given a query and a set of labeled examples, the model will predict the most likely label
- * for the query. Useful as a drop-in replacement for any ML classification or text-to-label task.
+ * Given a query and a set of labeled examples,
+ * the model will predict the most likely label for the query. 
+ * Useful as a drop-in replacement for any ML classification or text-to-label task.
  * */
 $classification = $open_ai->classification([
     'examples' => [
@@ -78,13 +83,15 @@ $classification = $open_ai->classification([
 
 /** List engines
  *
- * Lists the currently available engines, and provides basic information about each one such as the owner and availability.
+ * Lists the currently available engines,
+ * and provides basic information about each one such as the owner and availability.
  */
 $engines = $open_ai->engines();
 
 /** Retrieve engine
  *
- * Retrieves an engine instance, providing basic information about the engine such as the owner and availability.
+ * Retrieves an engine instance, 
+ * providing basic information about the engine such as the owner and availability.
  */
 $engine = $open_ai->engine('davinci');
 
