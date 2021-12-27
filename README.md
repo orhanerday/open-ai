@@ -94,8 +94,8 @@ $engines = $open_ai->engines();
  */
 $engine = $open_ai->engine('davinci');
 
-// this will return json
-return response()->json(json_decode($search));
+// this will print $search
+echo $search;
 ```
 
 ## Testing
