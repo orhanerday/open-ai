@@ -3,6 +3,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
 [![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
 
+> #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
 
 ## Installation
 
@@ -13,6 +14,11 @@ composer require orhanerday/open-ai
 ```
 
 ## Usage
+
+
+> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples).
+
+
 
 ```php
 use Orhanerday\OpenAi\OpenAi;
