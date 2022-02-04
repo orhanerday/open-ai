@@ -5,6 +5,9 @@
 
 > #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
 
+## News
+orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
+
 ## Installation
 
 You can install the package via composer:
@@ -12,8 +15,6 @@ You can install the package via composer:
 ```bash
 composer require orhanerday/open-ai
 ```
-## Update
-orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
 
 ## Usage
 
