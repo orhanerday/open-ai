@@ -12,6 +12,8 @@ You can install the package via composer:
 ```bash
 composer require orhanerday/open-ai
 ```
+## Update
+orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
 
 ## Usage
 
