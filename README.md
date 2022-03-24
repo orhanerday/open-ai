@@ -3,6 +3,18 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
 [![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
 
+<br />
+
+<br />
+
+<img src="./openai-elephpant.svg" width="1250" height="300" alt="orhanerday-open-ai-logo">
+
+<br />
+
+<br />
+
+<br />
+
 > #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
 
 ## News
