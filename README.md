@@ -46,11 +46,11 @@ $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
  * */
 $complete = $open_ai->complete([
     'engine' => 'davinci',
-    'prompt' => "Hello",
+    'prompt' => 'Hello',
     'temperature' => 0.9,
-    "max_tokens" => 150,
-    "frequency_penalty" => 0,
-    "presence_penalty" => 0.6,
+    'max_tokens' => 150,
+    'frequency_penalty' => 0,
+    'presence_penalty' => 0.6,
 ]);
 
 /** Searches
@@ -61,8 +61,8 @@ $complete = $open_ai->complete([
  * */
 $search = $open_ai->search([
     'engine' => 'ada',
-    'documents' => ["White House", "hospital", "school"],
-    'query' => "the president",
+    'documents' => ['White House', 'hospital', 'school'],
+    'query' => 'the president',
 ]);
 
 /** Answers
@@ -73,14 +73,14 @@ $search = $open_ai->search([
  * like company documentation or a knowledge base.
  * */
 $answer = $open_ai->answer([
-    "documents" => ["Puppy A is happy.", "Puppy B is sad."],
-    "question" => "which puppy is happy?",
-    "search_model" => "ada",
-    "model" => "curie",
-    "examples_context" => "In 2017, U.S. life expectancy was 78.6 years.",
-    "examples" => [["What is human life expectancy in the United States?", "78 years."]],
-    "max_tokens" => 5,
-    "stop" => ["\n", "<|endoftext|>"],
+    'documents' => ['Puppy A is happy.', 'Puppy B is sad.'],
+    'question' => 'which puppy is happy?',
+    'search_model' => 'ada',
+    'model' => 'curie',
+    'examples_context' => 'In 2017, U.S. life expectancy was 78.6 years.',
+    'examples' => [['What is human life expectancy in the United States?', '78 years.']],
+    'max_tokens' => 5,
+    'stop' => ["\n", '<|endoftext|>'],
 ]);
 
 /** Classifications
@@ -91,14 +91,14 @@ $answer = $open_ai->answer([
  * */
 $classification = $open_ai->classification([
     'examples' => [
-        ["A happy moment", "Positive"],
-        ["I am sad.", "Negative"],
-        ["I am feeling awesome", "Positive"],
+        ['A happy moment', 'Positive'],
+        ['I am sad.', 'Negative'],
+        ['I am feeling awesome', 'Positive'],
     ],
-    'labels' => ["Positive", "Negative", "Neutral"],
-    'query' => "It is a raining day =>(",
-    'search_model' => "ada",
-    'model' => "curie",
+    'labels' => ['Positive', 'Negative', 'Neutral'],
+    'query' => 'It is a raining day =>(',
+    'search_model' => 'ada',
+    'model' => 'curie',
 ]);
 
 /** List engines
