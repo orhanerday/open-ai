@@ -16,9 +16,10 @@
 <br />
 
 > #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
+> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples).
 
 ## News
-orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
+orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php). 
 
 ## Installation
 
@@ -29,11 +30,6 @@ composer require orhanerday/open-ai
 ```
 
 ## Usage
-
-
-> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples).
-
-<br>
 
 ### Load your key from an environment variable.
 > According to the following code `$open_ai` is the base variable for all open-ai operations. 
