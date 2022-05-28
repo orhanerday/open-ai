@@ -12,7 +12,7 @@ class Url
      * @param string $engine
      * @return string
      */
-    public static function completionURL(string $engine)
+    public static function completionURL(string $engine): string
     {
         return self::OPEN_AI_URL."/engines/$engine/completions";
     }
@@ -21,12 +21,12 @@ class Url
      * @param string $engine
      * @return string
      */
-    public static function searchURL(string $engine)
+    public static function searchURL(string $engine): string
     {
         return self::OPEN_AI_URL."/engines/$engine/search";
     }
 
-    public static function enginesUrl()
+    public static function enginesUrl(): string
     {
         return self::OPEN_AI_URL."/engines";
     }
@@ -35,22 +35,22 @@ class Url
      * @param string $engine
      * @return string
      */
-    public static function engineUrl(string $engine)
+    public static function engineUrl(string $engine): string
     {
         return self::OPEN_AI_URL."/engines/$engine";
     }
 
-    public static function classificationsUrl()
+    public static function classificationsUrl(): string
     {
         return self::OPEN_AI_URL."/classifications";
     }
 
-    public static function filesUrl()
+    public static function filesUrl(): string
     {
         return self::OPEN_AI_URL."/files";
     }
 
-    public static function answersUrl()
+    public static function answersUrl(): string
     {
         return self::OPEN_AI_URL."/answers";
     }

@@ -102,6 +102,65 @@ Lists the currently available engines, and provides basic information about each
  ```php
 $engines = $open_ai->engines();
 ```
+## Files
+Files are used to upload documents that can be used across features like Answers, Search, and Classifications
+## List files
+Returns a list of files that belong to the user's organization.
+```php
+$open_ai->listFiles();
+```
+## Upload file
+Upload a file that contains document(s) to be used across various endpoints/features. Currently, the size of all the files uploaded by one organization can be up to 1 GB. Please contact us if you need to increase the storage limit.
+```php
+$c_file = curl_file_create(__DIR__ . 'files/sample_file_1.jsonl');
+$open_ai->uploadFile([
+            "purpose" => "answers",
+            "file" => $c_file,
+        ]);
+```
+### Uploading file with HTML Form
+```php
+<form action="index.php" method="post" enctype="multipart/form-data">
+    Select image to upload:
+    <input type="file" name="fileToUpload" id="fileToUpload">
+    <input type="submit" value="Upload File" name="submit">
+</form>
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+use Orhanerday\OpenAi\OpenAi;
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    ob_clean();
+    $open_ai = new OpenAi('YOUR_API_KEY');
+    $tmp_file = $_FILES['fileToUpload']['tmp_name'];
+    $file_name = basename($_FILES['fileToUpload']['name']);
+    $c_file = curl_file_create($tmp_file, $_FILES['fileToUpload']['type'], $file_name);
+
+    echo "[";
+    echo $open_ai->uploadFile(
+        [
+            "purpose" => "answers",
+            "file" => $c_file,
+        ]
+    );
+    echo ",";
+    echo $open_ai->listFiles();
+    echo "]";
+
+}
+
+```
+## Delete file
+ ```php
+$open_ai->deleteFile('file-xxxxxxxx');
+```
+
+## Retrieve file
+ ```php
+$open_ai->deleteFile('file-xxxxxxxx');
+```
+
 ## Retrieve engine
 Retrieves an engine instance, providing basic information about the engine such as the owner and availability.
  ```php

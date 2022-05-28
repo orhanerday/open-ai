@@ -30,6 +30,34 @@ it('should handle search', function () use ($open_ai) {
 });
 
 
+it('should handle file upload', function () use ($open_ai) {
+    $c_file = curl_file_create(__DIR__ . './files/sample_file_1.jsonl');
+    $result = $open_ai->uploadFile([
+            "purpose" => "answers",
+            "file" => $c_file,
+        ]);
+
+    $this->assertStringContainsString('uploaded', $result);
+});
+
+it('should handle list files', function () use ($open_ai) {
+    $result = $open_ai->listFiles();
+
+    $this->assertStringContainsString('data', $result);
+});
+
+it('should handle retrieve the file', function () use ($open_ai) {
+    $result = $open_ai->retrieveFile('file-hrlLUmPhddnplQUVa2CTzg5k');
+
+    $this->assertStringContainsString('file', $result);
+});
+
+it('should handle delete the file', function () use ($open_ai) {
+    $result = $open_ai->deleteFile('file-hrlLUmPhddnplQUVa2CTzg5k');
+
+    $this->assertStringContainsString('file', $result);
+});
+
 it('should handle answers', function () use ($open_ai) {
     $result = $open_ai->answer([
         "documents" => ["Puppy A is happy.", "Puppy B is sad."],

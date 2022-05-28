@@ -6,11 +6,17 @@ class OpenAi
 {
     private string $engine = "davinci";
     private array $headers;
+    private array $contentTypes;
 
     public function __construct($OPENAI_API_KEY)
     {
+        $this->contentTypes = [
+            "application/json" => "Content-Type: application/json",
+            "multipart/form-data" => "Content-Type: multipart/form-data",
+        ];
+
         $this->headers = [
-            "Content-Type: application/json",
+            $this->contentTypes["application/json"],
             "Authorization: Bearer $OPENAI_API_KEY",
         ];
     }
@@ -64,6 +70,51 @@ class OpenAi
     }
 
     /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function uploadFile($opts)
+    {
+        $url = Url::filesUrl();
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function listFiles()
+    {
+        $url = Url::filesUrl();
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $file_id
+     * @return bool|string
+     */
+    public function retrieveFile($file_id)
+    {
+        $file_id = "/$file_id";
+        $url = Url::filesUrl().$file_id;
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $file_id
+     * @return bool|string
+     */
+    public function deleteFile($file_id)
+    {
+        $file_id = "/$file_id";
+        $url = Url::filesUrl().$file_id;
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
      * @param
      * @return bool|string
      */
@@ -91,8 +142,16 @@ class OpenAi
      * @param array $opts
      * @return bool|string
      */
-    private function sendRequest(string $url, string $method, array $opts = null)
+    private function sendRequest(string $url, string $method, array $opts = [])
     {
+        $post_fields = json_encode($opts);
+
+        if (array_key_exists('file', $opts)) {
+            $this->headers[0] = $this->contentTypes["multipart/form-data"];
+            $post_fields = $opts;
+        } else {
+            $this->headers[0] = $this->contentTypes["application/json"];
+        }
         $curl_info = [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
@@ -102,10 +161,11 @@ class OpenAi
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_POSTFIELDS => json_encode($opts),
+            CURLOPT_POSTFIELDS => $post_fields,
             CURLOPT_HTTPHEADER => $this->headers,
         ];
-        if ($opts == null) {
+
+        if ($opts == []) {
             unset($curl_info[CURLOPT_POSTFIELDS]);
         }
 
