@@ -106,7 +106,7 @@ Returns a list of files that belong to the user's organization.
 $open_ai->listFiles();
 ```
 ## Upload file
-Upload a file that contains document(s) to be used across various endpoints/features. Currently, the size of all the files uploaded by one organization can be up to 1 GB. Please contact us if you need to increase the storage limit.
+Upload a file that contains document(s) to be used across various endpoints/features. Currently, the size of all the files uploaded by one organization can be up to 1 GB. Please contact OpenAI if you need to increase the storage limit.
 ```php
 $c_file = curl_file_create(__DIR__ . 'files/sample_file_1.jsonl');
 $open_ai->uploadFile([
