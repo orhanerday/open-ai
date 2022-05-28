@@ -112,7 +112,7 @@ $c_file = curl_file_create(__DIR__ . 'files/sample_file_1.jsonl');
 $open_ai->uploadFile([
             "purpose" => "answers",
             "file" => $c_file,
-        ]);
+]);
 ```
 ### Uploading file with HTML Form
 ```php
