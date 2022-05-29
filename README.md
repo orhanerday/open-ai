@@ -114,10 +114,10 @@ $open_ai->uploadFile([
             "file" => $c_file,
 ]);
 ```
-### Uploading file with HTML Form
+### Upload file with HTML Form
 ```php
 <form action="index.php" method="post" enctype="multipart/form-data">
-    Select image to upload:
+    Select file to upload:
     <input type="file" name="fileToUpload" id="fileToUpload">
     <input type="submit" value="Upload File" name="submit">
 </form>
