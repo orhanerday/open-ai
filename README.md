@@ -19,7 +19,8 @@
 > #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples).
 
 ## News
-orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php). 
+
+orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
 
 ## Installation
 
@@ -32,14 +33,19 @@ composer require orhanerday/open-ai
 ## Usage
 
 ### Load your key from an environment variable.
-> According to the following code `$open_ai` is the base variable for all open-ai operations. 
+
+> According to the following code `$open_ai` is the base variable for all open-ai operations.
+
 ```php
 use Orhanerday\OpenAi\OpenAi;
 
 $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
 ```
+
 ## Completions
- Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of alternative tokens at each position.
+
+Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of
+alternative tokens at each position.
 
  ```php
 $complete = $open_ai->complete([
@@ -52,9 +58,11 @@ $complete = $open_ai->complete([
 ]);
 ```
 
-
 ## Searches
-Given a query and a set of documents or labels, the model ranks each document based on its semantic similarity to the provided query.
+
+Given a query and a set of documents or labels, the model ranks each document based on its semantic similarity to the
+provided query.
+
 ```php
 $search = $open_ai->search([
     'engine' => 'ada',
@@ -64,7 +72,11 @@ $search = $open_ai->search([
 ```
 
 ## Answers
- Given a question, a set of documents, and some examples, the API generates an answer to the question based on the information in the set of documents. This is useful for question-answering applications on sources of truth, like company documentation or a knowledge base.
+
+Given a question, a set of documents, and some examples, the API generates an answer to the question based on the
+information in the set of documents. This is useful for question-answering applications on sources of truth, like
+company documentation or a knowledge base.
+
   ```php
 $answer = $open_ai->answer([
     'documents' => ['Puppy A is happy.', 'Puppy B is sad.'],
@@ -77,8 +89,12 @@ $answer = $open_ai->answer([
     'stop' => ["\n", '<|endoftext|>'],
 ]);
 ```
+
 ## Classifications
-Given a query and a set of labeled examples, the model will predict the most likely label for the query. Useful as a drop-in replacement for any ML classification or text-to-label task.
+
+Given a query and a set of labeled examples, the model will predict the most likely label for the query. Useful as a
+drop-in replacement for any ML classification or text-to-label task.
+
  ```php
 $classification = $open_ai->classification([
     'examples' => [
@@ -94,27 +110,40 @@ $classification = $open_ai->classification([
 ```
 
 ## List engines
+
 Lists the currently available engines, and provides basic information about each one such as the owner and availability.
+
  ```php
 $engines = $open_ai->engines();
 ```
+
 ## Files
+
 Files are used to upload documents that can be used across features like Answers, Search, and Classifications
+
 ## List files
+
 Returns a list of files that belong to the user's organization.
+
 ```php
-$open_ai->listFiles();
+$files = $open_ai->listFiles();
 ```
+
 ## Upload file
-Upload a file that contains document(s) to be used across various endpoints/features. Currently, the size of all the files uploaded by one organization can be up to 1 GB. Please contact OpenAI if you need to increase the storage limit.
+
+Upload a file that contains document(s) to be used across various endpoints/features. Currently, the size of all the
+files uploaded by one organization can be up to 1 GB. Please contact OpenAI if you need to increase the storage limit.
+
 ```php
 $c_file = curl_file_create(__DIR__ . 'files/sample_file_1.jsonl');
-$open_ai->uploadFile([
+$result = $open_ai->uploadFile([
             "purpose" => "answers",
             "file" => $c_file,
 ]);
 ```
+
 ### Upload file with HTML Form
+
 ```php
 <form action="index.php" method="post" enctype="multipart/form-data">
     Select file to upload:
@@ -147,23 +176,71 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 ```
+
 ## Delete file
+
  ```php
-$open_ai->deleteFile('file-xxxxxxxx');
+$result = $open_ai->deleteFile('file-xxxxxxxx');
 ```
 
 ## Retrieve file
+
  ```php
-$open_ai->deleteFile('file-xxxxxxxx');
+$file = $open_ai->retrieveFile('file-xxxxxxxx');
+```
+
+## Fine-tunes
+
+Manage fine-tuning jobs to tailor a model to your specific training data.
+
+## Create fine-tune
+
+ ```php
+$result = $open_ai->createFineTune([
+        "training_file" => "file-U3KoAAtGsjUKSPXwEUDdtw86",
+]);
+```
+
+## List fine-tune
+
+ ```php
+$fine_tunes = $open_ai->listFineTunes();
+```
+
+## Retrieve fine-tune
+
+ ```php
+$fine_tune = $open_ai->retrieveFineTune('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
+```
+
+## Cancel fine-tune
+
+ ```php
+$result = $open_ai->cancelFineTune('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
+```
+
+## List fine-tune events
+
+ ```php
+$fine_tune_events = $open_ai->listFineTuneEvents('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
+```
+
+## Delete fine-tune model
+
+ ```php
+$result = $open_ai->deleteFineTune('curie:ft-acmeco-2021-03-03-21-44-20');
 ```
 
 ## Retrieve engine
+
 Retrieves an engine instance, providing basic information about the engine such as the owner and availability.
+
  ```php
 $engine = $open_ai->engine('davinci');
 ```
 
 ## Printing results *i.e.* `$search`
+
  ```php
 echo $search;
 ```
@@ -194,7 +271,6 @@ Please report security vulnerabilities to [orhanerday@gmail.com](mailto:orhanerd
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
 
 ## Donation
 
