@@ -183,7 +183,6 @@ class OpenAi
         return $this->sendRequest($url, 'DELETE');
     }
 
-
     /**
      * @param
      * @return bool|string
