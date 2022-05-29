@@ -2,6 +2,20 @@
 
 All notable changes to `open-ai` will be documented in this file.
 
+## 2.1 - 2022-05-29
+
+### What's Changed
+
+- Adding more capabilities by @orhanerday in https://github.com/orhanerday/open-ai/pull/11
+- Files
+- Fine-tuning
+
+### New Contributors
+
+- @orhanerday made their first contribution in https://github.com/orhanerday/open-ai/pull/11
+
+**Full Changelog**: https://github.com/orhanerday/open-ai/compare/2.0...2.1
+
 ## 2.0 - 2022-05-28
 
 ### What's Changed
