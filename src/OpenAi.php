@@ -97,7 +97,7 @@ class OpenAi
     public function retrieveFile($file_id)
     {
         $file_id = "/$file_id";
-        $url = Url::filesUrl().$file_id;
+        $url = Url::filesUrl() . $file_id;
 
         return $this->sendRequest($url, 'GET');
     }
@@ -109,7 +109,76 @@ class OpenAi
     public function deleteFile($file_id)
     {
         $file_id = "/$file_id";
-        $url = Url::filesUrl().$file_id;
+        $url = Url::filesUrl() . $file_id;
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function createFineTune($opts)
+    {
+        $url = Url::fineTuneUrl();
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function listFineTunes()
+    {
+        $url = Url::fineTuneUrl();
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $fine_tune_id
+     * @return bool|string
+     */
+    public function retrieveFineTune($fine_tune_id)
+    {
+        $fine_tune_id = "/$fine_tune_id";
+        $url = Url::fineTuneUrl() . $fine_tune_id;
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $fine_tune_id
+     * @return bool|string
+     */
+    public function cancelFineTune($fine_tune_id)
+    {
+        $fine_tune_id = "/$fine_tune_id/cancel";
+        $url = Url::fineTuneUrl() . $fine_tune_id;
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    /**
+     * @param $fine_tune_id
+     * @return bool|string
+     */
+    public function listFineTuneEvents($fine_tune_id)
+    {
+        $fine_tune_id = "/$fine_tune_id/events";
+        $url = Url::fineTuneUrl() . $fine_tune_id;
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $fine_tune_id
+     * @return bool|string
+     */
+    public function deleteFineTune($fine_tune_id)
+    {
+        $fine_tune_id = "/$fine_tune_id";
+        $url = Url::fineTuneModel() . $fine_tune_id;
 
         return $this->sendRequest($url, 'DELETE');
     }

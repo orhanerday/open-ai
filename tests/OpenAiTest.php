@@ -33,9 +33,9 @@ it('should handle search', function () use ($open_ai) {
 it('should handle file upload', function () use ($open_ai) {
     $c_file = curl_file_create(__DIR__ . './files/sample_file_1.jsonl');
     $result = $open_ai->uploadFile([
-            "purpose" => "answers",
-            "file" => $c_file,
-        ]);
+        "purpose" => "answers",
+        "file" => $c_file,
+    ]);
 
     $this->assertStringContainsString('uploaded', $result);
 });
@@ -56,6 +56,44 @@ it('should handle delete the file', function () use ($open_ai) {
     $result = $open_ai->deleteFile('file-hrlLUmPhddnplQUVa2CTzg5k');
 
     $this->assertStringContainsString('file', $result);
+});
+
+it('should handle creating fine-tune', function () use ($open_ai) {
+    $result = $open_ai->createFineTune([
+        "training_file" => "file-U3KoAAtGsjUKSPXwEUDdtw86",
+    ]);
+
+    $this->assertStringContainsString('training_files', $result);
+});
+
+it('should handle listing fine-tunes', function () use ($open_ai) {
+    $result = $open_ai->listFineTunes();
+
+    $this->assertStringContainsString('data', $result);
+});
+
+it('should handle retrieve the fine-tune', function () use ($open_ai) {
+    $result = $open_ai->retrieveFineTune('file-XGinujblHPwGLSztz8cPS8XY');
+
+    $this->assertStringContainsString('training_files', $result);
+});
+
+it('should handle cancel the fine-tune', function () use ($open_ai) {
+    $result = $open_ai->cancelFineTune('file-XGinujblHPwGLSztz8cPS8XY');
+
+    $this->assertStringContainsString('training_files', $result);
+});
+
+it('should handle list fine-tune event', function () use ($open_ai) {
+    $result = $open_ai->listFineTuneEvents('file-XGinujblHPwGLSztz8cPS8XY');
+
+    $this->assertStringContainsString('training_files', $result);
+});
+
+it('should handle delete fine-tune model', function () use ($open_ai) {
+    $result = $open_ai->deleteFineTune('curie:ft-acmeco-2021-03-03-21-44-20');
+
+    $this->assertStringContainsString('deleted', $result);
 });
 
 it('should handle answers', function () use ($open_ai) {
