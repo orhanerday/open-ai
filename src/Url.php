@@ -45,6 +45,11 @@ class Url
         return self::OPEN_AI_URL . "/classifications";
     }
 
+    public static function moderationUrl(): string
+    {
+        return self::OPEN_AI_URL . "/moderations";
+    }
+
     public static function filesUrl(): string
     {
         return self::OPEN_AI_URL . "/files";

@@ -73,6 +73,17 @@ class OpenAi
      * @param $opts
      * @return bool|string
      */
+    public function moderation($opts)
+    {
+        $url = Url::moderationUrl();
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
     public function uploadFile($opts)
     {
         $url = Url::filesUrl();
