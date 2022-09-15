@@ -109,6 +109,17 @@ $classification = $open_ai->classification([
 ]);
 ```
 
+## Content Moderations
+
+Given a input text, outputs if the model classifies it as violating OpenAI's content policy.
+
+```php
+$flags = $open_ai->moderation([
+    'input' => 'I want to kill them.'
+]);
+```
+Know more about Content Moderations here: [OpenAI Moderations](https://beta.openai.com/docs/api-reference/moderations)
+
 ## List engines
 
 Lists the currently available engines, and provides basic information about each one such as the owner and availability.

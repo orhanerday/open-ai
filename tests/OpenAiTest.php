@@ -26,7 +26,14 @@ it('should handle search', function () use ($open_ai) {
         'documents' => ["White House", "hospital", "school"],
         'query' => "the president",
     ]);
-    $this->assertStringContainsString('data', $result);
+    $this->assertStringContainsString('document', $result);
+});
+
+it('should handle content filtering', function () use ($open_ai) {
+    $result = $open_ai->moderation([
+        'input' => "I want to kill them.",
+    ]);
+    $this->assertStringContainsString('results', $result);
 });
 
 
@@ -37,7 +44,7 @@ it('should handle file upload', function () use ($open_ai) {
         "file" => $c_file,
     ]);
 
-    $this->assertStringContainsString('uploaded', $result);
+    $this->assertStringContainsString('filename', $result);
 });
 
 it('should handle list files', function () use ($open_ai) {
@@ -49,13 +56,13 @@ it('should handle list files', function () use ($open_ai) {
 it('should handle retrieve the file', function () use ($open_ai) {
     $result = $open_ai->retrieveFile('file-hrlLUmPhddnplQUVa2CTzg5k');
 
-    $this->assertStringContainsString('file', $result);
+    $this->assertStringContainsString('filename', $result);
 });
 
 it('should handle delete the file', function () use ($open_ai) {
     $result = $open_ai->deleteFile('file-hrlLUmPhddnplQUVa2CTzg5k');
 
-    $this->assertStringContainsString('file', $result);
+    $this->assertStringContainsString('deleted', $result);
 });
 
 it('should handle creating fine-tune', function () use ($open_ai) {
@@ -87,7 +94,7 @@ it('should handle cancel the fine-tune', function () use ($open_ai) {
 it('should handle list fine-tune event', function () use ($open_ai) {
     $result = $open_ai->listFineTuneEvents('file-XGinujblHPwGLSztz8cPS8XY');
 
-    $this->assertStringContainsString('training_files', $result);
+    $this->assertStringContainsString('data', $result);
 });
 
 it('should handle delete fine-tune model', function () use ($open_ai) {
