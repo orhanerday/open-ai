@@ -29,6 +29,28 @@ You can install the package via composer:
 ```bash
 composer require orhanerday/open-ai
 ```
+## Quick Start
+
+```php
+<?php
+
+require __DIR__ . '/vendor/autoload.php'; // remove this line if you use a PHP Framework.
+
+use Orhanerday\OpenAi\OpenAi;
+
+$open_ai = new OpenAi('sk-gjtv.....');
+
+$complete = $open_ai->complete([
+    'engine' => 'davinci',
+    'prompt' => 'Hello',
+    'temperature' => 0.9,
+    'max_tokens' => 150,
+    'frequency_penalty' => 0,
+    'presence_penalty' => 0.6,
+]);
+
+var_dump($complete);
+```
 
 ## Usage
 
