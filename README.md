@@ -38,7 +38,7 @@ require __DIR__ . '/vendor/autoload.php'; // remove this line if you use a PHP F
 
 use Orhanerday\OpenAi\OpenAi;
 
-$open_ai = new OpenAi('sk-gjtv.....');
+$open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
 
 $complete = $open_ai->complete([
     'engine' => 'davinci',
