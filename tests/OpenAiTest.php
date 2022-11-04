@@ -197,4 +197,3 @@ it('should handle image variation', function () use ($open_ai) {
     ]);
     $this->assertStringContainsString('created', $result);
 });
-
