@@ -80,6 +80,19 @@ $complete = $open_ai->complete([
 ]);
 ```
 
+## Images (Dall-E)
+
+Given a prompt, the model will return one or more generated images as urls or base64 encoded.
+
+ ```php
+$complete = $open_ai->image([
+    'prompt' => 'A cat drinking milk',
+    'n' => 1,
+    'size' => '256x256',
+    'response_format' => 'url',
+]);
+```
+
 ## Searches
 
 Given a query and a set of documents or labels, the model ranks each document based on its semantic similarity to the
