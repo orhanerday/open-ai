@@ -147,10 +147,20 @@ it('should handle engine', function () use ($open_ai) {
 });
 
 it('should handle image', function () use ($open_ai) {
-  $result = $open_ai->image([
-    'prompt' => "a picture of a cat",
-    'n' => 1,
-    'size' => "256x256",
-  ]);
-  $this->assertStringContainsString('data', $result);
+    $result = $open_ai->image([
+      'prompt' => "a picture of a cat",
+      'n' => 1,
+      'size' => "256x256",
+    ]);
+    $this->assertStringContainsString('data', $result);
+});
+
+it('should handle List models', function () use ($open_ai) {
+    $result = $open_ai->listModels();
+    $this->assertStringContainsString('owned_by', $result);
+});
+
+it('should handle Retrieve given model', function () use ($open_ai) {
+    $result = $open_ai->retrieveModel("text-ada-001");
+    $this->assertStringContainsString('owned_by', $result);
 });
