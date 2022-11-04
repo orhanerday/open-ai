@@ -16,7 +16,7 @@
 <br />
 
 > #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
-> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples).
+> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples). (PS: It's very easy (: )
 
 ## News
 
