@@ -197,3 +197,12 @@ it('should handle image variation', function () use ($open_ai) {
     ]);
     $this->assertStringContainsString('created', $result);
 });
+
+it('should handle Create embeddings', function () use ($open_ai) {
+    $result = $open_ai->embeddings([
+        "model" => "text-similarity-babbage-001",
+        "input" => "The food was delicious and the waiter..."
+    ]);
+
+    $this->assertStringContainsString('data', $result);
+});

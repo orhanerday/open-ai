@@ -173,6 +173,21 @@ $search = $open_ai->search([
 ]);
 ```
 
+## Embeddings
+
+Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.
+
+Related guide: [Embeddings](https://beta.openai.com/docs/guides/embeddings)
+
+### Create embeddings
+
+```php
+$result = $open_ai->embeddings([
+    "model" => "text-similarity-babbage-001",
+    "input" => "The food was delicious and the waiter..."
+]);
+```
+
 ## Answers
 
 Given a question, a set of documents, and some examples, the API generates an answer to the question based on the
