@@ -30,6 +30,24 @@ You can install the package via composer:
 composer require orhanerday/open-ai
 ```
 ## Quick Start
+Before you get starting, you should set OPENAI_API_KEY as ENV key, and set OpenAI key as env value with the following commands;
+
+_Powershell_
+```powershell
+$Env:OPENAI_API_KEY = "sk-gjtv....."
+```
+
+_CMD_
+```cmd
+set OPENAI_API_KEY=sk-gjtv.....
+```
+
+_Linux or macOS_
+```shell
+export OPENAI_API_KEY=sk-gjtv.....
+```
+
+Create your `index.php` file and paste the following code part into the file.
 
 ```php
 <?php
@@ -38,7 +56,8 @@ require __DIR__ . '/vendor/autoload.php'; // remove this line if you use a PHP F
 
 use Orhanerday\OpenAi\OpenAi;
 
-$open_ai = new OpenAi('sk-gjtv.....');
+$open_ai_key = getenv('OPENAI_API_KEY');;
+$open_ai = new OpenAi($open_ai_key);
 
 $complete = $open_ai->complete([
     'engine' => 'davinci',
@@ -51,6 +70,13 @@ $complete = $open_ai->complete([
 
 var_dump($complete);
 ```
+
+_Run the server with the following command_
+
+```shell
+php -S localhost:8000 -t .
+```
+
 
 ## Usage
 
