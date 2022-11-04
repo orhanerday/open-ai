@@ -113,6 +113,6 @@ class Url
      */
     public static function imageUrl(): string
     {
-        return self::OPEN_AI_URL . "/images/generations";
+        return self::OPEN_AI_URL . "/images";
     }
 }

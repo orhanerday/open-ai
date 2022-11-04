@@ -37,7 +37,7 @@ _Powershell_
 $Env:OPENAI_API_KEY = "sk-gjtv....."
 ```
 
-_CMD_
+_Cmd_
 ```cmd
 set OPENAI_API_KEY=sk-gjtv.....
 ```
@@ -46,6 +46,7 @@ _Linux or macOS_
 ```shell
 export OPENAI_API_KEY=sk-gjtv.....
 ```
+> Getting issues while setting up env? Please read https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety article.
 
 Create your `index.php` file and paste the following code part into the file.
 
@@ -122,6 +123,8 @@ Creates a new edit for the provided input, instruction, and parameters
 
 Given a prompt, the model will return one or more generated images as urls or base64 encoded.
 
+### Create image
+Creates an image given a prompt.
  ```php
 $complete = $open_ai->image([
     'prompt' => 'A cat drinking milk',
@@ -130,6 +133,32 @@ $complete = $open_ai->image([
     'response_format' => 'url',
 ]);
 ```
+### Create image edit
+Creates an edited or extended image given an original image and a prompt.
+> You need HTML upload? Get help from  [this](https://github.com/orhanerday/open-ai#upload-file-with-html-form) part for easy implementation.
+````php
+$otter = curl_file_create(__DIR__ . './files/otter.png');
+$mask = curl_file_create(__DIR__ . './files/mask.jpg');
+
+$result = $open_ai->imageEdit([
+    "image" => $otter,
+    "mask" => $mask,
+    "prompt" => "A cute baby sea otter wearing a beret",
+    "n" => 2,
+    "size" => "1024x1024",
+]);
+````
+### Create image variation
+Creates a variation of a given image.
+````php
+$otter = curl_file_create(__DIR__ . './files/otter.png');
+
+$result = $open_ai->createImageVariation([
+    "image" => $otter,
+    "n" => 2,
+    "size" => "256x256",
+]);
+````
 
 ## Searches
 
