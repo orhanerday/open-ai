@@ -284,6 +284,17 @@ class OpenAi
     }
 
     /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function embeddings($opts)
+    {
+        $url = Url::embeddings();
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
      * @param string $url
      * @param string $method
      * @param array $opts

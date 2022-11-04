@@ -115,4 +115,13 @@ class Url
     {
         return self::OPEN_AI_URL . "/images";
     }
+
+    /**
+     * @param
+     * @return string
+     */
+    public static function embeddings(): string
+    {
+        return self::OPEN_AI_URL . "/embeddings";
+    }
 }
