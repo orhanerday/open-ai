@@ -173,3 +173,28 @@ it('should handle create edit', function () use ($open_ai) {
     ]);
     $this->assertStringContainsString('created', $result);
 });
+
+it('should handle image edit', function () use ($open_ai) {
+    $otter = curl_file_create(__DIR__ . './files/otter.png');
+    $mask = curl_file_create(__DIR__ . './files/mask.jpg');
+
+    $result = $open_ai->imageEdit([
+        "image" => $otter,
+        "mask" => $mask,
+        "prompt" => "A cute baby sea otter wearing a beret",
+        "n" => 2,
+        "size" => "1024x1024",
+    ]);
+    $this->assertStringContainsString('created', $result);
+});
+
+it('should handle image variation', function () use ($open_ai) {
+    $otter = curl_file_create(__DIR__ . './files/otter.png');
+    $result = $open_ai->createImageVariation([
+        "image" => $otter,
+        "n" => 2,
+        "size" => "256x256",
+    ]);
+    $this->assertStringContainsString('created', $result);
+});
+

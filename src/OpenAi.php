@@ -74,7 +74,29 @@ class OpenAi
      */
     public function image($opts)
     {
-        $url = Url::imageUrl();
+        $url = Url::imageUrl()."/generations";
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function imageEdit($opts)
+    {
+        $url = Url::imageUrl()."/edits";
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function createImageVariation($opts)
+    {
+        $url = Url::imageUrl()."/variations";
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -271,7 +293,7 @@ class OpenAi
     {
         $post_fields = json_encode($opts);
 
-        if (array_key_exists('file', $opts)) {
+        if (array_key_exists('file', $opts) || array_key_exists('image', $opts) ) {
             $this->headers[0] = $this->contentTypes["multipart/form-data"];
             $post_fields = $opts;
         } else {
