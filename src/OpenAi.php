@@ -102,6 +102,7 @@ class OpenAi
     }
 
     /**
+     * @deprecated
      * @param $opts
      * @return bool|string
      */
@@ -115,6 +116,7 @@ class OpenAi
     }
 
     /**
+     * @deprecated
      * @param $opts
      * @return bool|string
      */
@@ -126,6 +128,7 @@ class OpenAi
     }
 
     /**
+     * @deprecated
      * @param $opts
      * @return bool|string
      */
@@ -274,6 +277,7 @@ class OpenAi
     }
 
     /**
+     * @deprecated
      * @param
      * @return bool|string
      */
@@ -285,6 +289,7 @@ class OpenAi
     }
 
     /**
+     * @deprecated
      * @param $engine
      * @return bool|string
      */
