@@ -22,6 +22,29 @@ class OpenAi
     }
 
     /**
+     *
+     * @return bool|string
+     */
+    public function listModels()
+    {
+        $url = Url::fineTuneModel();
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $model
+     * @return bool|string
+     */
+    public function retrieveModel($model)
+    {
+        $model = "/$model";
+        $url = Url::fineTuneModel() . $model;
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
      * @param $opts
      * @return bool|string
      */

@@ -16,7 +16,7 @@
 <br />
 
 > #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
-> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples). (PS: It's very easy (: )
+> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples).
 
 ## News
 
@@ -309,6 +309,24 @@ Retrieves an engine instance, providing basic information about the engine such 
 
  ```php
 $engine = $open_ai->engine('davinci');
+```
+
+
+## List models
+
+Lists the currently available models, and provides basic information about each one such as the owner and availability.
+
+ ```php
+$result = $open_ai->listModels();
+```
+
+
+## Retrieve model
+
+Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
+
+ ```php
+$result = $open_ai->retrieveModel("text-ada-001");
 ```
 
 ## Printing results *i.e.* `$search`

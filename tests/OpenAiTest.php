@@ -154,3 +154,13 @@ it('should handle image', function () use ($open_ai) {
     ]);
     $this->assertStringContainsString('data', $result);
 });
+
+it('should handle List models', function () use ($open_ai) {
+  $result = $open_ai->listModels();
+  $this->assertStringContainsString('owned_by', $result);
+});
+
+it('should handle Retrieve given model', function () use ($open_ai) {
+  $result = $open_ai->retrieveModel("text-ada-001");
+  $this->assertStringContainsString('owned_by', $result);
+});
