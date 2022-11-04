@@ -61,6 +61,17 @@ class OpenAi
      * @param $opts
      * @return bool|string
      */
+    public function createEdit($opts)
+    {
+        $url = Url::editsUrl();
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
     public function image($opts)
     {
         $url = Url::imageUrl();

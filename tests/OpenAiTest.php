@@ -164,3 +164,12 @@ it('should handle Retrieve given model', function () use ($open_ai) {
     $result = $open_ai->retrieveModel("text-ada-001");
     $this->assertStringContainsString('owned_by', $result);
 });
+
+it('should handle create edit', function () use ($open_ai) {
+    $result = $open_ai->createEdit([
+        "model" => "text-davinci-edit-001",
+        "input" => "What day of the wek is it?",
+        "instruction" => "Fix the spelling mistakes",
+    ]);
+    $this->assertStringContainsString('created', $result);
+});
