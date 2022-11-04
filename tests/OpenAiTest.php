@@ -156,11 +156,11 @@ it('should handle image', function () use ($open_ai) {
 });
 
 it('should handle List models', function () use ($open_ai) {
-  $result = $open_ai->listModels();
-  $this->assertStringContainsString('owned_by', $result);
+    $result = $open_ai->listModels();
+    $this->assertStringContainsString('owned_by', $result);
 });
 
 it('should handle Retrieve given model', function () use ($open_ai) {
-  $result = $open_ai->retrieveModel("text-ada-001");
-  $this->assertStringContainsString('owned_by', $result);
+    $result = $open_ai->retrieveModel("text-ada-001");
+    $this->assertStringContainsString('owned_by', $result);
 });
