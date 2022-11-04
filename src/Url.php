@@ -18,6 +18,15 @@ class Url
     }
 
     /**
+     *
+     * @return string
+     */
+    public static function editsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/edits";
+    }
+
+    /**
      * @param string $engine
      * @return string
      */

@@ -106,6 +106,18 @@ $complete = $open_ai->complete([
 ]);
 ```
 
+## Edits
+
+Creates a new edit for the provided input, instruction, and parameters
+
+ ```php
+    $result = $open_ai->createEdit([
+        "model" => "text-davinci-edit-001",
+        "input" => "What day of the wek is it?",
+        "instruction" => "Fix the spelling mistakes",
+    ]);
+```
+
 ## Images (Dall-E)
 
 Given a prompt, the model will return one or more generated images as urls or base64 encoded.
