@@ -135,7 +135,7 @@ $complete = $open_ai->image([
 ```
 ### Create image edit
 Creates an edited or extended image given an original image and a prompt.
-> You need HTML upload? Get help from  [this](https://github.com/orhanerday/open-ai#upload-file-with-html-form) part for easy implementation.
+> You need HTML upload? Get help from  [this](#upload-file-with-html-form) part for easy implementation.
 ````php
 $otter = curl_file_create(__DIR__ . './files/otter.png');
 $mask = curl_file_create(__DIR__ . './files/mask.jpg');
@@ -161,6 +161,9 @@ $result = $open_ai->createImageVariation([
 ````
 
 ## Searches
+**_(Deprecated)_**
+> This endpoint is deprecated and will be removed on December 3rd, 2022
+OpenAI developed new methods with better performance. [Learn more.](https://help.openai.com/en/articles/6272952-search-transition-guide)
 
 Given a query and a set of documents or labels, the model ranks each document based on its semantic similarity to the
 provided query.
@@ -190,6 +193,11 @@ $result = $open_ai->embeddings([
 
 ## Answers
 
+**_(Deprecated)_**
+
+> This endpoint is deprecated and will be removed on December 3rd, 2022
+We’ve developed new methods with better performance. [Learn more](https://help.openai.com/en/articles/6233728-answers-transition-guide).
+
 Given a question, a set of documents, and some examples, the API generates an answer to the question based on the
 information in the set of documents. This is useful for question-answering applications on sources of truth, like
 company documentation or a knowledge base.
@@ -208,6 +216,10 @@ $answer = $open_ai->answer([
 ```
 
 ## Classifications
+
+**_(Deprecated)_**
+>This endpoint is deprecated and will be removed on December 3rd, 2022
+OpenAI developed new methods with better performance. [Learn more.](https://help.openai.com/en/articles/6272941-classifications-transition-guide)
 
 Given a query and a set of labeled examples, the model will predict the most likely label for the query. Useful as a
 drop-in replacement for any ML classification or text-to-label task.
@@ -238,6 +250,10 @@ $flags = $open_ai->moderation([
 Know more about Content Moderations here: [OpenAI Moderations](https://beta.openai.com/docs/api-reference/moderations)
 
 ## List engines
+**_(Deprecated)_**
+
+> The Engines endpoints are deprecated.
+Please use their replacement, [Models](#list-models), instead. [Learn more](TODO?).
 
 Lists the currently available engines, and provides basic information about each one such as the owner and availability.
 
@@ -366,6 +382,7 @@ $result = $open_ai->deleteFineTune('curie:ft-acmeco-2021-03-03-21-44-20');
 ```
 
 ## Retrieve engine
+**_(Deprecated)_**
 
 Retrieves an engine instance, providing basic information about the engine such as the owner and availability.
 
