@@ -59,6 +59,12 @@ it('should handle retrieve the file', function () use ($open_ai) {
     $this->assertStringContainsString('filename', $result);
 });
 
+it('should handle retrieve the file content', function () use ($open_ai) {
+    $result = $open_ai->retrieveFileContent('file-hrlLUmPhddnplQUVa2CTzg5k');
+
+    $this->assertStringContainsString('', $result);
+});
+
 it('should handle delete the file', function () use ($open_ai) {
     $result = $open_ai->deleteFile('file-hrlLUmPhddnplQUVa2CTzg5k');
 

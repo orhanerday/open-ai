@@ -184,6 +184,18 @@ class OpenAi
      * @param $file_id
      * @return bool|string
      */
+    public function retrieveFileContent($file_id)
+    {
+        $file_id = "/$file_id/content";
+        $url = Url::filesUrl() . $file_id;
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $file_id
+     * @return bool|string
+     */
     public function deleteFile($file_id)
     {
         $file_id = "/$file_id";
