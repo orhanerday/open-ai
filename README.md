@@ -317,6 +317,12 @@ $result = $open_ai->deleteFile('file-xxxxxxxx');
 $file = $open_ai->retrieveFile('file-xxxxxxxx');
 ```
 
+## Retrieve file content
+
+ ```php
+$file = $open_ai->retrieveFileContent('file-xxxxxxxx');
+```
+
 ## Fine-tunes
 
 Manage fine-tuning jobs to tailor a model to your specific training data.
