@@ -97,4 +97,13 @@ class Url
     {
         return self::OPEN_AI_URL . "/answers";
     }
+
+    /**
+     * @param
+     * @return string
+     */
+    public static function imageUrl(): string
+    {
+        return self::OPEN_AI_URL . "/images/generations";
+    }
 }

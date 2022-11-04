@@ -38,6 +38,17 @@ class OpenAi
      * @param $opts
      * @return bool|string
      */
+    public function image($opts)
+    {
+        $url = Url::imageUrl();
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
     public function search($opts)
     {
         $engine = $opts['engine'] ?? $this->engine;

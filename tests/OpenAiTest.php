@@ -145,3 +145,12 @@ it('should handle engine', function () use ($open_ai) {
     $result = $open_ai->engine($engine_id);
     $this->assertStringContainsString($engine_id, $result);
 });
+
+it('should handle image', function () use ($open_ai) {
+  $result = $open_ai->image([
+    'prompt' => "a picture of a cat",
+    'n' => 1,
+    'size' => "256x256",
+  ]);
+  $this->assertStringContainsString('data', $result);
+});
