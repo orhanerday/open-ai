@@ -266,7 +266,7 @@ $engines = $open_ai->engines();
 
 Files are used to upload documents that can be used across features like Answers, Search, and Classifications
 
-## List files
+### List files
 
 Returns a list of files that belong to the user's organization.
 
@@ -274,7 +274,7 @@ Returns a list of files that belong to the user's organization.
 $files = $open_ai->listFiles();
 ```
 
-## Upload file
+### Upload file
 
 Upload a file that contains document(s) to be used across various endpoints/features. Currently, the size of all the
 files uploaded by one organization can be up to 1 GB. Please contact OpenAI if you need to increase the storage limit.
@@ -391,8 +391,10 @@ Retrieves an engine instance, providing basic information about the engine such 
 $engine = $open_ai->engine('davinci');
 ```
 
+## Models
+List and describe the various models available in the API. 
 
-## List models
+### List models
 
 Lists the currently available models, and provides basic information about each one such as the owner and availability.
 
@@ -401,7 +403,7 @@ $result = $open_ai->listModels();
 ```
 
 
-## Retrieve model
+### Retrieve model
 
 Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
 
