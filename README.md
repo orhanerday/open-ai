@@ -119,7 +119,8 @@ Creates a new edit for the provided input, instruction, and parameters
     ]);
 ```
 
-## Images (Dall-E)
+## Images (DALL·E)
+> All DALL·E Examples available in this [repo](https://github.com/orhanerday/DALLE-Examples).
 
 Given a prompt, the model will return one or more generated images as urls or base64 encoded.
 
@@ -127,15 +128,15 @@ Given a prompt, the model will return one or more generated images as urls or ba
 Creates an image given a prompt.
  ```php
 $complete = $open_ai->image([
-    'prompt' => 'A cat drinking milk',
-    'n' => 1,
-    'size' => '256x256',
-    'response_format' => 'url',
+    "prompt" => "A cat drinking milk",
+    "n" => 1,
+    "size" => "256x256",
+    "response_format" => "url",
 ]);
 ```
 ### Create image edit
 Creates an edited or extended image given an original image and a prompt.
-> You need HTML upload? Get help from  [this](#upload-file-with-html-form) part for easy implementation.
+> You need HTML upload for image edit or variation? Please check [DALL·E Examples](https://github.com/orhanerday/DALLE-Examples)
 ````php
 $otter = curl_file_create(__DIR__ . './files/otter.png');
 $mask = curl_file_create(__DIR__ . './files/mask.jpg');
@@ -321,19 +322,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 ```
 
-## Delete file
+### Delete file
 
  ```php
 $result = $open_ai->deleteFile('file-xxxxxxxx');
 ```
 
-## Retrieve file
+### Retrieve file
 
  ```php
 $file = $open_ai->retrieveFile('file-xxxxxxxx');
 ```
 
-## Retrieve file content
+### Retrieve file content
 
  ```php
 $file = $open_ai->retrieveFileContent('file-xxxxxxxx');
@@ -343,7 +344,7 @@ $file = $open_ai->retrieveFileContent('file-xxxxxxxx');
 
 Manage fine-tuning jobs to tailor a model to your specific training data.
 
-## Create fine-tune
+### Create fine-tune
 
  ```php
 $result = $open_ai->createFineTune([
@@ -351,31 +352,31 @@ $result = $open_ai->createFineTune([
 ]);
 ```
 
-## List fine-tune
+### List fine-tune
 
  ```php
 $fine_tunes = $open_ai->listFineTunes();
 ```
 
-## Retrieve fine-tune
+### Retrieve fine-tune
 
  ```php
 $fine_tune = $open_ai->retrieveFineTune('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
 ```
 
-## Cancel fine-tune
+### Cancel fine-tune
 
  ```php
 $result = $open_ai->cancelFineTune('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
 ```
 
-## List fine-tune events
+### List fine-tune events
 
  ```php
 $fine_tune_events = $open_ai->listFineTuneEvents('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
 ```
 
-## Delete fine-tune model
+### Delete fine-tune model
 
  ```php
 $result = $open_ai->deleteFineTune('curie:ft-acmeco-2021-03-03-21-44-20');
