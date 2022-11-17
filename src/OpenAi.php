@@ -65,9 +65,8 @@ class OpenAi
      */
     public function completion($opts)
     {
-        $model = $opts['model'] ?? $this->model;
-        $url = Url::completionURL($model);
-        unset($opts['model']);
+        $opts['model'] = $opts['model'] ?? $this->model;
+        $url = Url::completionsURL();
 
         return $this->sendRequest($url, 'POST', $opts);
     }

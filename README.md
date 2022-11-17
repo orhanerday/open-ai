@@ -97,8 +97,8 @@ Given a prompt, the model will return one or more predicted completions, and can
 alternative tokens at each position.
 
  ```php
-$complete = $open_ai->complete([
-    'engine' => 'davinci',
+$complete = $open_ai->completion([
+    'model' => 'text-davinci-002',
     'prompt' => 'Hello',
     'temperature' => 0.9,
     'max_tokens' => 150,

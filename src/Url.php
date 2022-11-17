@@ -9,12 +9,21 @@ class Url
     public const OPEN_AI_URL = self::ORIGIN . "/" . self::API_VERSION;
 
     /**
+     * @deprecated
      * @param string $engine
      * @return string
      */
     public static function completionURL(string $engine): string
     {
         return self::OPEN_AI_URL . "/engines/$engine/completions";
+    }
+
+    /**
+     * @return string
+     */
+    public static function completionsURL(): string
+    {
+        return self::OPEN_AI_URL . "/completions";
     }
 
     /**

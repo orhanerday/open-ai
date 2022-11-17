@@ -3,10 +3,20 @@
 
 use Orhanerday\OpenAi\OpenAi;
 
-$open_ai = new OpenAi('OPEN-AI-KEY');
 
+it('should handle simple completion using the new endpoint', function () use ($open_ai) {
+    $result = $open_ai->completion([
+        'prompt' => "Hello",
+        'temperature' => 0.9,
+        "max_tokens" => 150,
+        "frequency_penalty" => 0,
+        "presence_penalty" => 0.6,
+    ]);
 
-it('should handle simple completion', function () use ($open_ai) {
+    $this->assertStringContainsString('text', $result);
+})->group('working');
+
+it('should handle simple completion using the deprecated endpoint', function () use ($open_ai) {
     $result = $open_ai->complete([
         'engine' => 'davinci',
         'prompt' => "Hello",
