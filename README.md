@@ -419,8 +419,14 @@ echo $search;
 
 ## Testing
 
+To run all tests:
 ```bash
 composer test
+```
+
+To run only those tests that work for most user (exclude those that require a missing folder or that hit deprecated endpoints no longer available to most users):
+```bash
+./vendor/bin/pest --group=working
 ```
 
 ## Changelog
