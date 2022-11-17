@@ -38,7 +38,8 @@ it('should handle content filtering', function () use ($open_ai) {
 
 
 it('should handle file upload', function () use ($open_ai) {
-    $c_file = curl_file_create(__DIR__ . './files/sample_file_1.jsonl');
+    $c_file = curl_file_create(__DIR__ . '/../files/sample_file_1.jsonl');
+
     $result = $open_ai->uploadFile([
         "purpose" => "answers",
         "file" => $c_file,
