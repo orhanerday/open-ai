@@ -5,6 +5,7 @@ namespace Orhanerday\OpenAi;
 class OpenAi
 {
     private string $engine = "davinci";
+    private string $model = "text-davinci-002";
     private array $headers;
     private array $contentTypes;
 
@@ -45,6 +46,7 @@ class OpenAi
     }
 
     /**
+     * @deprecated
      * @param $opts
      * @return bool|string
      */
@@ -53,6 +55,18 @@ class OpenAi
         $engine = $opts['engine'] ?? $this->engine;
         $url = Url::completionURL($engine);
         unset($opts['engine']);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function completion($opts)
+    {
+        $opts['model'] = $opts['model'] ?? $this->model;
+        $url = Url::completionsURL();
 
         return $this->sendRequest($url, 'POST', $opts);
     }
