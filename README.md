@@ -22,6 +22,9 @@
 
 orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
 
+## Join our discord server
+![Discord Banner 2](https://discordapp.com/api/guilds/1047074572488417330/widget.png?style=banner2)
+
 ## Installation
 
 You can install the package via composer:
