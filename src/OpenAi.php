@@ -8,6 +8,7 @@ class OpenAi
     private string $model = "text-davinci-002";
     private array $headers;
     private array $contentTypes;
+    private int $timeout = 0;
 
     public function __construct($OPENAI_API_KEY)
     {
@@ -326,6 +327,14 @@ class OpenAi
     }
 
     /**
+     * @param int $timeout
+     */
+    public function setTimeout(int $timeout)
+    {
+        $this->timeout = $timeout;
+    }
+
+    /**
      * @param string $url
      * @param string $method
      * @param array $opts
@@ -346,7 +355,7 @@ class OpenAi
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
+            CURLOPT_TIMEOUT => $this->timeout,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => $method,
