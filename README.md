@@ -51,7 +51,7 @@ _Linux or macOS_
 ```shell
 export OPENAI_API_KEY=sk-gjtv.....
 ```
-> Getting issues while setting up env? Please read https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety article.
+> Getting issues while setting up env? Please read the [article](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety).
 
 Create your `index.php` file and paste the following code part into the file.
 
