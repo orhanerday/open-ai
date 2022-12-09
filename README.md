@@ -25,7 +25,7 @@ orhanerday/open-ai added to community libraries php [section](https://beta.opena
 ## Join our discord server
 ![Discord Banner 2](https://discordapp.com/api/guilds/1047074572488417330/widget.png?style=banner2)
 
-[Join](https://discord.gg/mtY2jCsQgx)
+[Click here to join the Discord server](https://discord.gg/mtY2jCsQgx)
 
 ## Installation
 
