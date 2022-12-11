@@ -67,7 +67,7 @@ $open_ai = new OpenAi($open_ai_key);
 
 $complete = $open_ai->completion([
     'model' => 'text-davinci-003',
-    'prompt' => 'Hello',
+    'prompt' => 'What are popular things in France?',
     'temperature' => 0.9,
     'max_tokens' => 150,
     'frequency_penalty' => 0,
