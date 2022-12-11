@@ -65,8 +65,8 @@ use Orhanerday\OpenAi\OpenAi;
 $open_ai_key = getenv('OPENAI_API_KEY');
 $open_ai = new OpenAi($open_ai_key);
 
-$complete = $open_ai->complete([
-    'engine' => 'davinci',
+$complete = $open_ai->completion([
+    'model' => 'davinci',
     'prompt' => 'Hello',
     'temperature' => 0.9,
     'max_tokens' => 150,
