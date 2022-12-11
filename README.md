@@ -65,8 +65,8 @@ use Orhanerday\OpenAi\OpenAi;
 $open_ai_key = getenv('OPENAI_API_KEY');
 $open_ai = new OpenAi($open_ai_key);
 
-$complete = $open_ai->complete([
-    'engine' => 'davinci',
+$complete = $open_ai->completion([
+    'model' => 'text-davinci-003',
     'prompt' => 'Hello',
     'temperature' => 0.9,
     'max_tokens' => 150,
@@ -103,8 +103,8 @@ alternative tokens at each position.
 
  ```php
 $complete = $open_ai->completion([
-    'model' => 'text-davinci-002',
-    'prompt' => 'Hello',
+    'model' => 'text-davinci-003',
+    'prompt' => 'What is the capital of France?',
     'temperature' => 0.9,
     'max_tokens' => 150,
     'frequency_penalty' => 0,
