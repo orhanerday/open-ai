@@ -15,12 +15,18 @@
 
 <br />
 
+## About this package
+
+Fully open-source and secure community-maintained, PHP SDK for accessing the OpenAI GPT-3 API.
+
 > #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
-> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples).
+> #### Free support is available. [Join our discord server](#join-our-discord-server)
+> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples). Also you can get help from our discord channel that called [#api-support](https://discord.gg/R9CpVUdqQR)
 
 ## News
 
-orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
+- orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
+- orhanerday/open-ai featured on [PHPStorm blog post](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API), thanks JetBrains! 
 
 ## Join our discord server
 ![Discord Banner 2](https://discordapp.com/api/guilds/1047074572488417330/widget.png?style=banner2)
