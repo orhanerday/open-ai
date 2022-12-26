@@ -43,8 +43,8 @@ body:
   - type: input
     id: language-version
     attributes:
-      label: Node version
-      placeholder: Node v16.14.2
+      label: PHP version
+      placeholder: PHP 7.1.1-1
     validations:
       required: true
   - type: input
