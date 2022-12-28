@@ -133,6 +133,10 @@ $opts = [
     "presence_penalty" => 0.6,
     "stream" => true,
 ];
+
+header('Content-type: text/event-stream');
+header('Cache-Control: no-cache');
+
 $open_ai->completion($opts, function ($curl_info, $data) {
     echo $data . "<br><br>";
     echo PHP_EOL;
