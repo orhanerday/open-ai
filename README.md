@@ -120,6 +120,8 @@ $complete = $open_ai->completion([
 
 ### Stream Example
 
+This feature might sound familiar from [ChatGPT](https://chat.openai.com/chat).
+
 Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format) as they become available, with the stream terminated by a data: [DONE] message.
 
  ````php
@@ -146,6 +148,35 @@ $open_ai->completion($opts, function ($curl_info, $data) {
 });
 
 ````
+
+Add this part inside `<body>` of the HTML
+
+ ````php
+ 
+<div id="divID">Hello</div>
+<script>
+    var eventSource = new EventSource("/");
+    var div = document.getElementById('divID');
+
+
+    eventSource.onmessage = function (e) {
+       if(e.data == "[DONE]")
+       {
+           div.innerHTML += "<br><br>Hello";
+       }
+        div.innerHTML += JSON.parse(e.data).choices[0].text;
+    };
+    eventSource.onerror = function (e) {
+        console.log(e);
+    };
+</script>
+````
+
+You should see a response like the in video;
+
+https://user-images.githubusercontent.com/22305274/209847128-f72c9345-dd34-46f0-bbc5-daf1d7b6121f.mp4
+
+
 
 ## Edits
 
