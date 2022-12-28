@@ -107,19 +107,22 @@ it('should handle cancel the fine-tune', function () use ($open_ai) {
     $result = $open_ai->cancelFineTune('file-XGinujblHPwGLSztz8cPS8XY');
 
     $this->assertStringContainsString('training_files', $result);
-})->group('requires-missing-file');;
+})->group('requires-missing-file');
+;
 
 it('should handle list fine-tune event', function () use ($open_ai) {
     $result = $open_ai->listFineTuneEvents('file-XGinujblHPwGLSztz8cPS8XY');
 
     $this->assertStringContainsString('data', $result);
-})->group('requires-missing-file');;
+})->group('requires-missing-file');
+;
 
 it('should handle delete fine-tune model', function () use ($open_ai) {
     $result = $open_ai->deleteFineTune('curie:ft-acmeco-2021-03-03-21-44-20');
 
     $this->assertStringContainsString('deleted', $result);
-})->group('requires-missing-file');;
+})->group('requires-missing-file');
+;
 
 it('should handle answers', function () use ($open_ai) {
     $result = $open_ai->answer([

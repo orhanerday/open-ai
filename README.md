@@ -118,6 +118,31 @@ $complete = $open_ai->completion([
 ]);
 ```
 
+### Stream Example
+
+Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format) as they become available, with the stream terminated by a data: [DONE] message.
+
+ ````php
+$open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
+
+$opts = [
+    'prompt' => "Hello",
+    'temperature' => 0.9,
+    "max_tokens" => 150,
+    "frequency_penalty" => 0,
+    "presence_penalty" => 0.6,
+    "stream" => true,
+];
+$open_ai->completion($opts, function ($curl_info, $data) {
+    echo $data . "<br><br>";
+    echo PHP_EOL;
+    ob_flush();
+    flush();
+    return strlen($data);
+});
+
+````
+
 ## Edits
 
 Creates a new edit for the provided input, instruction, and parameters
@@ -313,7 +338,7 @@ use Orhanerday\OpenAi\OpenAi;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ob_clean();
-    $open_ai = new OpenAi('YOUR_API_KEY');
+    $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
     $tmp_file = $_FILES['fileToUpload']['tmp_name'];
     $file_name = basename($_FILES['fileToUpload']['name']);
     $c_file = curl_file_create($tmp_file, $_FILES['fileToUpload']['type'], $file_name);
