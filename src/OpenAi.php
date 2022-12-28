@@ -2,6 +2,8 @@
 
 namespace Orhanerday\OpenAi;
 
+use Exception;
+
 class OpenAi
 {
     private string $engine = "davinci";
@@ -9,6 +11,7 @@ class OpenAi
     private array $headers;
     private array $contentTypes;
     private int $timeout = 0;
+    private object $stream_method;
 
     public function __construct($OPENAI_API_KEY)
     {
@@ -47,9 +50,9 @@ class OpenAi
     }
 
     /**
-     * @deprecated
      * @param $opts
      * @return bool|string
+     * @deprecated
      */
     public function complete($opts)
     {
@@ -62,10 +65,22 @@ class OpenAi
 
     /**
      * @param $opts
+     * @param null $stream
      * @return bool|string
+     * @throws Exception
      */
-    public function completion($opts)
+    public function completion($opts, $stream = null)
     {
+        if ($stream != null && array_key_exists('stream', $opts)) {
+            if (! $opts['stream']) {
+                throw new Exception(
+                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                );
+            }
+
+            $this->stream_method = $stream;
+        }
+
         $opts['model'] = $opts['model'] ?? $this->model;
         $url = Url::completionsURL();
 
@@ -89,7 +104,7 @@ class OpenAi
      */
     public function image($opts)
     {
-        $url = Url::imageUrl()."/generations";
+        $url = Url::imageUrl() . "/generations";
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -100,7 +115,7 @@ class OpenAi
      */
     public function imageEdit($opts)
     {
-        $url = Url::imageUrl()."/edits";
+        $url = Url::imageUrl() . "/edits";
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -111,15 +126,15 @@ class OpenAi
      */
     public function createImageVariation($opts)
     {
-        $url = Url::imageUrl()."/variations";
+        $url = Url::imageUrl() . "/variations";
 
         return $this->sendRequest($url, 'POST', $opts);
     }
 
     /**
-     * @deprecated
      * @param $opts
      * @return bool|string
+     * @deprecated
      */
     public function search($opts)
     {
@@ -131,9 +146,9 @@ class OpenAi
     }
 
     /**
-     * @deprecated
      * @param $opts
      * @return bool|string
+     * @deprecated
      */
     public function answer($opts)
     {
@@ -143,9 +158,9 @@ class OpenAi
     }
 
     /**
-     * @deprecated
      * @param $opts
      * @return bool|string
+     * @deprecated
      */
     public function classification($opts)
     {
@@ -292,9 +307,9 @@ class OpenAi
     }
 
     /**
-     * @deprecated
      * @param
      * @return bool|string
+     * @deprecated
      */
     public function engines()
     {
@@ -304,9 +319,9 @@ class OpenAi
     }
 
     /**
-     * @deprecated
      * @param $engine
      * @return bool|string
+     * @deprecated
      */
     public function engine($engine)
     {
@@ -365,6 +380,10 @@ class OpenAi
 
         if ($opts == []) {
             unset($curl_info[CURLOPT_POSTFIELDS]);
+        }
+
+        if (array_key_exists('stream', $opts) && $opts['stream']) {
+            $curl_info[CURLOPT_WRITEFUNCTION] = $this->stream_method;
         }
 
         $curl = curl_init();
