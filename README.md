@@ -33,6 +33,24 @@ Fully open-source and secure community-maintained, PHP SDK for accessing the Ope
 
 [Click here to join the Discord server](https://discord.gg/mtY2jCsQgx)
 
+## Support this project
+
+As you may know, OpenAI PHP is an open-source project wrapping tool for OpenAI. We rely on the support of our community to continue developing and maintaining the project, and one way that you can help is by making a donation.
+
+Donations allow us to cover expenses such as hosting costs(for testing), development tools, and other resources that are necessary to keep the project running smoothly. Every contribution, no matter how small, helps us to continue improving OpenAI PHP for everyone.
+
+If you have benefited from using OpenAI PHP and would like to support its continued development, we would greatly appreciate a donation of any amount. You can make a donation through;
+* [Buy me a coffee](https://www.buymeacoffee.com/orhane)
+* [QR](#btc) Bitcoin => 34w2DftWGkDqDbYMixkmdWWMLmaP9uTRz7
+* [QR](#doge) Dogecoin => DHiqcZox9M8kYDn7BkesnN6Z2kJ7dYG9Lc
+* [QR](#eth) Ethereum => 0x135E2D5d7AC40c6850f844BA589D68e91a268Ceb
+
+
+Thank you for considering a donation to OpenAI. Your support is greatly appreciated and helps to ensure that the project can continue to grow and improve.
+
+Sincerely,
+Orhan Erday / Creator.
+
 ## Installation
 
 You can install the package via composer:
@@ -525,3 +543,12 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 
 <a href="https://www.buymeacoffee.com/orhane" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
+
+#### btc
+![image](https://user-images.githubusercontent.com/22305274/209946578-fc7db433-699c-491f-9f8b-1c962f0b9ea2.png)
+
+#### eth
+![image](https://user-images.githubusercontent.com/22305274/209946539-24f247d9-68a1-4f46-a18b-62790d943c99.png)
+
+#### doge
+![image](https://user-images.githubusercontent.com/22305274/209946556-164798d0-e404-4b6c-8669-d63e78f24228.png)
