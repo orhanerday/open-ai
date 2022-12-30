@@ -41,15 +41,16 @@ Donations allow us to cover expenses such as hosting costs(for testing), develop
 
 If you have benefited from using OpenAI PHP and would like to support its continued development, we would greatly appreciate a donation of any amount. You can make a donation through;
 * [Buy me a coffee](https://www.buymeacoffee.com/orhane)
-* [QR](#btc) Bitcoin => 34w2DftWGkDqDbYMixkmdWWMLmaP9uTRz7
-* [QR](#doge) Dogecoin => DHiqcZox9M8kYDn7BkesnN6Z2kJ7dYG9Lc
-* [QR](#eth) Ethereum => 0x135E2D5d7AC40c6850f844BA589D68e91a268Ceb
+* [Click here for the Coinbase QR](#btc) **Bitcoin** > 34w2DftWGkDqDbYMixkmdWWMLmaP9uTRz7
+* [Click here for the Coinbase QR](#doge) **Dogecoin** > DHiqcZox9M8kYDn7BkesnN6Z2kJ7dYG9Lc
+* [Click here for the Coinbase QR](#eth) **Ethereum** > 0x135E2D5d7AC40c6850f844BA589D68e91a268Ceb
 
 
-Thank you for considering a donation to OpenAI. Your support is greatly appreciated and helps to ensure that the project can continue to grow and improve.
+Thank you for considering a donation to Orhanerday/OpenAI PHP SDK. Your support is greatly appreciated and helps to ensure that the project can continue to grow and improve.
 
-Sincerely,
-Orhan Erday / Creator.
+*Sincerely,*
+
+**Orhan Erday** / Creator.
 
 ## Installation
 
