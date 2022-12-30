@@ -41,6 +41,7 @@ Donations allow us to cover expenses such as hosting costs(for testing), develop
 
 If you have benefited from using OpenAI PHP and would like to support its continued development, we would greatly appreciate a donation of any amount. You can make a donation through;
 * [Buy me a coffee](https://www.buymeacoffee.com/orhane)
+* [Patreon](https://patreon.com/orhann)
 * [Click here for the Coinbase QR](#btc) **Bitcoin** > 34w2DftWGkDqDbYMixkmdWWMLmaP9uTRz7
 * [Click here for the Coinbase QR](#doge) **Dogecoin** > DHiqcZox9M8kYDn7BkesnN6Z2kJ7dYG9Lc
 * [Click here for the Coinbase QR](#eth) **Ethereum** > 0x135E2D5d7AC40c6850f844BA589D68e91a268Ceb
