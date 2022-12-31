@@ -1,4 +1,16 @@
 # OpenAI GPT-3 Api Client in PHP
+<br />
+
+<br />
+
+*A message from creator,<br />Thank you for visiting the __@orhanerday/open-ai__ repository! We are thrilled to see that it has been downloaded nearly 30k times. If you find this repository helpful or useful, we encourage you to **star** it on GitHub. Starring a repository is a way to show your support for the project. It also helps to increase the visibility of the project and to let the community know that it is valuable. Thanks again for your support and we hope you find the repository useful! <br /><br /> Orhan*
+
+<br />
+
+<br />
+<br />
+
+
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
 [![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
