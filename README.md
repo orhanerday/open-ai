@@ -52,7 +52,40 @@ Thank you for considering a donation to Orhanerday/OpenAI PHP SDK. Your support 
 *Sincerely,*
 
 **Orhan Erday** / Creator.
+# Endpoint Support
 
+- Models
+  - [x] [List models](https://beta.openai.com/docs/api-reference/models/list)
+  - [x] [Retrieve model](https://beta.openai.com/docs/api-reference/models/retrieve)
+- Completions
+  - [x] [Create completion](https://beta.openai.com/docs/api-reference/completions/create)
+- Edits
+  - [x] [Create edits](https://beta.openai.com/docs/api-reference/edits/create)
+- Images
+  - [x] [Create image](https://beta.openai.com/docs/api-reference/images/create)
+  - [x] [Create image edit](https://beta.openai.com/docs/api-reference/images/create-edit)
+  - [x] [Create image variation](https://beta.openai.com/docs/api-reference/images/create-variation)
+- Embeddings
+  - [x] [Create embeddings](https://beta.openai.com/docs/api-reference/embeddings/create)
+- Files
+  - [x] [List files](https://beta.openai.com/docs/api-reference/files/list)
+  - [x] [Upload file](https://beta.openai.com/docs/api-reference/files/upload)
+  - [x] [Delete file](https://beta.openai.com/docs/api-reference/files/delete)
+  - [x] [Retrieve file](https://beta.openai.com/docs/api-reference/files/retrieve)
+  - [x] [Retrieve file content](https://beta.openai.com/docs/api-reference/files/retrieve-content)
+- Fine-tunes
+  - [x] [Create fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/create)
+  - [x] [List fine-tunes (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/list)
+  - [x] [Retrieve fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/retrieve)
+  - [x] [Cancel fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/cancel)
+  - [x] [List fine-tune events (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/events)
+  - [x] [Delete fine-tune model (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/delete-model)
+- Moderation
+  - [x] [Create moderation](https://beta.openai.com/docs/api-reference/moderations/create)
+- ~~Engines~~ *(deprecated)*
+  - ~~[List engines](https://beta.openai.com/docs/api-reference/engines/list)~~
+  - ~~[Retrieve engine](https://beta.openai.com/docs/api-reference/engines/retrieve)~~
+  
 ## Installation
 
 You can install the package via composer:
