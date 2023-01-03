@@ -13,7 +13,7 @@ class OpenAi
     private int $timeout = 0;
     private object $stream_method;
 
-    public function __construct($OPENAI_API_KEY)
+    public function __construct($OPENAI_API_KEY, $OPENAI_ORG = "")
     {
         $this->contentTypes = [
             "application/json" => "Content-Type: application/json",
@@ -24,6 +24,10 @@ class OpenAi
             $this->contentTypes["application/json"],
             "Authorization: Bearer $OPENAI_API_KEY",
         ];
+
+        if ($OPENAI_ORG != "") {
+            $this->headers[] = "OpenAI-Organization: $OPENAI_ORG";
+        }
     }
 
     /**
