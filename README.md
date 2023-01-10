@@ -54,7 +54,7 @@ Fully open-source and secure community-maintained, PHP SDK for accessing the Ope
 ## Join our discord server
 ![Discord Banner 2](https://discordapp.com/api/guilds/1047074572488417330/widget.png?style=banner2)
 
-[Click here to join the Discord server](https://discord.gg/mtY2jCsQgx)
+[Click here to join the Discord server](https://discord.gg/6FmA6vDUkS)
 
 ## Support this project
 
