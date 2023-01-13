@@ -3,5 +3,5 @@ contact_links:
   - name: OpenAI support
     url: https://help.openai.com/
     about: |
-      Please only file issues here that you believe represent actual bugs or feature requests for the OpenAI Node library.
+      Please only file issues here that you believe represent actual bugs or feature requests for the OpenAI PHP library.
       If you're having general trouble with the OpenAI API, please visit our help center to get support.
