@@ -8,8 +8,6 @@
 <br />
 
 <br />
-<br />
-
 
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
