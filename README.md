@@ -1,9 +1,12 @@
-# OpenAI GPT-3 Api Client in PHP
-<br />
+# PHP 中的 OpenAI GPT-3 Api 客户端
 
 <br />
 
-*A message from creator,<br />Thank you for visiting the __@orhanerday/open-ai__ repository! We are thrilled to see that it has been downloaded nearly 30k times. If you find this repository helpful or useful, we encourage you to **star** it on GitHub. Starring a repository is a way to show your support for the project. It also helps to increase the visibility of the project and to let the community know that it is valuable. Thanks again for your support and we hope you find the repository useful! <br /><br /> Orhan*
+<br />
+
+*来自创作者的消息，<br />感谢您访问 __@orhanerday/open-ai__ 存储库！ 我们很高兴看到它已被下载近 3 万次。
+如果您发现此存储库有帮助或有用，我们鼓励您在 GitHub 上为它加注星标。 为存储库加注星标是表达您对该项目支持的一种方式。
+它还有助于提高项目的知名度并让社区知道它是有价值的。 再次感谢您的支持，我们希望您发现存储库有用！ <br /><br />奥尔罕*
 
 <br />
 
@@ -12,7 +15,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
 [![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
-
 <br />
 
 <br />
@@ -23,589 +25,611 @@
 
 <br />
 
+# 与其他包的比较
 
-# Comparison With Other Packages
-
-| Project Name           | Required PHP Version | Downloads                                                                                                                                                                     | Decription                                                                                                                                                 | Type (Official / Community) | Support                                                                                                                                |
-|------------------------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| **orhanerday/open-ai** | **PHP 7.4+**         | **[![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai) <br>🚀nearly 35K 🚀** | **Most downloaded, forked, contributed, huge community supported, and used PHP SDK for OpenAI GPT-3 and DALL-E. It also supports chatGPT-like streaming.** | Community                   | Available, ([Community driven Discord Server](https://discord.gg/mtY2jCsQgx) or personal mail [orhan@duck.com](mailto:orhan@duck.com)) |
-| openai-php/client      | PHP 8.1+             | <a href="https://packagist.org/packages/openai-php/client"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/openai-php/client"></a>                        | OpenAI PHP API client.                                                                                                                                     | Community                   | -                                                                                                                                      |
-
+| 项目名称                   | 所需的 PHP 版本   | 下载                                                                                                                                                                            | 说明                                                                                  | 类型（官方/社区） | 支持                                                                                                    |
+|------------------------|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|-----------|-------------------------------------------------------------------------------------------------------|
+| **orhanerday/open-ai** | **PHP 7.4+** | **[![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai) <br>🚀nearly 35K 🚀** | **大多数下载、分叉、贡献、庞大的社区支持，以及用于 OpenAI GPT-3 和 DALL-E 的 PHP SDK。 它还支持类似 chatGPT 的流式传输。** | 社区        | 可用，（[社区驱动的 Discord 服务器](https://discord.gg/mtY2jCsQgx) 或个人邮件 [orhan@duck.com](mailto:orhan@duck.com)） |
+| openai-php/client      | PHP 8.1+     | <a href="https://packagist.org/packages/openai-php/client"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/openai-php/client"></a>                        | OpenAI PHP API 客户端。                                                                 | 社区        | -                                                                                                     |
 
 <br />
 
-## About this package
+## 关于这个包
 
-Fully open-source and secure community-maintained, PHP SDK for accessing the OpenAI GPT-3 API.
+完全开源且安全的社区维护的 PHP SDK，用于访问 OpenAI GPT-3 API。
 
-> #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
-> #### Free support is available. [Join our discord server](#join-our-discord-server)
-> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples). Also you can get help from our discord channel that called [#api-support](https://discord.gg/R9CpVUdqQR)
+> #### 更多信息，可以阅读 laravel news [博文](https://laravel-news.com/openai-sdk-for-php)。
+> #### 提供免费支持。 [加入我们的不和谐服务器](#join-our-discord-server)
+> #### 要开始使用此包，您首先需要熟悉 [OpenAI API 文档](https://beta.openai.com/docs/introduction) 和 [示例](https:/ /beta.openai.com/examples）。 您还可以从我们名为 [#api-support](https://discord.gg/R9CpVUdqQR) 的不和谐频道获得帮助
 
-## News
+＃＃ 消息
 
-- orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
-- orhanerday/open-ai featured on [PHPStorm blog post](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API), thanks JetBrains! 
+- orhanerday/open-ai 添加到社区库 php [部分](https://beta.openai.com/docs/libraries/php)。
+- orhanerday/open-aiorhanerday/open-ai featured on [PHPStorm blog post](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API), 谢谢，JetBrains！
 
-> Requires PHP 7.4+
+> 需要 PHP 7.4+
 
-## Join our discord server
-![Discord Banner 2](https://discordapp.com/api/guilds/1047074572488417330/widget.png?style=banner2)
+## 加入我们的不和谐服务器
 
-[Click here to join the Discord server](https://discord.gg/6FmA6vDUkS)
+![Discord 横幅 2](https://discordapp.com/api/guilds/1047074572488417330/widget.png?style=banner2)
 
-## Support this project
+[点击此处加入 Discord 服务器](https://discord.gg/6FmA6vDUkS)
 
-As you may know, OpenAI PHP is an open-source project wrapping tool for OpenAI. We rely on the support of our community to continue developing and maintaining the project, and one way that you can help is by making a donation.
+## 支持这个项目
 
-Donations allow us to cover expenses such as hosting costs(for testing), development tools, and other resources that are necessary to keep the project running smoothly. Every contribution, no matter how small, helps us to continue improving OpenAI PHP for everyone.
+您可能知道，OpenAI PHP 是 OpenAI 的开源项目包装工具。 我们依靠社区的支持来继续开发和维护该项目，您可以提供帮助的一种方式是捐款。
 
-If you have benefited from using OpenAI PHP and would like to support its continued development, we would greatly appreciate a donation of any amount. You can make a donation through;
-* [Buy me a coffee](https://www.buymeacoffee.com/orhane)
+捐款使我们能够支付托管费用（用于测试）、开发工具和其他保持项目顺利运行所需的资源等费用。 每一个贡献，无论多小，都有助于我们继续改进
+OpenAI PHP
+每个人。
+
+如果您从使用 OpenAI PHP 中受益并愿意支持它的持续开发，我们将不胜感激任何数额的捐赠。 您可以通过以下方式捐款；
+
+* [请我喝咖啡](https://www.buymeacoffee.com/orhane)
 * [Patreon](https://patreon.com/orhann)
-* [Click here for the Coinbase QR](#btc) **Bitcoin** > 34w2DftWGkDqDbYMixkmdWWMLmaP9uTRz7
-* [Click here for the Coinbase QR](#doge) **Dogecoin** > DHiqcZox9M8kYDn7BkesnN6Z2kJ7dYG9Lc
-* [Click here for the Coinbase QR](#eth) **Ethereum** > 0x135E2D5d7AC40c6850f844BA589D68e91a268Ceb
+* [点击此处获取 Coinbase QR](#btc) **比特币** > 34w2DftWGkDqDbYMixkmdWWMLmaP9uTRz7
+* [点击此处获取 Coinbase QR](#doge) **Dogecoin** > DHiqcZox9M8kYDn7BkesnN6Z2kJ7dYG9Lc
+* [点击此处获取 Coinbase QR](#eth) **以太坊** > 0x135E2D5d7AC40c6850f844BA589D68e91a268Ceb
 
+感谢您考虑向 Orhanerday/OpenAI PHP SDK 捐款。 非常感谢您的支持，这有助于确保项目能够继续发展和改进。
 
-Thank you for considering a donation to Orhanerday/OpenAI PHP SDK. Your support is greatly appreciated and helps to ensure that the project can continue to grow and improve.
+*真挚地，*
 
-*Sincerely,*
+**Orhan Erday** / 创作者。
 
-**Orhan Erday** / Creator.
+# 端点支持
 
-# Endpoint Support
+- 楷模
+    - [x] [列出模型](https://beta.openai.com/docs/api-reference/models/list)
+    - [x] [检索模型](https://beta.openai.com/docs/api-reference/models/retrieve)
+- 完成
+    - [x] [创建完成](https://beta.openai.com/docs/api-reference/completions/create)
+- 编辑
+    - [x] [创建编辑](https://beta.openai.com/docs/api-reference/edits/create)
+- 图片
+    - [x] [创建图像](https://beta.openai.com/docs/api-reference/images/create)
+    - [x] [创建图像编辑](https://beta.openai.com/docs/api-reference/images/create-edit)
+    - [x] [创建图像变体](https://beta.openai.com/docs/api-reference/images/create-variation)
+- 嵌入
+    - [x] [创建嵌入](https://beta.openai.com/docs/api-reference/embeddings/create)
+- 文件
+    - [x] [列表文件](https://beta.openai.com/docs/api-reference/files/list)
+    - [x] [上传文件](https://beta.openai.com/docs/api-reference/files/upload)
+    - [x] [删除文件](https://beta.openai.com/docs/api-reference/files/delete)
+    - [x] [检索文件](https://beta.openai.com/docs/api-reference/files/retrieve)
+    - [x] [检索文件内容](https://beta.openai.com/docs/api-reference/files/retrieve-content)
+- 微调
+    - [x] [创建微调（测试版）](https://beta.openai.com/docs/api-reference/fine-tunes/create)
+    - [x] [列表微调（测试版）](https://beta.openai.com/docs/api-reference/fine-tunes/list)
+    - [x] [检索微调（测试版）](https://beta.openai.com/docs/api-reference/fine-tunes/retrieve)
+    - [x] [取消微调（测试版）](https://beta.openai.com/docs/api-reference/fine-tunes/cancel)
+    - [x] [列出微调事件（测试版）](https://beta.openai.com/docs/api-reference/fine-tunes/events)
+    - [x] [删除微调模型（测试版）](https://beta.openai.com/docs/api-reference/fine-tunes/delete-model)
+- 适度
+    - [x] [创建审核](https://beta.openai.com/docs/api-reference/moderations/create)
+- ~~引擎~~ *（弃用）*
+    - ~~[列出引擎](https://beta.openai.com/docs/api-reference/engines/list)~~
+    - ~~[检索引擎](https://beta.openai.com/docs/api-reference/engines/retrieve)~~
 
-- Models
-  - [x] [List models](https://beta.openai.com/docs/api-reference/models/list)
-  - [x] [Retrieve model](https://beta.openai.com/docs/api-reference/models/retrieve)
-- Completions
-  - [x] [Create completion](https://beta.openai.com/docs/api-reference/completions/create)
-- Edits
-  - [x] [Create edits](https://beta.openai.com/docs/api-reference/edits/create)
-- Images
-  - [x] [Create image](https://beta.openai.com/docs/api-reference/images/create)
-  - [x] [Create image edit](https://beta.openai.com/docs/api-reference/images/create-edit)
-  - [x] [Create image variation](https://beta.openai.com/docs/api-reference/images/create-variation)
-- Embeddings
-  - [x] [Create embeddings](https://beta.openai.com/docs/api-reference/embeddings/create)
-- Files
-  - [x] [List files](https://beta.openai.com/docs/api-reference/files/list)
-  - [x] [Upload file](https://beta.openai.com/docs/api-reference/files/upload)
-  - [x] [Delete file](https://beta.openai.com/docs/api-reference/files/delete)
-  - [x] [Retrieve file](https://beta.openai.com/docs/api-reference/files/retrieve)
-  - [x] [Retrieve file content](https://beta.openai.com/docs/api-reference/files/retrieve-content)
-- Fine-tunes
-  - [x] [Create fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/create)
-  - [x] [List fine-tunes (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/list)
-  - [x] [Retrieve fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/retrieve)
-  - [x] [Cancel fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/cancel)
-  - [x] [List fine-tune events (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/events)
-  - [x] [Delete fine-tune model (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/delete-model)
-- Moderation
-  - [x] [Create moderation](https://beta.openai.com/docs/api-reference/moderations/create)
-- ~~Engines~~ *(deprecated)*
-  - ~~[List engines](https://beta.openai.com/docs/api-reference/engines/list)~~
-  - ~~[Retrieve engine](https://beta.openai.com/docs/api-reference/engines/retrieve)~~
-  
-## Installation
+＃＃ 安装
 
-You can install the package via composer:
+您可以通过作曲家安装软件包：
 
-```bash
+```狂欢
 composer require orhanerday/open-ai
 ```
-## Quick Start
-Before you get starting, you should set OPENAI_API_KEY as ENV key, and set OpenAI key as env value with the following commands;
 
-_Powershell_
+＃＃ 快速开始
+在开始之前，您应该将 OPENAI_API_KEY 设置为 ENV 密钥，并使用以下命令将 OpenAI 密钥设置为 env 值；
+
+_电源外壳_
+
 ```powershell
 $Env:OPENAI_API_KEY = "sk-gjtv....."
 ```
 
-_Cmd_
-```cmd
-set OPENAI_API_KEY=sk-gjtv.....
+_命令_
+
+```命令
+设置 OPENAI_API_KEY=sk-gjtv.....
 ```
 
-_Linux or macOS_
-```shell
+_Linux 或 macOS_
+
+```外壳
 export OPENAI_API_KEY=sk-gjtv.....
 ```
-> Getting issues while setting up env? Please read the [article](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety).
 
-Create your `index.php` file and paste the following code part into the file.
+> 在设置 env 时遇到问题？ 请阅读[文章](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety)。
 
-```php
+创建您的 `index.php` 文件并将以下代码部分粘贴到该文件中。
+
+```PHP
 <?php
 
-require __DIR__ . '/vendor/autoload.php'; // remove this line if you use a PHP Framework.
+需要 __DIR__ 。 '/vendor/autoload.php'; // 如果您使用 PHP 框架，请删除此行。
 
-use Orhanerday\OpenAi\OpenAi;
+使用 Orhanerday\OpenAi\OpenAi；
 
 $open_ai_key = getenv('OPENAI_API_KEY');
 $open_ai = new OpenAi($open_ai_key);
 
-$complete = $open_ai->completion([
-    'model' => 'davinci',
-    'prompt' => 'Hello',
-    'temperature' => 0.9,
-    'max_tokens' => 150,
-    'frequency_penalty' => 0,
-    'presence_penalty' => 0.6,
+$complete = $open_ai->完成([
+     '模型'=>'达芬奇'，
+     '提示'=>'你好'，
+     '温度'=> 0.9，
+     'max_tokens' => 150,
+     'frequency_penalty' => 0,
+     'presence_penalty' => 0.6,
 ]);
 
-var_dump($complete);
+var_dump（$完成）；
 ```
 
-_Run the server with the following command_
+_使用以下命令运行服务器_
 
-```shell
-php -S localhost:8000 -t .
+```外壳
+php -S localhost:8000 -t 。
 ```
 
+＃＃ 用法
 
-## Usage
+### 从环境变量加载你的密钥。
 
-### Load your key from an environment variable.
+> 根据以下代码，`$open_ai` 是所有 open-ai 操作的基础变量。
 
-> According to the following code `$open_ai` is the base variable for all open-ai operations.
-
-```php
-use Orhanerday\OpenAi\OpenAi;
+```PHP
+使用 Orhanerday\OpenAi\OpenAi；
 
 $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
 ```
 
-## Completions
+## 完成
 
-Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of
-alternative tokens at each position.
+给定一个提示，模型将返回一个或多个预测的完成，也可以返回概率
+每个位置的替代令牌。
 
- ```php
-$complete = $open_ai->completion([
-    'model' => 'text-davinci-002',
-    'prompt' => 'Hello',
-    'temperature' => 0.9,
-    'max_tokens' => 150,
-    'frequency_penalty' => 0,
-    'presence_penalty' => 0.6,
+  ```PHP
+$complete = $open_ai->完成([
+     '模型' => 'text-davinci-002',
+     '提示'=>'你好'，
+     '温度'=> 0.9，
+     'max_tokens' => 150,
+     'frequency_penalty' => 0,
+     'presence_penalty' => 0.6,
 ]);
 ```
 
-### Stream Example
+### 流示例
 
-This feature might sound familiar from [ChatGPT](https://chat.openai.com/chat).
+[ChatGPT](https://chat.openai.com/chat) 中的此功能可能听起来很熟悉。
 
-Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format) as they become available, with the stream terminated by a data: [DONE] message.
+是否回流部分进度。
+如果设置，令牌将作为纯数据 [服务器发送事件](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Usin
+g_server-sent_events#event_stream_format）可用时，数据流终止：[DONE] 消息。
 
- ````php
+  ````php
 $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
 
-$opts = [
-    'prompt' => "Hello",
-    'temperature' => 0.9,
-    "max_tokens" => 150,
-    "frequency_penalty" => 0,
-    "presence_penalty" => 0.6,
-    "stream" => true,
+$选择= [
+     '提示'=>“你好”，
+     '温度'=> 0.9，
+     "max_tokens" => 150,
+     "frequency_penalty" => 0,
+     "presence_penalty" => 0.6,
+     “流” => 真，
 ];
 
-header('Content-type: text/event-stream');
-header('Cache-Control: no-cache');
+header('内容类型：文本/事件流');
+header('缓存控制：无缓存');
 
 $open_ai->completion($opts, function ($curl_info, $data) {
-    echo $data . "<br><br>";
-    echo PHP_EOL;
-    ob_flush();
-    flush();
-    return strlen($data);
+     回声 $ 数据。 “<br><br>”；
+     echo PHP_EOL;
+     ob_flush();
+     冲洗（）；
+     返回 strlen($数据);
 });
 
 ````
 
-Add this part inside `<body>` of the HTML
+将此部分添加到 HTML 的 `<body>` 中
 
- ````php
+  ````php
  
-<div id="divID">Hello</div>
-<script>
-    var eventSource = new EventSource("/");
-    var div = document.getElementById('divID');
+<div id="divID">你好</div>
+<脚本>
+     var eventSource = new EventSource("/");
+     var div = document.getElementById('divID');
 
 
-    eventSource.onmessage = function (e) {
-       if(e.data == "[DONE]")
-       {
-           div.innerHTML += "<br><br>Hello";
-       }
-        div.innerHTML += JSON.parse(e.data).choices[0].text;
-    };
-    eventSource.onerror = function (e) {
-        console.log(e);
-    };
-</script>
+     eventSource.onmessage = function (e) {
+        如果（e.data ==“[完成]”）
+        {
+            div.innerHTML += "<br><br>你好";
+        }
+         div.innerHTML += JSON.parse(e.data).choices[0].text;
+     };
+     eventSource.onerror = function (e) {
+         控制台日志（e）；
+     };
+</脚本>
 ````
 
-You should see a response like the in video;
+您应该会看到类似视频中的回复；
 
 https://user-images.githubusercontent.com/22305274/209847128-f72c9345-dd34-46f0-bbc5-daf1d7b6121f.mp4
 
+## 编辑
 
+为提供的输入、指令和参数创建新的编辑
 
-## Edits
-
-Creates a new edit for the provided input, instruction, and parameters
-
- ```php
-    $result = $open_ai->createEdit([
-        "model" => "text-davinci-edit-001",
-        "input" => "What day of the wek is it?",
-        "instruction" => "Fix the spelling mistakes",
-    ]);
+  ```PHP
+     $result = $open_ai->createEdit([
+         “模型”=>“text-davinci-edit-001”，
+         "input" => "今天是星期几？",
+         "instruction" => "修正拼写错误",
+     ]);
 ```
 
-## Images (DALL·E)
-> All DALL·E Examples available in this [repo](https://github.com/orhanerday/DALLE-Examples).
+## 图片 (DALL·E)
 
-Given a prompt, the model will return one or more generated images as urls or base64 encoded.
+> 此 [repo](https://github.com/orhanerday/DALLE-Examples) 中提供的所有 DALL·E 示例。
 
-### Create image
-Creates an image given a prompt.
- ```php
-$complete = $open_ai->image([
-    "prompt" => "A cat drinking milk",
-    "n" => 1,
-    "size" => "256x256",
-    "response_format" => "url",
+给出提示后，模型将以 url 或 base64 编码的形式返回一个或多个生成的图像。
+
+### 创建图像
+
+根据提示创建图像。
+
+  ```PHP
+$complete = $open_ai->图像([
+     "prompt" => "一只喝牛奶的猫",
+     "n" => 1,
+     "尺寸" => "256x256",
+     "response_format" => "url",
 ]);
 ```
-### Create image edit
-Creates an edited or extended image given an original image and a prompt.
-> You need HTML upload for image edit or variation? Please check [DALL·E Examples](https://github.com/orhanerday/DALLE-Examples)
+
+### 创建图像编辑
+
+在给定原始图像和提示的情况下创建编辑或扩展图像。
+> 您需要上传 HTML 来进行图片编辑或修改吗？ 请查看[DALL·E示例](https://github.com/orhanerday/DALLE-Examples)
+
 ````php
 $otter = curl_file_create(__DIR__ . './files/otter.png');
 $mask = curl_file_create(__DIR__ . './files/mask.jpg');
 
 $result = $open_ai->imageEdit([
-    "image" => $otter,
-    "mask" => $mask,
-    "prompt" => "A cute baby sea otter wearing a beret",
-    "n" => 2,
-    "size" => "1024x1024",
+     "图片" => $水獭,
+     “面具”=> $面具,
+     "prompt" => "一只戴着贝雷帽的可爱海獭宝宝",
+     "n" => 2,
+     "尺寸" => "1024x1024",
 ]);
 ````
-### Create image variation
-Creates a variation of a given image.
+
+### 创建图像变体
+
+创建给定图像的变体。
+
 ````php
 $otter = curl_file_create(__DIR__ . './files/otter.png');
 
 $result = $open_ai->createImageVariation([
-    "image" => $otter,
-    "n" => 2,
-    "size" => "256x256",
+     "图片" => $水獭,
+     "n" => 2,
+     "尺寸" => "256x256",
 ]);
 ````
 
-## Searches
-**_(Deprecated)_**
-> This endpoint is deprecated and will be removed on December 3rd, 2022
-OpenAI developed new methods with better performance. [Learn more.](https://help.openai.com/en/articles/6272952-search-transition-guide)
+## 搜索
 
-Given a query and a set of documents or labels, the model ranks each document based on its semantic similarity to the
-provided query.
+**_（已弃用）_**
+> 此端点已弃用，将于 2022 年 12 月 3 日删除
+> OpenAI 开发了性能更好的新方法。 [了解更多。](https://help.openai.com/en/articles/6272952-search-transition-guide)
 
-```php
+给定一个查询和一组文档或标签，该模型根据每个文档与
+提供查询。
+
+```PHP
 $search = $open_ai->search([
-    'engine' => 'ada',
-    'documents' => ['White House', 'hospital', 'school'],
-    'query' => 'the president',
+     '引擎' => 'ada',
+     'documents' => ['白宫', '医院', '学校'],
+     '查询'=>'总统'，
 ]);
 ```
 
-## Embeddings
+## 嵌入
 
-Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.
+获取给定输入的矢量表示，机器学习模型和算法可以轻松使用该表示。
 
-Related guide: [Embeddings](https://beta.openai.com/docs/guides/embeddings)
+相关指南：[Embeddings](https://beta.openai.com/docs/guides/embeddings)
 
-### Create embeddings
+### 创建嵌入
 
-```php
-$result = $open_ai->embeddings([
-    "model" => "text-similarity-babbage-001",
-    "input" => "The food was delicious and the waiter..."
+```PHP
+$result = $open_ai->嵌入（[
+     “模型”=>“文本相似度-babbage-001”，
+     "input" => "食物很美味，服务员..."
 ]);
 ```
 
-## Answers
+## 答案
 
-**_(Deprecated)_**
+**_（已弃用）_**
 
-> This endpoint is deprecated and will be removed on December 3rd, 2022
-We’ve developed new methods with better performance. [Learn more](https://help.openai.com/en/articles/6233728-answers-transition-guide).
+> 此端点已弃用，将于 2022 年 12 月 3 日删除
+> 我们开发了性能更好的新方法。 [了解更多](https://help.openai.com/en/articles/6233728-answers-transition-guide)。
 
-Given a question, a set of documents, and some examples, the API generates an answer to the question based on the
-information in the set of documents. This is useful for question-answering applications on sources of truth, like
-company documentation or a knowledge base.
+给定一个问题、一组文档和一些示例，API 会根据
+文件集中的信息。 这对于基于真实来源的问答应用程序很有用，例如
+公司文档或知识库。
 
-  ```php
+   ```PHP
 $answer = $open_ai->answer([
-    'documents' => ['Puppy A is happy.', 'Puppy B is sad.'],
-    'question' => 'which puppy is happy?',
-    'search_model' => 'ada',
-    'model' => 'curie',
-    'examples_context' => 'In 2017, U.S. life expectancy was 78.6 years.',
-    'examples' => [['What is human life expectancy in the United States?', '78 years.']],
-    'max_tokens' => 5,
-    'stop' => ["\n", '<|endoftext|>'],
+     'documents' => ['小狗 A 很开心。', '小狗 B 很伤心。'],
+     'question' => '哪只小狗快乐？',
+     'search_model' => 'ada',
+     '模型'=>'居里'，
+     'examples_context' => '2017 年，美国人的预期寿命为 78.6 岁。',
+     'examples' => [['美国的人类预期寿命是多少？', '78 岁。']],
+     'max_tokens' => 5,
+     '停止' => ["\n", '<|endoftext|>'],
 ]);
 ```
 
-## Classifications
+## 分类
 
-**_(Deprecated)_**
->This endpoint is deprecated and will be removed on December 3rd, 2022
-OpenAI developed new methods with better performance. [Learn more.](https://help.openai.com/en/articles/6272941-classifications-transition-guide)
+**_（已弃用）_**
+> 此端点已弃用，将于 2022 年 12 月 3 日删除
+> OpenAI
+> 开发了性能更好的新方法。 [了解更多。](https://help.openai.com/en/articles/6272941-classifications-transition-guide)
 
-Given a query and a set of labeled examples, the model will predict the most likely label for the query. Useful as a
-drop-in replacement for any ML classification or text-to-label task.
+给定一个查询和一组标记的示例，该模型将预测最可能的查询标签。 作为有用的
+任何 ML 分类或 t 的直接替换
+ext-to-label 任务。
 
- ```php
-$classification = $open_ai->classification([
-    'examples' => [
-        ['A happy moment', 'Positive'],
-        ['I am sad.', 'Negative'],
-        ['I am feeling awesome', 'Positive'],
-    ],
-    'labels' => ['Positive', 'Negative', 'Neutral'],
-    'query' => 'It is a raining day =>(',
-    'search_model' => 'ada',
-    'model' => 'curie',
+  ```PHP
+$classification = $open_ai->分类([
+     '例子'=> [
+         ['幸福的时刻', '积极的'],
+         ['我很难过', '消极'],
+         ['我感觉棒极了', '积极的'],
+     ],
+     'labels' => ['正面', '负面', '中性'],
+     '查询'=>'这是一个下雨天=>（'，
+     'search_model' => 'ada',
+     '模型'=>'居里'，
 ]);
 ```
 
-## Content Moderations
+## 内容审核
 
-Given a input text, outputs if the model classifies it as violating OpenAI's content policy.
+给定输入文本，如果模型将其分类为违反 OpenAI 的内容策略，则输出。
 
-```php
-$flags = $open_ai->moderation([
-    'input' => 'I want to kill them.'
+```PHP
+$flags = $open_ai->节制([
+     'input' => '我想杀了他们。
 ]);
 ```
-Know more about Content Moderations here: [OpenAI Moderations](https://beta.openai.com/docs/api-reference/moderations)
 
-## List engines
-**_(Deprecated)_**
+在此处了解有关内容审核的更多信息：[OpenAI 审核](https://beta.openai.com/docs/api-reference/moderations)
 
-> The Engines endpoints are deprecated.
-Please use their replacement, [Models](#list-models), instead. [Learn more](TODO?).
+## 列出引擎
 
-Lists the currently available engines, and provides basic information about each one such as the owner and availability.
+**_（已弃用）_**
 
- ```php
+> 引擎端点已弃用。
+> 请改用它们的替代品 [Models](#list-models)。 [了解更多]（待办事项？）。
+
+列出当前可用的引擎，并提供有关每个引擎的基本信息，例如所有者和可用性。
+
+  ```PHP
 $engines = $open_ai->engines();
 ```
 
-## Files
+## 文件
 
-Files are used to upload documents that can be used across features like Answers, Search, and Classifications
+文件用于上传文档，这些文档可跨答案、搜索和分类等功能使用
 
-### List files
+### 列出文件
 
-Returns a list of files that belong to the user's organization.
+返回属于用户组织的文件列表。
 
-```php
+```PHP
 $files = $open_ai->listFiles();
 ```
 
-### Upload file
+＃＃＃ 上传文件
 
-Upload a file that contains document(s) to be used across various endpoints/features. Currently, the size of all the
-files uploaded by one organization can be up to 1 GB. Please contact OpenAI if you need to increase the storage limit.
+上传包含要跨各种端点/功能使用的文档的文件。 目前，所有规模
+一个组织上传的文件最大可达 1 GB。 如果您需要增加存储限制，请联系 OpenAI。
 
-```php
+```PHP
 $c_file = curl_file_create(__DIR__ . 'files/sample_file_1.jsonl');
 $result = $open_ai->uploadFile([
-            "purpose" => "answers",
-            "file" => $c_file,
+             “目的”=>“答案”，
+             "文件" => $c_file,
 ]);
 ```
 
-### Upload file with HTML Form
+### 使用 HTML 表单上传文件
 
-```php
+```PHP
 <form action="index.php" method="post" enctype="multipart/form-data">
-    Select file to upload:
-    <input type="file" name="fileToUpload" id="fileToUpload">
-    <input type="submit" value="Upload File" name="submit">
-</form>
+     选择要上传的文件：
+     <input type="file" name="fileToUpload" id="fileToUpload">
+     <input type="submit" value="上传文件" name="submit">
+</表格>
 <?php
-require __DIR__ . '/vendor/autoload.php';
+需要 __DIR__ 。 '/vendor/autoload.php';
 
-use Orhanerday\OpenAi\OpenAi;
+使用 Orhanerday\OpenAi\OpenAi；
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    ob_clean();
-    $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
-    $tmp_file = $_FILES['fileToUpload']['tmp_name'];
-    $file_name = basename($_FILES['fileToUpload']['name']);
-    $c_file = curl_file_create($tmp_file, $_FILES['fileToUpload']['type'], $file_name);
+如果（$_SERVER['REQUEST_METHOD'] == 'POST'）{
+     ob_clean();
+     $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
+     $tmp_file = $_FILES['fileToUpload']['tmp_name'];
+     $file_name = basename($_FILES['fileToUpload']['name']);
+     $c_file = curl_file_create($tmp_file, $_FILES['fileToUpload']['type'], $file_name);
 
-    echo "[";
-    echo $open_ai->uploadFile(
-        [
-            "purpose" => "answers",
-            "file" => $c_file,
-        ]
-    );
-    echo ",";
-    echo $open_ai->listFiles();
-    echo "]";
+     回声“[”;
+     echo $open_ai->上传文件(
+         [
+             “目的”=>“答案”，
+             "文件" => $c_file,
+         ]
+     );
+     回声“，”；
+     echo $open_ai->listFiles();
+     回声“]”；
 
 }
 
 ```
 
-### Delete file
+###  删除文件
 
- ```php
+  ```PHP
 $result = $open_ai->deleteFile('file-xxxxxxxx');
 ```
 
-### Retrieve file
+### 检索文件
 
- ```php
+  ```PHP
 $file = $open_ai->retrieveFile('file-xxxxxxxx');
 ```
 
-### Retrieve file content
+### 检索文件内容
 
- ```php
+  ```PHP
 $file = $open_ai->retrieveFileContent('file-xxxxxxxx');
 ```
 
-## Fine-tunes
+##微调
 
-Manage fine-tuning jobs to tailor a model to your specific training data.
+管理微调作业以根据您的特定训练数据定制模型。
 
-### Create fine-tune
+### 创建微调
 
- ```php
+  ```PHP
 $result = $open_ai->createFineTune([
-        "training_file" => "file-U3KoAAtGsjUKSPXwEUDdtw86",
+         "training_file" => "文件-U3KoAAtGsjUKSPXwEUDdtw86",
 ]);
 ```
 
-### List fine-tune
+### 列表微调
 
- ```php
+  ```PHP
 $fine_tunes = $open_ai->listFineTunes();
 ```
 
-### Retrieve fine-tune
+### 检索微调
 
- ```php
+  ```PHP
 $fine_tune = $open_ai->retrieveFineTune('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
 ```
 
-### Cancel fine-tune
+###取消微调
 
- ```php
+  ```PHP
 $result = $open_ai->cancelFineTune('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
 ```
 
-### List fine-tune events
+### 列出微调事件
 
- ```php
+  ```PHP
 $fine_tune_events = $open_ai->listFineTuneEvents('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
 ```
 
-### Delete fine-tune model
+###删除微调模型
 
- ```php
-$result = $open_ai->deleteFineTune('curie:ft-acmeco-2021-03-03-21-44-20');
+  ```PHP
+$result = $open_ai->deleteFineTune('居里：ft-acmeco-2021-03-03-21-44-20');
 ```
 
-## Retrieve engine
-**_(Deprecated)_**
+## 检索引擎
 
-Retrieves an engine instance, providing basic information about the engine such as the owner and availability.
+**_（已弃用）_**
 
- ```php
-$engine = $open_ai->engine('davinci');
+检索引擎实例，提供有关引擎的基本信息，例如所有者和可用性。
+
+  ```PHP
+$engine = $open_ai->engine('达芬奇');
 ```
 
-## Models
-List and describe the various models available in the API. 
+＃＃ 楷模
+列出并描述 API 中可用的各种模型。
 
-### List models
+### 列出模型
 
-Lists the currently available models, and provides basic information about each one such as the owner and availability.
+列出当前可用的模型，并提供有关每个模型的基本信息，例如所有者和可用性。
 
- ```php
+  ```PHP
 $result = $open_ai->listModels();
 ```
 
+### 检索模型
 
-### Retrieve model
+检索模型实例，提供有关模型的基本信息，例如所有者和权限。
 
-Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
-
- ```php
+  ```PHP
 $result = $open_ai->retrieveModel("text-ada-001");
 ```
 
-## Printing results *i.e.* `$search`
+## 打印结果 *即* `$search`
 
- ```php
-echo $search;
+  ```PHP
+回声$搜索；
 ```
 
-## Testing
+## 测试
 
-To run all tests:
-```bash
-composer test
+运行所有测试：
+
+```狂欢
+作曲家测试
 ```
 
-To run only those tests that work for most user (exclude those that require a missing folder or that hit deprecated endpoints no longer available to most users):
-```bash
+仅运行那些对大多数用户有效的测试（排除那些需要丢失文件夹或命中大多数用户不再可用的已弃用端点的测试）：
+
+```狂欢
 ./vendor/bin/pest --group=working
 ```
 
-## Changelog
+## 变更日志
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+请参阅 [CHANGELOG](CHANGELOG.md) 以获取有关最近更改内容的更多信息。
 
-## Contributing
+## 贡献
 
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
+有关详细信息，请参阅 [CONTRIBUTING](.github/CONTRIBUTING.md)。
 
-## Security Vulnerabilities
+## 安全漏洞
 
-Please report security vulnerabilities to [orhanerday@gmail.com](mailto:orhanerday@gmail.com)
+请向 [orhanerday@gmail.com](mailto:orhanerday@gmail.com) 报告安全漏洞
 
-## Credits
+## 学分
 
 - [Orhan Erday](https://github.com/orhanerday)
-- [All Contributors](../../contributors)
-
-## License
-
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Donation
-
-<a href="https://www.buymeacoffee.com/orhane" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+- [所有贡献者](../../contributors)
 
 
-#### btc
-![image](https://user-images.githubusercontent.com/22305274/209946578-fc7db433-699c-491f-9f8b-1c962f0b9ea2.png)
+##  执照
 
-#### eth
-![image](https://user-images.githubusercontent.com/22305274/209946539-24f247d9-68a1-4f46-a18b-62790d943c99.png)
+麻省理工学院李焚香炉（麻省理工学院）。 请参阅[许可证文件](LICENSE.md) 了解更多信息。
 
-#### doge
-![image](https://user-images.githubusercontent.com/22305274/209946556-164798d0-e404-4b6c-8669-d63e78f24228.png)
+## 捐赠
+
+<a href="https://www.buymeacoffee.com/orhane" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt= "给我买杯咖啡" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+
+#### 比特币
+![图片](https://user-images.githubusercontent.com/22305274/209946578-fc7db433-699c-491f-9f8b-1c962f0b9ea2.png)
+
+#### 伦理
+
+![图片](https://user-images.githubusercontent.com/22305274/209946539-24f247d9-68a1-4f46-a18b-62790d943c99.png)
+
+#### 总督
+![图片](https://user-images.githubusercontent.com/22305274/209946556-164798d0-e404-4b6c-8669-d63e78f24228.png)
