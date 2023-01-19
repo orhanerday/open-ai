@@ -28,7 +28,7 @@
 
 | Project Name           | Required PHP Version | Downloads                                                                                                                                                                     | Decription                                                                                                                                                 | Type (Official / Community) | Support                                                                                                                                |
 |------------------------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| **orhanerday/open-ai** | **PHP 7.4+**         | **[![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai) <br>🚀nearly 35K 🚀** | **Most downloaded, forked, contributed, huge community supported, and used PHP SDK for OpenAI GPT-3 and DALL-E. It also supports chatGPT-like streaming.** | Community                   | Available, ([Community driven Discord Server](https://discord.gg/mtY2jCsQgx) or personal mail [orhan@duck.com](mailto:orhan@duck.com)) |
+| **orhanerday/open-ai** | **PHP 7.4+**         | **[![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai) <br>🚀nearly 35K 🚀** | **Most downloaded, forked, contributed, huge community supported, and used PHP SDK for OpenAI GPT-3 and DALL-E. It also supports chatGPT-like streaming.** | Community                   | Available, ([Community driven Discord Server](https://discord.gg/xpGUD528XJ) or personal mail [orhan@duck.com](mailto:orhan@duck.com)) |
 | openai-php/client      | PHP 8.1+             | <a href="https://packagist.org/packages/openai-php/client"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/openai-php/client"></a>                        | OpenAI PHP API client.                                                                                                                                     | Community                   | -                                                                                                                                      |
 
 
@@ -52,7 +52,7 @@ Fully open-source and secure community-maintained, PHP SDK for accessing the Ope
 ## Join our discord server
 ![Discord Banner 2](https://discordapp.com/api/guilds/1047074572488417330/widget.png?style=banner2)
 
-[Click here to join the Discord server](https://discord.gg/6FmA6vDUkS)
+[Click here to join the Discord server](https://discord.gg/xpGUD528XJ)
 
 ## Support this project
 
