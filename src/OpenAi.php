@@ -12,8 +12,9 @@ class OpenAi
     private array $contentTypes;
     private int $timeout = 0;
     private object $stream_method;
+    public string $customUrl = "";
 
-    public function __construct($OPENAI_API_KEY, $OPENAI_ORG = "")
+    public function __construct($OPENAI_API_KEY, $OPENAI_ORG = "", $customUrl = "")
     {
         $this->contentTypes = [
             "application/json" => "Content-Type: application/json",
@@ -28,6 +29,9 @@ class OpenAi
         if ($OPENAI_ORG != "") {
             $this->headers[] = "OpenAI-Organization: $OPENAI_ORG";
         }
+        if ($customUrl != "") {
+            $this->customUrl = $customUrl;
+        }
     }
 
     /**
@@ -37,6 +41,7 @@ class OpenAi
     public function listModels()
     {
         $url = Url::fineTuneModel();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
     }
@@ -49,6 +54,7 @@ class OpenAi
     {
         $model = "/$model";
         $url = Url::fineTuneModel() . $model;
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
     }
@@ -63,6 +69,7 @@ class OpenAi
         $engine = $opts['engine'] ?? $this->engine;
         $url = Url::completionURL($engine);
         unset($opts['engine']);
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -87,6 +94,7 @@ class OpenAi
 
         $opts['model'] = $opts['model'] ?? $this->model;
         $url = Url::completionsURL();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -98,6 +106,7 @@ class OpenAi
     public function createEdit($opts)
     {
         $url = Url::editsUrl();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -109,6 +118,7 @@ class OpenAi
     public function image($opts)
     {
         $url = Url::imageUrl() . "/generations";
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -120,6 +130,7 @@ class OpenAi
     public function imageEdit($opts)
     {
         $url = Url::imageUrl() . "/edits";
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -131,6 +142,7 @@ class OpenAi
     public function createImageVariation($opts)
     {
         $url = Url::imageUrl() . "/variations";
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -145,6 +157,7 @@ class OpenAi
         $engine = $opts['engine'] ?? $this->engine;
         $url = Url::searchURL($engine);
         unset($opts['engine']);
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -157,6 +170,7 @@ class OpenAi
     public function answer($opts)
     {
         $url = Url::answersUrl();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -169,6 +183,7 @@ class OpenAi
     public function classification($opts)
     {
         $url = Url::classificationsUrl();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -180,6 +195,7 @@ class OpenAi
     public function moderation($opts)
     {
         $url = Url::moderationUrl();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -191,6 +207,7 @@ class OpenAi
     public function uploadFile($opts)
     {
         $url = Url::filesUrl();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -201,6 +218,7 @@ class OpenAi
     public function listFiles()
     {
         $url = Url::filesUrl();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
     }
@@ -213,6 +231,7 @@ class OpenAi
     {
         $file_id = "/$file_id";
         $url = Url::filesUrl() . $file_id;
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
     }
@@ -225,6 +244,7 @@ class OpenAi
     {
         $file_id = "/$file_id/content";
         $url = Url::filesUrl() . $file_id;
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
     }
@@ -237,6 +257,7 @@ class OpenAi
     {
         $file_id = "/$file_id";
         $url = Url::filesUrl() . $file_id;
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'DELETE');
     }
@@ -248,6 +269,7 @@ class OpenAi
     public function createFineTune($opts)
     {
         $url = Url::fineTuneUrl();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -258,6 +280,7 @@ class OpenAi
     public function listFineTunes()
     {
         $url = Url::fineTuneUrl();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
     }
@@ -270,6 +293,7 @@ class OpenAi
     {
         $fine_tune_id = "/$fine_tune_id";
         $url = Url::fineTuneUrl() . $fine_tune_id;
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
     }
@@ -282,6 +306,7 @@ class OpenAi
     {
         $fine_tune_id = "/$fine_tune_id/cancel";
         $url = Url::fineTuneUrl() . $fine_tune_id;
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST');
     }
@@ -294,6 +319,7 @@ class OpenAi
     {
         $fine_tune_id = "/$fine_tune_id/events";
         $url = Url::fineTuneUrl() . $fine_tune_id;
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
     }
@@ -306,6 +332,7 @@ class OpenAi
     {
         $fine_tune_id = "/$fine_tune_id";
         $url = Url::fineTuneModel() . $fine_tune_id;
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'DELETE');
     }
@@ -318,6 +345,7 @@ class OpenAi
     public function engines()
     {
         $url = Url::enginesUrl();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
     }
@@ -330,6 +358,7 @@ class OpenAi
     public function engine($engine)
     {
         $url = Url::engineUrl($engine);
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET');
     }
@@ -341,6 +370,7 @@ class OpenAi
     public function embeddings($opts)
     {
         $url = Url::embeddings();
+        $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
     }
@@ -397,5 +427,15 @@ class OpenAi
         curl_close($curl);
 
         return $response;
+    }
+
+    /**
+     * @param string $url
+     */
+    private function baseUrl(string &$url)
+    {
+        if ($this->customUrl != "") {
+            $url = str_replace(Url::ORIGIN, $this->customUrl, $url);
+        }
     }
 }
