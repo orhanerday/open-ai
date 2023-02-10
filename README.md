@@ -177,6 +177,29 @@ use Orhanerday\OpenAi\OpenAi;
 $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
 ```
 
+## Requesting organization
+
+For users who belong to multiple organizations, you can pass a header to specify which organization is used for an API request.
+Usage from these API requests will count against the specified organization's subscription quota.
+
+````php
+$open_ai_key = getenv('OPENAI_API_KEY');
+$open_ai = new OpenAi($open_ai_key, "org-IKN2E1nI3kFYU8ywaqgFRKqi");
+````
+
+## Custom URL
+
+You can specify Origin URL with the third parameter of the OpenAI constructor method;
+
+````php
+$open_ai_key = getenv('OPENAI_API_KEY');
+$organization = ""; // the empty string means there is no organization
+$originURL = "https://ai.example.com/"; // the empty string mean the origin URL is 'https://api.openai.com'
+$open_ai = new OpenAi($open_ai_key, $organization, $originURL);
+````
+
+## Custom URL
+
 ## Completions
 
 Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of
@@ -310,7 +333,7 @@ $result = $open_ai->createImageVariation([
 ## Searches
 **_(Deprecated)_**
 > This endpoint is deprecated and will be removed on December 3rd, 2022
-OpenAI developed new methods with better performance. [Learn more.](https://help.openai.com/en/articles/6272952-search-transition-guide)
+> OpenAI developed new methods with better performance. [Learn more.](https://help.openai.com/en/articles/6272952-search-transition-guide)
 
 Given a query and a set of documents or labels, the model ranks each document based on its semantic similarity to the
 provided query.
@@ -343,7 +366,7 @@ $result = $open_ai->embeddings([
 **_(Deprecated)_**
 
 > This endpoint is deprecated and will be removed on December 3rd, 2022
-We’ve developed new methods with better performance. [Learn more](https://help.openai.com/en/articles/6233728-answers-transition-guide).
+> We’ve developed new methods with better performance. [Learn more](https://help.openai.com/en/articles/6233728-answers-transition-guide).
 
 Given a question, a set of documents, and some examples, the API generates an answer to the question based on the
 information in the set of documents. This is useful for question-answering applications on sources of truth, like
@@ -365,8 +388,8 @@ $answer = $open_ai->answer([
 ## Classifications
 
 **_(Deprecated)_**
->This endpoint is deprecated and will be removed on December 3rd, 2022
-OpenAI developed new methods with better performance. [Learn more.](https://help.openai.com/en/articles/6272941-classifications-transition-guide)
+> This endpoint is deprecated and will be removed on December 3rd, 2022
+> OpenAI developed new methods with better performance. [Learn more.](https://help.openai.com/en/articles/6272941-classifications-transition-guide)
 
 Given a query and a set of labeled examples, the model will predict the most likely label for the query. Useful as a
 drop-in replacement for any ML classification or text-to-label task.
@@ -400,7 +423,7 @@ Know more about Content Moderations here: [OpenAI Moderations](https://beta.open
 **_(Deprecated)_**
 
 > The Engines endpoints are deprecated.
-Please use their replacement, [Models](#list-models), instead. [Learn more](TODO?).
+> Please use their replacement, [Models](#list-models), instead. [Learn more](TODO?).
 
 Lists the currently available engines, and provides basic information about each one such as the owner and availability.
 
