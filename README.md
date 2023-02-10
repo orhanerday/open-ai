@@ -198,8 +198,6 @@ $originURL = "https://ai.example.com/"; // the empty string mean the origin URL 
 $open_ai = new OpenAi($open_ai_key, $organization, $originURL);
 ````
 
-## Custom URL
-
 ## Completions
 
 Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of
