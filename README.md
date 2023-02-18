@@ -218,6 +218,19 @@ $complete = $open_ai->completion([
 
 This feature might sound familiar from [ChatGPT](https://chat.openai.com/chat).
 
+<hr>
+
+#### ChatGPT Clone Project
+Video of demo:
+
+https://user-images.githubusercontent.com/22305274/219878695-c76a58c0-5081-402c-a1b5-2b1fd971735a.mp4
+
+ChatGPT clone is a simple web application powered by the OpenAI library and built with PHP. It allows users to chat with an AI language model that responds in real-time. Chat history is saved using cookies, and the project requires the use of an API key and enabled SQLite3.
+
+Url of The ChatGPT-Clone Repo https://github.com/orhanerday/ChatGPT
+
+<hr>
+
 Whether to stream back partial progress. If set, tokens will be sent as data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format) as they become available, with the stream terminated by a data: [DONE] message.
 
  ````php
