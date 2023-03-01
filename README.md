@@ -419,6 +419,26 @@ $classification = $open_ai->classification([
 ]);
 ```
 
+## Chat
+
+Given a chat conversation, the model will return a chat completion response.
+
+ ```php
+$complete = $open_ai->chat([
+    'model' => 'gpt-3.5-turbo',
+    'messages' => [
+        [
+            "role" => "user", 
+            "content": "Hello!"
+        ]
+    ],
+    'temperature' => 1.0,
+    'max_tokens' => 4096,
+    'frequency_penalty' => 0,
+    'presence_penalty' => 0,
+]);
+```
+
 ## Content Moderations
 
 Given a input text, outputs if the model classifies it as violating OpenAI's content policy.

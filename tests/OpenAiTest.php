@@ -227,3 +227,22 @@ it('should handle Create embeddings', function () use ($open_ai) {
 
     $this->assertStringContainsString('data', $result);
 })->group('working');
+
+
+it('should handle simple chat completion using the new endpoint', function () use ($open_ai) {
+    $result = $open_ai->chat([
+        'model' => 'gpt-3.5-turbo',
+        'messages' => [
+            [
+                "role" => "user",
+                "content" => "Hello!"
+            ]
+        ],
+        'temperature' => 0.9,
+        "max_tokens" => 150,
+        "frequency_penalty" => 0,
+        "presence_penalty" => 0,
+    ]);
+
+    $this->assertStringContainsString('text', $result);
+})->group('working');

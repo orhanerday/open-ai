@@ -200,6 +200,32 @@ class OpenAi
         return $this->sendRequest($url, 'POST', $opts);
     }
 
+
+    /**
+     * @param $opts
+     * @param null $stream
+     * @return bool|string
+     * @throws Exception
+     */
+    public function chat($opts, $stream = null)
+    {
+        if ($stream != null && array_key_exists('stream', $opts)) {
+            if (! $opts['stream']) {
+                throw new Exception(
+                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                );
+            }
+
+            $this->stream_method = $stream;
+        }
+
+        $opts['model'] = $opts['model'] ?? $this->model;
+        $url = Url::chatUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
     /**
      * @param $opts
      * @return bool|string
