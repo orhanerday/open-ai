@@ -429,7 +429,7 @@ $complete = $open_ai->chat([
     'messages' => [
         [
             "role" => "user", 
-            "content": "Hello!"
+            "content" => "Hello!"
         ]
     ],
     'temperature' => 1.0,
