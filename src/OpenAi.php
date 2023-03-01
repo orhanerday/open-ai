@@ -8,6 +8,7 @@ class OpenAi
 {
     private string $engine = "davinci";
     private string $model = "text-davinci-002";
+    private string $chatModel = "gpt-3.5-turbo";
     private array $headers;
     private array $contentTypes;
     private int $timeout = 0;
@@ -219,7 +220,7 @@ class OpenAi
             $this->stream_method = $stream;
         }
 
-        $opts['model'] = $opts['model'] ?? $this->model;
+        $opts['model'] = $opts['model'] ?? $this->chatModel;
         $url = Url::chatUrl();
         $this->baseUrl($url);
 
