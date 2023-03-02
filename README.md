@@ -31,11 +31,11 @@ repository useful! <br /><br /> Orhan*
 # Featured in
 
 
-[![Jetbrains Blog](https://user-images.githubusercontent.com/22305274/222429758-5848ea1c-7842-4fba-903e-2fef56478d3a.png)](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API)
+[![Jetbrains Blog](https://user-images.githubusercontent.com/22305274/222431781-86591161-ccd5-4889-bd80-97a0fd0fdf0d.png)](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API)
 
 [![Laravel News](https://user-images.githubusercontent.com/22305274/222430084-be097d59-e6bc-408d-8adb-7b751d5a05b2.png)](https://laravel-news.com/openai-sdk-for-php)
 
-[![日思录](https://user-images.githubusercontent.com/22305274/222428648-3203074f-72eb-43d9-9dab-c3ecc0c1c293.png)](http://tubring.cn/articles/59)
+[![日思录](https://user-images.githubusercontent.com/22305274/222431699-f3a8a146-e27c-4fe3-8c93-1d762559752f.png)](http://tubring.cn/articles/59)
 
 
 
