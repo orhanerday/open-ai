@@ -8,6 +8,7 @@ class OpenAi
 {
     private string $engine = "davinci";
     private string $model = "text-davinci-002";
+    private string $chatModel = "gpt-3.5-turbo";
     private array $headers;
     private array $contentTypes;
     private int $timeout = 0;
@@ -195,6 +196,32 @@ class OpenAi
     public function moderation($opts)
     {
         $url = Url::moderationUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+
+    /**
+     * @param $opts
+     * @param null $stream
+     * @return bool|string
+     * @throws Exception
+     */
+    public function chat($opts, $stream = null)
+    {
+        if ($stream != null && array_key_exists('stream', $opts)) {
+            if (! $opts['stream']) {
+                throw new Exception(
+                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                );
+            }
+
+            $this->stream_method = $stream;
+        }
+
+        $opts['model'] = $opts['model'] ?? $this->chatModel;
+        $url = Url::chatUrl();
         $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);

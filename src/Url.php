@@ -133,4 +133,13 @@ class Url
     {
         return self::OPEN_AI_URL . "/embeddings";
     }
+
+    /**
+     * @param
+     * @return string
+     */
+    public static function chatUrl(): string
+    {
+        return self::OPEN_AI_URL . "/chat/completions";
+    }
 }
