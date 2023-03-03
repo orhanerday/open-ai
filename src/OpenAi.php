@@ -202,7 +202,6 @@ class OpenAi
         return $this->sendRequest($url, 'POST', $opts);
     }
 
-
     /**
      * @param $opts
      * @param null $stream
@@ -452,7 +451,7 @@ class OpenAi
             unset($curl_info[CURLOPT_POSTFIELDS]);
         }
 
-        if ($this->proxy) {
+        if (! empty($this->proxy)) {
             $curl_info[CURLOPT_PROXY] = $this->proxy;
         }
 
