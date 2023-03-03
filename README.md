@@ -252,6 +252,14 @@ $originURL = "https://ai.example.com/"; // the empty string mean the origin URL 
 $open_ai = new OpenAi($open_ai_key, $organization, $originURL);
 ````
 
+## Use Proxy
+
+You can use some proxy servers for your requests api;
+
+````php
+$open_ai->setProxy("http://127.0.0.1:1086");
+````
+
 ## Chat (as known as ChatGPT API)
 
 Given a chat conversation, the model will return a chat completion response.
