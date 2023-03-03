@@ -4,6 +4,10 @@
 
 <br />
 
+> ### ChatGPT API is currently supported, [click here](#chat-as-known-as-chatgpt-api) for the implementation introductions.
+
+<br />
+
 *A message from creator,<br />Thank you for visiting the __@orhanerday/open-ai__ repository! We are thrilled to see that
 it has been downloaded nearly 60k times. If you find this repository helpful or useful, we encourage you to **star** it
 on GitHub. Starring a repository is a way to show your support for the project. It also helps to increase the visibility
