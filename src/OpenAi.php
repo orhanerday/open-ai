@@ -1,8 +1,8 @@
 <?php
 
-namespace Orhanerday\OpenAi;
+namespace Ze\OpenAi;
 
-use Exception;
+use Ze\OpenAi\Exceptions\OpenAiException;
 
 class OpenAi
 {
@@ -14,11 +14,12 @@ class OpenAi
     private int $timeout = 0;
     private object $stream_method;
     public string $customUrl = "";
+    private array $curlConfig = [];
 
     public function __construct($OPENAI_API_KEY, $OPENAI_ORG = "", $customUrl = "")
     {
         $this->contentTypes = [
-            "application/json" => "Content-Type: application/json",
+            "application/json"    => "Content-Type: application/json",
             "multipart/form-data" => "Content-Type: multipart/form-data",
         ];
 
@@ -33,6 +34,11 @@ class OpenAi
         if ($customUrl != "") {
             $this->customUrl = $customUrl;
         }
+    }
+
+    public function setCurlConfig(array $conf)
+    {
+        $this->curlConfig = $conf;
     }
 
     /**
@@ -79,14 +85,14 @@ class OpenAi
      * @param $opts
      * @param null $stream
      * @return bool|string
-     * @throws Exception
+     * @throws OpenAiException
      */
     public function completion($opts, $stream = null)
     {
         if ($stream != null && array_key_exists('stream', $opts)) {
             if (! $opts['stream']) {
-                throw new Exception(
-                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                throw new OpenAiException(
+                    'Please provide a stream function.'
                 );
             }
 
@@ -206,14 +212,14 @@ class OpenAi
      * @param $opts
      * @param null $stream
      * @return bool|string
-     * @throws Exception
+     * @throws OpenAiException
      */
     public function chat($opts, $stream = null)
     {
         if ($stream != null && array_key_exists('stream', $opts)) {
             if (! $opts['stream']) {
-                throw new Exception(
-                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                throw new OpenAiException(
+                    'Please provide a stream function. '
                 );
             }
 
@@ -423,21 +429,22 @@ class OpenAi
         if (array_key_exists('file', $opts) || array_key_exists('image', $opts)) {
             $this->headers[0] = $this->contentTypes["multipart/form-data"];
             $post_fields = $opts;
-        } else {
+        }
+        else {
             $this->headers[0] = $this->contentTypes["application/json"];
         }
         $curl_info = [
-            CURLOPT_URL => $url,
+            CURLOPT_URL            => $url,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => $this->timeout,
+            CURLOPT_ENCODING       => '',
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => $this->timeout,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_POSTFIELDS => $post_fields,
-            CURLOPT_HTTPHEADER => $this->headers,
-        ];
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => $method,
+            CURLOPT_POSTFIELDS     => $post_fields,
+            CURLOPT_HTTPHEADER     => $this->headers,
+        ] + $this->curlConfig;
 
         if ($opts == []) {
             unset($curl_info[CURLOPT_POSTFIELDS]);
@@ -451,6 +458,18 @@ class OpenAi
 
         curl_setopt_array($curl, $curl_info);
         $response = curl_exec($curl);
+
+        if ($response === false || curl_errno($curl)) {
+            throw new OpenAiException('Curl error: ' . curl_error($curl));
+        }
+
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        if ($httpCode != 200) {
+            $httpErrMsg = json_decode($response ?? '', true)['error']['msg'] ?? 'An error occurred';
+            throw new OpenAiException('Http error: ' . $httpErrMsg, $httpCode);
+        }
+
         curl_close($curl);
 
         return $response;

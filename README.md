@@ -2,99 +2,11 @@
 
 <br />
 
-<br />
-
-*A message from creator,<br />Thank you for visiting the __@orhanerday/open-ai__ repository! We are thrilled to see that
-it has been downloaded nearly 60k times. If you find this repository helpful or useful, we encourage you to **star** it
-on GitHub. Starring a repository is a way to show your support for the project. It also helps to increase the visibility
-of the project and to let the community know that it is valuable. Thanks again for your support and we hope you find the
-repository useful! <br /><br /> Orhan*
-
-<br />
-
-<br />
-
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
-[![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
-
-<br />
-
-<br />
-
-<img src="./openai-elephpant.svg" width="1250" height="300" alt="orhanerday-open-ai-logo">
-
-<br />
-
-<br />
-
-# Featured in
-
-
-[![Jetbrains Blog](https://user-images.githubusercontent.com/22305274/222431781-86591161-ccd5-4889-bd80-97a0fd0fdf0d.png)](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API)
-
-[![Laravel News](https://user-images.githubusercontent.com/22305274/222430084-be097d59-e6bc-408d-8adb-7b751d5a05b2.png)](https://laravel-news.com/openai-sdk-for-php)
-
-[![日思录](https://user-images.githubusercontent.com/22305274/222431699-f3a8a146-e27c-4fe3-8c93-1d762559752f.png)](http://tubring.cn/articles/59)
-
-
-
-# Comparison With Other Packages
-
-| Project Name           | Required PHP Version | Downloads                                                                                                                                                                     | Description                                                                                                                                                | Type (Official / Community) | Support                                                                                                                                |
-|------------------------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| **orhanerday/open-ai** | **PHP 7.4+**         | **[![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai) <br>🚀nearly 60K 🚀** | **Most downloaded, forked, contributed, huge community supported, and used PHP SDK for OpenAI GPT-3 and DALL-E. It also supports chatGPT-like streaming.** | Community                   | Available, ([Community driven Discord Server](https://discord.gg/xpGUD528XJ) or personal mail [orhan@duck.com](mailto:orhan@duck.com)) |
-| openai-php/client      | PHP 8.1+             | <a href="https://packagist.org/packages/openai-php/client"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/openai-php/client"></a>                        | OpenAI PHP API client.                                                                                                                                     | Community                   | -                                                                                                                                      |
-
-<br />
-
-## About this package
-
-Fully open-source and secure community-maintained, PHP SDK for accessing the OpenAI GPT-3 API.
-
-> #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
-> #### Free support is available. [Join our discord server](#join-our-discord-server)
-> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples). Also you can get help from our discord channel that called [#api-support](https://discord.gg/R9CpVUdqQR)
-
-## News
-
-- orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
-- orhanerday/open-ai featured
-  on [PHPStorm blog post](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API),
-  thanks JetBrains!
+> Fork from [orhanerday/open-ai](https://github.com/orhanerday/open-ai)    
+> Add http exception catching
+> Add curl prox support
 
 > Requires PHP 7.4+
-
-## Join our discord server
-
-![Discord Banner 2](https://discordapp.com/api/guilds/1047074572488417330/widget.png?style=banner2)
-
-[Click here to join the Discord server](https://discord.gg/xpGUD528XJ)
-
-## Support this project
-
-As you may know, OpenAI PHP is an open-source project wrapping tool for OpenAI. We rely on the support of our community
-to continue developing and maintaining the project, and one way that you can help is by making a donation.
-
-Donations allow us to cover expenses such as hosting costs(for testing), development tools, and other resources that are
-necessary to keep the project running smoothly. Every contribution, no matter how small, helps us to continue improving
-OpenAI PHP for everyone.
-
-If you have benefited from using OpenAI PHP and would like to support its continued development, we would greatly
-appreciate a donation of any amount. You can make a donation through;
-
-* [Buy me a coffee](https://www.buymeacoffee.com/orhane)
-* [Patreon](https://patreon.com/orhann)
-* [Click here for the Coinbase QR](#btc) **Bitcoin** > 34w2DftWGkDqDbYMixkmdWWMLmaP9uTRz7
-* [Click here for the Coinbase QR](#doge) **Dogecoin** > DHiqcZox9M8kYDn7BkesnN6Z2kJ7dYG9Lc
-* [Click here for the Coinbase QR](#eth) **Ethereum** > 0x135E2D5d7AC40c6850f844BA589D68e91a268Ceb
-
-Thank you for considering a donation to Orhanerday/OpenAI PHP SDK. Your support is greatly appreciated and helps to
-ensure that the project can continue to grow and improve.
-
-*Sincerely,*
-
-**Orhan Erday** / Creator.
 
 # Endpoint Support
 
@@ -137,7 +49,7 @@ ensure that the project can continue to grow and improve.
 You can install the package via composer:
 
 ```bash
-composer require orhanerday/open-ai
+composer require ze/openai-php
 ```
 
 ## Quick Start
@@ -174,7 +86,7 @@ Create your `index.php` file and paste the following code part into the file.
 
 require __DIR__ . '/vendor/autoload.php'; // remove this line if you use a PHP Framework.
 
-use Orhanerday\OpenAi\OpenAi;
+use Ze\OpenAi\OpenAi;
 
 $open_ai_key = getenv('OPENAI_API_KEY');
 $open_ai = new OpenAi($open_ai_key);
@@ -221,7 +133,7 @@ php -S localhost:8000 -t .
 > According to the following code `$open_ai` is the base variable for all open-ai operations.
 
 ```php
-use Orhanerday\OpenAi\OpenAi;
+use Ze\OpenAi\OpenAi;
 
 $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
 ```
@@ -302,19 +214,6 @@ This feature might sound familiar from [ChatGPT](https://chat.openai.com/chat).
 
 <hr>
 
-#### ChatGPT Clone Project
-
-Video of demo:
-
-https://user-images.githubusercontent.com/22305274/219878695-c76a58c0-5081-402c-a1b5-2b1fd971735a.mp4
-
-ChatGPT clone is a simple web application powered by the OpenAI library and built with PHP. It allows users to chat with
-an AI language model that responds in real-time. Chat history is saved using cookies, and the project requires the use
-of an API key and enabled SQLite3.
-
-Url of The ChatGPT-Clone Repo https://github.com/orhanerday/ChatGPT
-
-<hr>
 
 Whether to stream back partial progress. If set, tokens will be sent as
 data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format)
@@ -579,7 +478,7 @@ $result = $open_ai->uploadFile([
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-use Orhanerday\OpenAi\OpenAi;
+use Ze\OpenAi\OpenAi;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ob_clean();
@@ -714,39 +613,7 @@ endpoints no longer available to most users):
 ./vendor/bin/pest --group=working
 ```
 
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please report security vulnerabilities to [orhanerday@gmail.com](mailto:orhanerday@gmail.com)
-
-## Credits
-
-- [Orhan Erday](https://github.com/orhanerday)
-- [All Contributors](../../contributors)
-
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-## Donation
-
-<a href="https://www.buymeacoffee.com/orhane" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-#### btc
-
-![image](https://user-images.githubusercontent.com/22305274/209946578-fc7db433-699c-491f-9f8b-1c962f0b9ea2.png)
-
-#### eth
-
-![image](https://user-images.githubusercontent.com/22305274/209946539-24f247d9-68a1-4f46-a18b-62790d943c99.png)
-
-#### doge
-
-![image](https://user-images.githubusercontent.com/22305274/209946556-164798d0-e404-4b6c-8669-d63e78f24228.png)

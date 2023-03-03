@@ -1,11 +1,11 @@
 {
-    "name": "orhanerday/open-ai",
+    "name": "ze/openai-php",
     "description": "OpenAI GPT-3 Api Client in PHP",
     "keywords": [
         "orhanerday",
         "open-ai"
     ],
-    "homepage": "https://github.com/orhanerday/open-ai",
+    "homepage": "https://github.com/zyz954489346/opanai-php",
     "license": "MIT",
     "authors": [
         {
@@ -26,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Orhanerday\\OpenAi\\": "src"
+            "Ze\\OpenAi\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Orhanerday\\OpenAi\\Tests\\": "tests"
+            "Ze\\OpenAi\\Tests\\": "tests"
         }
     },
     "scripts": {
