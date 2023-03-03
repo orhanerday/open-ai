@@ -415,6 +415,9 @@ class OpenAi
      */
     public function setProxy(string $proxy)
     {
+        if ($proxy && strpos($proxy, '://') === false) {
+            $proxy = 'http://' . $proxy;
+        }
         $this->proxy = $proxy;
     }
 
