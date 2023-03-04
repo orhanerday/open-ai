@@ -117,6 +117,9 @@ ensure that the project can continue to grow and improve.
     - [x] [Create image variation](https://beta.openai.com/docs/api-reference/images/create-variation)
 - Embeddings
     - [x] [Create embeddings](https://beta.openai.com/docs/api-reference/embeddings/create)
+- Audio
+    - [x] [Create transcription](https://platform.openai.com/docs/api-reference/audio/create)
+    - [x] [Create translation](https://platform.openai.com/docs/api-reference/audio/create)
 - Files
     - [x] [List files](https://beta.openai.com/docs/api-reference/files/list)
     - [x] [Upload file](https://beta.openai.com/docs/api-reference/files/upload)
@@ -570,7 +573,7 @@ $engines = $open_ai->engines();
 
 ## Audio
 
-## Create Transcription
+### Create Transcription
 
 Transcribes audio into the input language.
 
@@ -590,7 +593,7 @@ $result = $open_ai->transcribe([
 }
 ```
 
-## Create Translation
+### Create Translation
 
 Translates audio into English.
 
