@@ -14,6 +14,7 @@ class OpenAi
     private int $timeout = 0;
     private object $stream_method;
     public string $customUrl = "";
+    public string $proxy = "";
 
     public function __construct($OPENAI_API_KEY, $OPENAI_ORG = "", $customUrl = "")
     {
@@ -200,7 +201,6 @@ class OpenAi
 
         return $this->sendRequest($url, 'POST', $opts);
     }
-
 
     /**
      * @param $opts
@@ -411,6 +411,17 @@ class OpenAi
     }
 
     /**
+     * @param string $proxy
+     */
+    public function setProxy(string $proxy)
+    {
+        if ($proxy && strpos($proxy, '://') === false) {
+            $proxy = 'http://' . $proxy;
+        }
+        $this->proxy = $proxy;
+    }
+
+    /**
      * @param string $url
      * @param string $method
      * @param array $opts
@@ -441,6 +452,10 @@ class OpenAi
 
         if ($opts == []) {
             unset($curl_info[CURLOPT_POSTFIELDS]);
+        }
+
+        if (! empty($this->proxy)) {
+            $curl_info[CURLOPT_PROXY] = $this->proxy;
         }
 
         if (array_key_exists('stream', $opts) && $opts['stream']) {
