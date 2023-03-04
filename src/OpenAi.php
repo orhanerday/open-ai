@@ -513,11 +513,12 @@ class OpenAi
         $curl = curl_init();
 
         curl_setopt_array($curl, $curl_info);
-        $response = curl_exec($curl);
-        curl_close($curl);
+        $response = curl_exec($curl);        
 
         $info = curl_getinfo($curl);
         $this->curlInfo = $info;
+        
+        curl_close($curl);
 
         return $response;
     }
