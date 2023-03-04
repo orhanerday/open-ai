@@ -13,10 +13,11 @@ class OpenAi
     private array $contentTypes;
     private int $timeout = 0;
     private object $stream_method;
-    public string $customUrl = "";
-    public string $proxy = "";
+    private string $customUrl = "";
+    private string $proxy = "";
+    private array $curlInfo = [];
 
-    public function __construct($OPENAI_API_KEY, $OPENAI_ORG = "", $customUrl = "")
+    public function __construct($OPENAI_API_KEY)
     {
         $this->contentTypes = [
             "application/json" => "Content-Type: application/json",
@@ -27,13 +28,16 @@ class OpenAi
             $this->contentTypes["application/json"],
             "Authorization: Bearer $OPENAI_API_KEY",
         ];
+    }
 
-        if ($OPENAI_ORG != "") {
-            $this->headers[] = "OpenAI-Organization: $OPENAI_ORG";
-        }
-        if ($customUrl != "") {
-            $this->customUrl = $customUrl;
-        }
+    /**
+     *
+     * @return array
+     * Remove this method from your code before deploying
+     */
+    public function getCURLInfo()
+    {
+        return $this->curlInfo;
     }
 
     /**
@@ -422,6 +426,26 @@ class OpenAi
     }
 
     /**
+     * @param string $customUrl
+     */
+    public function setCustomURL(string $customUrl)
+    {
+        if ($customUrl != "") {
+            $this->customUrl = $customUrl;
+        }
+    }
+
+    /**
+     * @param string $org
+     */
+    public function setORG(string $org)
+    {
+        if ($org != "") {
+            $this->headers[] = "OpenAI-Organization: $org";
+        }
+    }
+
+    /**
      * @param string $url
      * @param string $method
      * @param array $opts
@@ -467,6 +491,9 @@ class OpenAi
         curl_setopt_array($curl, $curl_info);
         $response = curl_exec($curl);
         curl_close($curl);
+
+        $info = curl_getinfo($curl);
+        $this->curlInfo = $info;
 
         return $response;
     }

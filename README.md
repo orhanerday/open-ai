@@ -238,18 +238,18 @@ Usage from these API requests will count against the specified organization's su
 
 ````php
 $open_ai_key = getenv('OPENAI_API_KEY');
-$open_ai = new OpenAi($open_ai_key, "org-IKN2E1nI3kFYU8ywaqgFRKqi");
+$open_ai->setORG("org-IKN2E1nI3kFYU8ywaqgFRKqi");
+$open_ai = new OpenAi($open_ai_key);
 ````
 
 ## Custom URL
 
-You can specify Origin URL with the third parameter of the OpenAI constructor method;
+You can specify Origin URL with `setCustomURL()` method;
 
 ````php
 $open_ai_key = getenv('OPENAI_API_KEY');
-$organization = ""; // the empty string means there is no organization
-$originURL = "https://ai.example.com/"; // the empty string mean the origin URL is 'https://api.openai.com'
-$open_ai = new OpenAi($open_ai_key, $organization, $originURL);
+$open_ai->setCustomURL("https://ai.example.com/");
+$open_ai = new OpenAi($open_ai_key,$originURL);
 ````
 
 ## Use Proxy
@@ -258,6 +258,17 @@ You can use some proxy servers for your requests api;
 
 ````php
 $open_ai->setProxy("http://127.0.0.1:1086");
+````
+
+## Get cURL request info
+
+> ### !!! WARNING:Your API key will expose if you add this method to your code, therefore remove the method before deployment. Be careful !
+You can get cURL info after the request. 
+
+````php
+$open_ai = new OpenAi($open_ai_key);
+echo $open_ai->listModels(); // you should execute the request FIRST!
+var_dump($open_ai->getCURLInfo()); // You can call the request
 ````
 
 ## Chat (as known as ChatGPT API)
