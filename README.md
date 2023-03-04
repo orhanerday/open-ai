@@ -103,7 +103,7 @@ ensure that the project can continue to grow and improve.
 # Endpoint Support
 
 - Chat
-  - [x] [ChatGPT API](https://platform.openai.com/docs/api-reference/chat)
+  - [x] [ChatGPT API](#chat-as-known-as-chatgpt-api)
 - Models
     - [x] [List models](https://beta.openai.com/docs/api-reference/models/list)
     - [x] [Retrieve model](https://beta.openai.com/docs/api-reference/models/retrieve)
