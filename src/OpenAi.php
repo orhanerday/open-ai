@@ -235,6 +235,30 @@ class OpenAi
      * @param $opts
      * @return bool|string
      */
+    public function transcribe($opts)
+    {
+        $url = Url::transcriptionsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function translate($opts)
+    {
+        $url = Url::translationsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
     public function uploadFile($opts)
     {
         $url = Url::filesUrl();

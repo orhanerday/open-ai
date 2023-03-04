@@ -568,6 +568,72 @@ Lists the currently available engines, and provides basic information about each
 $engines = $open_ai->engines();
 ```
 
+## Audio
+
+## Create Transcription
+
+Transcribes audio into the input language.
+
+```php
+$c_file = curl_file_create(__DIR__ . '/files/en-marvel-endgame.m4a');
+
+$result = $open_ai->transcribe([
+    "model" => "whisper-1",
+    "file" => $c_file,
+]);
+```
+#### Response
+
+```json
+{
+  "text": "I'm going to use the stones again. Hey, we'd be going in short-handed, you know. Look, he's still got the stones, so... So let's get them. Use them to bring everyone back. Just like that? Yeah, just like that. Even if there's a small chance that we can undo this, I mean, we owe it to everyone who's not in this room to try. If we do this, how do we know it's going to end any differently than it did before? Because before you didn't have me. Hey, little girl, everybody in this room is about that superhero life. And if you don't mind my asking, where the hell have you been all this time? There are a lot of other planets in the universe. But unfortunately, they didn't have you guys. I like this one. Let's go get this son of a bitch."
+}
+```
+
+## Create Translation
+
+Translates audio into English.
+
+_I use Turkish voice for translation thanks to famous science YouTuber [Barış Özcan](https://youtu.be/r2dQgdktUJg?t=90)_
+
+```php
+$c_file = curl_file_create(__DIR__ . '/files/tr-baris-ozcan-youtuber.m4a');
+
+$result = $open_ai->translate([
+    "model" => "whisper-1",
+    "file" => $c_file,
+]);
+```
+#### Response 
+
+```json
+{
+  "text": "GPT-3. Last month, the biggest leap in the world of artificial intelligence in recent years happened silently. Maybe the biggest leap of all time. GPT-3's beta version was released by OpenAI. When you hear such a sentence, you may think, what kind of leap is this? But be sure, this is the most advanced language model with the most advanced language model with the most advanced language ability. It can answer these artificial intelligence questions, it can translate and even write poetry. Those who have gained access to the API or API of GPT-3 have already started to make very interesting experiments. Let's look at a few examples together. Let's start with an example of aphorism. This site produces beautiful words that you can tweet. Start to actually do things with your words instead of just thinking about them."
+}
+```
+
+ #### Need HTML upload for audio? Check [this](#upload-file-with-html-form) section and change api references. Example :
+
+```php
+...
+    echo $open_ai->translate(
+        [
+            "purpose" => "answers",
+            "file" => $c_file,
+        ]
+    );
+...
+// OR
+...
+    echo $open_ai->transcribe(
+        [
+            "purpose" => "answers",
+            "file" => $c_file,
+        ]
+    );
+...
+```
+
 ## Files
 
 Files are used to upload documents that can be used across features like Answers, Search, and Classifications
