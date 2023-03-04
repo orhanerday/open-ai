@@ -284,6 +284,8 @@ $complete = $open_ai->chat([
 ]);
 ```
 
+> ### Related: [ChatGPT Clone Project](#chatgpt-clone-project)
+
 ## Completions
 
 Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of
