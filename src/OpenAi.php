@@ -466,7 +466,7 @@ class OpenAi
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         if ($httpCode != 200) {
-            $httpErrMsg = json_decode($response ?? '', true)['error']['msg'] ?? 'An error occurred';
+            $httpErrMsg = json_decode($response ?? '', true)['error']['msg'] ?? "An error occurred[{$httpCode}]";
             throw new OpenAiException('Http error: ' . $httpErrMsg, $httpCode);
         }
 
