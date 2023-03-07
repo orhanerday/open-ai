@@ -19,7 +19,7 @@ class OpenAi
     public function __construct($OPENAI_API_KEY, $OPENAI_ORG = "", $customUrl = "")
     {
         $this->contentTypes = [
-            "application/json"    => "Content-Type: application/json",
+            "application/json" => "Content-Type: application/json",
             "multipart/form-data" => "Content-Type: multipart/form-data",
         ];
 
@@ -207,7 +207,6 @@ class OpenAi
         return $this->sendRequest($url, 'POST', $opts);
     }
 
-
     /**
      * @param $opts
      * @param null $stream
@@ -228,6 +227,30 @@ class OpenAi
 
         $opts['model'] = $opts['model'] ?? $this->chatModel;
         $url = Url::chatUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function transcribe($opts)
+    {
+        $url = Url::transcriptionsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function translate($opts)
+    {
+        $url = Url::translationsUrl();
         $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
@@ -429,21 +452,20 @@ class OpenAi
         if (array_key_exists('file', $opts) || array_key_exists('image', $opts)) {
             $this->headers[0] = $this->contentTypes["multipart/form-data"];
             $post_fields = $opts;
-        }
-        else {
+        } else {
             $this->headers[0] = $this->contentTypes["application/json"];
         }
         $curl_info = [
-            CURLOPT_URL            => $url,
+            CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING       => '',
-            CURLOPT_MAXREDIRS      => 10,
-            CURLOPT_TIMEOUT        => $this->timeout,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => $this->timeout,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST  => $method,
-            CURLOPT_POSTFIELDS     => $post_fields,
-            CURLOPT_HTTPHEADER     => $this->headers,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => $method,
+            CURLOPT_POSTFIELDS => $post_fields,
+            CURLOPT_HTTPHEADER => $this->headers,
         ] + $this->curlConfig;
 
         if ($opts == []) {
@@ -467,6 +489,7 @@ class OpenAi
 
         if ($httpCode != 200) {
             $httpErrMsg = json_decode($response ?? '', true)['error']['msg'] ?? "An error occurred[{$httpCode}]";
+
             throw new OpenAiException('Http error: ' . $httpErrMsg, $httpCode);
         }
 
