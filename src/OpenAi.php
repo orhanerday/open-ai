@@ -481,8 +481,9 @@ class OpenAi
     public function setHeader(array $header)
     {
         if ($header) {
-            [$key, $value] = $header;
-            $this->headers[$key] = $value;
+            foreach ($header as $key => $value) {
+                $this->headers[$key] = $value;
+            }
         }
     }
 
