@@ -244,13 +244,13 @@ $open_ai->setORG("org-IKN2E1nI3kFYU8ywaqgFRKqi");
 $open_ai = new OpenAi($open_ai_key);
 ````
 
-## Custom URL
+## Base URL
 
-You can specify Origin URL with `setCustomURL()` method;
+You can specify Origin URL with `setBaseURL()` method;
 
 ````php
 $open_ai_key = getenv('OPENAI_API_KEY');
-$open_ai->setCustomURL("https://ai.example.com/");
+$open_ai->setBaseURL("https://ai.example.com/");
 $open_ai = new OpenAi($open_ai_key,$originURL);
 ````
 
@@ -261,6 +261,12 @@ You can use some proxy servers for your requests api;
 ````php
 $open_ai->setProxy("http://127.0.0.1:1086");
 ````
+
+## Set header
+
+ ```php
+$open_ai->setHeader(["Connection"=>"keep-alive"]);
+```
 
 ## Get cURL request info
 
