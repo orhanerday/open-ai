@@ -240,8 +240,8 @@ Usage from these API requests will count against the specified organization's su
 
 ````php
 $open_ai_key = getenv('OPENAI_API_KEY');
-$open_ai->setORG("org-IKN2E1nI3kFYU8ywaqgFRKqi");
 $open_ai = new OpenAi($open_ai_key);
+$open_ai->setORG("org-IKN2E1nI3kFYU8ywaqgFRKqi");
 ````
 
 ## Base URL
@@ -250,8 +250,8 @@ You can specify Origin URL with `setBaseURL()` method;
 
 ````php
 $open_ai_key = getenv('OPENAI_API_KEY');
-$open_ai->setBaseURL("https://ai.example.com/");
 $open_ai = new OpenAi($open_ai_key,$originURL);
+$open_ai->setBaseURL("https://ai.example.com/");
 ````
 
 ## Use Proxy
