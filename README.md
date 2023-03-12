@@ -146,7 +146,7 @@ You can install the package via composer:
 composer require orhanerday/open-ai
 ```
 
-## Quick Start
+## Quick Start ⚡
 
 Before you get starting, you should set OPENAI_API_KEY as ENV key, and set OpenAI key as env value with the following
 commands;
