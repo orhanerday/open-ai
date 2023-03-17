@@ -1,4 +1,4 @@
-# OpenAI GPT-3 Api Client in PHP
+# OpenAI API Client in PHP
 
 <br />
 
