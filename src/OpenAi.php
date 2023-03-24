@@ -13,6 +13,7 @@ class OpenAi
     private int $timeout = 0;
     private object $stream_method;
     public string $customUrl = "";
+    private array $curl_info = [];
 
     public function __construct($OPENAI_API_KEY, $OPENAI_ORG = "", $customUrl = "")
     {
@@ -34,6 +35,13 @@ class OpenAi
         }
     }
 
+    /**
+     * @param array $infos [CURLOPT_SSL_VERIFYPEER => false]
+     */
+    public function setCurlInfos(array $infos)
+    {
+        $this->curl_info = $infos;
+    }
     /**
      *
      * @return bool|string
@@ -411,6 +419,9 @@ class OpenAi
             CURLOPT_POSTFIELDS => $post_fields,
             CURLOPT_HTTPHEADER => $this->headers,
         ];
+
+        if (!empty($this->curl_info))
+            $curl_info = array_merge($curl_info, $this->curl_info);
 
         if ($opts == []) {
             unset($curl_info[CURLOPT_POSTFIELDS]);
