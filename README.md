@@ -113,7 +113,7 @@ Thank you for considering a donation to Orhanerday/OpenAI PHP SDK. Your support 
 You can install the package via composer:
 
 ```bash
-composer require orhanerday/open-ai
+composer require glock-fei/open-ai
 ```
 ## Quick Start
 Before you get starting, you should set OPENAI_API_KEY as ENV key, and set OpenAI key as env value with the following commands;
