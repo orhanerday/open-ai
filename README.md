@@ -186,7 +186,7 @@ use Orhanerday\OpenAi\OpenAi;
 $open_ai_key = getenv('OPENAI_API_KEY');
 $open_ai = new OpenAi($open_ai_key);
 
-$complete = $open_ai->chat([
+$chat = $open_ai->chat([
    'model' => 'gpt-3.5-turbo',
    'messages' => [
        [
@@ -212,7 +212,15 @@ $complete = $open_ai->chat([
    'presence_penalty' => 0,
 ]);
 
-var_dump($complete);
+
+var_dump($chat);
+echo "<br>";
+echo "<br>";
+echo "<br>";
+// decode response
+$d = json_decode($chat);
+// Get Content
+echo($d->choices[0]->message->content);
 ```
 
 _Run the server with the following command_
@@ -310,6 +318,42 @@ $complete = $open_ai->chat([
     'frequency_penalty' => 0,
     'presence_penalty' => 0,
 ]);
+```
+
+## Accessing the Element 
+
+```php
+<?php
+// Dummy Response For Chat API 
+$j = '
+{
+   "id":"chatcmpl-*****",
+   "object":"chat.completion",
+   "created":1679748856,
+   "model":"gpt-3.5-turbo-0301",
+   "usage":{
+      "prompt_tokens":9,
+      "completion_tokens":10,
+      "total_tokens":19
+   },
+   "choices":[
+      {
+         "message":{
+            "role":"assistant",
+            "content":"This is a test of the AI language model."
+         },
+         "finish_reason":"length",
+         "index":0
+      }
+   ]
+}
+';
+
+// decode response
+$d = json_decode($j);
+
+// Get Content
+echo($d->choices[0]->message->content);
 ```
 
 > ### Related: [ChatGPT Clone Project](#chatgpt-clone-project)
