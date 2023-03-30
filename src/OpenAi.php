@@ -16,6 +16,7 @@ class OpenAi
     private string $customUrl = "";
     private string $proxy = "";
     private array $curlInfo = [];
+    private array $curlOptions = [];
 
     public function __construct($OPENAI_API_KEY)
     {
@@ -429,6 +430,22 @@ class OpenAi
     }
 
     /**
+     * Convenient method for customizing CURL.
+     */
+    public function setCurlOptions(array $options)
+    {
+        $this->curlOptions = $options;
+    }
+
+    /**
+     * Allows a single CURL option to be set.
+     */
+    public function setCurlOption(string $key, mixed $value)
+    {
+        $this->curlOptions[$key] = $value;
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)
@@ -540,7 +557,7 @@ class OpenAi
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, $curl_info);
+        curl_setopt_array($curl, $this->curlOptions + $curl_info);
         $response = curl_exec($curl);
 
         $info           = curl_getinfo($curl);
