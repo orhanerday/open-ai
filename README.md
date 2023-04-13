@@ -8,6 +8,13 @@
 
 > Requires PHP 7.4+
 
+# Update Record
+
+| date | features |
+| ---- | ---- |
+| 2023-04-12 | - add support to Azure OpenAI API |
+
+
 # Endpoint Support
 
 - Chat
