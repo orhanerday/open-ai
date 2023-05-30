@@ -16,6 +16,8 @@ class OpenAi
     private string $customUrl = "";
     private string $proxy = "";
     private array $curlInfo = [];
+    private string $error = '';
+    private int $errno = 0;
 
     public function __construct($OPENAI_API_KEY)
     {
@@ -543,12 +545,30 @@ class OpenAi
         curl_setopt_array($curl, $curl_info);
         $response = curl_exec($curl);
 
+        if (empty($response)) {
+            $this->error = curl_error($curl);
+            $this->errno = curl_errno($curl);
+        } else {
+            $this->error = '';
+            $this->errno = 0;
+        }
+
         $info           = curl_getinfo($curl);
         $this->curlInfo = $info;
 
         curl_close($curl);
 
         return $response;
+    }
+
+    public function getError(): string
+    {
+        return $this->error;
+    }
+
+    public function getErrno(): int
+    {
+        return $this->errno;
     }
 
     /**
