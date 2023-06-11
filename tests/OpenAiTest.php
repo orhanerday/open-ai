@@ -3,7 +3,7 @@
 
 use Orhanerday\OpenAi\OpenAi;
 
-$open_ai = new OpenAi('OPEN-AI-KEY');
+$open_ai = new OpenAi(getenv('OPENAI_API_KEY'));
 
 it('should handle simple completion using the new endpoint', function () use ($open_ai) {
     $result = $open_ai->completion([
@@ -15,6 +15,17 @@ it('should handle simple completion using the new endpoint', function () use ($o
     ]);
 
     $this->assertStringContainsString('text', $result);
+})->group('working');
+
+it('should throw error when set the stream to true and does not set the stream method', function () use ($open_ai) {
+    expect(fn () => $open_ai->completion([
+        'prompt' => "Hello",
+        'temperature' => 0.9,
+        "max_tokens" => 150,
+        "frequency_penalty" => 0,
+        "presence_penalty" => 0.6,
+        "stream" => true
+    ]))->toThrow(Exception::class, 'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.');
 })->group('working');
 
 it('should handle simple completion using the deprecated endpoint', function () use ($open_ai) {
@@ -107,22 +118,19 @@ it('should handle cancel the fine-tune', function () use ($open_ai) {
     $result = $open_ai->cancelFineTune('file-XGinujblHPwGLSztz8cPS8XY');
 
     $this->assertStringContainsString('training_files', $result);
-})->group('requires-missing-file');
-;
+})->group('requires-missing-file');;
 
 it('should handle list fine-tune event', function () use ($open_ai) {
     $result = $open_ai->listFineTuneEvents('file-XGinujblHPwGLSztz8cPS8XY');
 
     $this->assertStringContainsString('data', $result);
-})->group('requires-missing-file');
-;
+})->group('requires-missing-file');;
 
 it('should handle delete fine-tune model', function () use ($open_ai) {
     $result = $open_ai->deleteFineTune('curie:ft-acmeco-2021-03-03-21-44-20');
 
     $this->assertStringContainsString('deleted', $result);
-})->group('requires-missing-file');
-;
+})->group('requires-missing-file');;
 
 it('should handle answers', function () use ($open_ai) {
     $result = $open_ai->answer([
