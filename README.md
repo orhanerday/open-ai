@@ -897,3 +897,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 #### doge
 
 ![image](https://user-images.githubusercontent.com/22305274/209946556-164798d0-e404-4b6c-8669-d63e78f24228.png)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=orhanerday/open-ai&type=Date)](https://star-history.com/#orhanerday/open-ai&Date)
