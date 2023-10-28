@@ -548,6 +548,8 @@ class OpenAi
 
         curl_close($curl);
 
+        if (!$response) throw new Exception(curl_error($curl));
+        
         return $response;
     }
 
