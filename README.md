@@ -368,7 +368,7 @@ alternative tokens at each position.
 
  ```php
 $complete = $open_ai->completion([
-    'model' => 'text-davinci-002',
+    'model' => 'gpt-3.5-turbo-instruct',
     'prompt' => 'Hello',
     'temperature' => 0.9,
     'max_tokens' => 150,
