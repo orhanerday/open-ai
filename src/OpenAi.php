@@ -482,7 +482,7 @@ class OpenAi
     {
         if ($header) {
             foreach ($header as $key => $value) {
-                $this->headers[$key] = $value;
+                $this->headers[] = $key . ': ' . $value;
             }
         }
     }
