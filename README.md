@@ -776,6 +776,7 @@ Manage fine-tuning jobs to tailor a model to your specific training data.
 
  ```php
 $result = $open_ai->createFineTune([
+        "model" => "gpt-3.5-turbo-1106",
         "training_file" => "file-U3KoAAtGsjUKSPXwEUDdtw86",
 ]);
 ```
