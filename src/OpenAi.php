@@ -17,6 +17,8 @@ class OpenAi
     private string $proxy = "";
     private array $curlInfo = [];
     private array $responseHeaders;
+    private array $rateLimitInfo;
+    private int $processingMs;
 
     public function __construct($OPENAI_API_KEY)
     {
@@ -489,9 +491,19 @@ class OpenAi
     }
 
     /**
+     * @param  string  $org
+     */
+    public function setORG(string $org)
+    {
+        if ($org != "") {
+            $this->headers[] = "OpenAI-Organization: $org";
+        }
+    }
+
+    /**
      * @return array
      */
-    public function getResponseHeaders(): array
+    private function getResponseHeaders(): array
     {
         return $this->responseHeaders;
     }
@@ -506,12 +518,71 @@ class OpenAi
     }
 
     /**
-     * @param  string  $org
+     * @return array
      */
-    public function setORG(string $org)
+    public function getRateLimitInfo(): array
     {
-        if ($org != "") {
-            $this->headers[] = "OpenAI-Organization: $org";
+        return $this->rateLimitInfo;
+    }
+    
+    /**
+     * @param  array  $rateLimitInfo
+     * @return void
+     */
+    private function setRateLimitInfo(array $rateLimitInfo)
+    {
+        $this->rateLimitInfo = $rateLimitInfo;
+    }
+
+    /**
+     * @return void
+     */
+    private function hydrateRateLimitInfo(): void
+    {
+        $responseHeaders = $this->getResponseHeaders();
+        if(!empty($responseHeaders))
+        {
+            $rateLimitInfo = [
+                'ratelimit-limit-requests'              => $responseHeaders['x-ratelimit-limit-requests'],
+                'ratelimit-limit-tokens'                => $responseHeaders['x-ratelimit-limit-tokens'],
+                'ratelimit-limit-remaining-requests'    => $responseHeaders['x-ratelimit-limit-remaining-requests'],
+                'ratelimit-limit-remaining-tokens'      => $responseHeaders['x-ratelimit-limit-remaining-tokens'],
+                'ratelimit-limit-reset-requests'        => $responseHeaders['x-ratelimit-limit-reset-requests'],
+                'ratelimit-limit-reset-tokens'          => $responseHeaders['x-ratelimit-limit-reset-tokens'],
+            ];
+
+            $this->setRateLimitInfo($rateLimitInfo);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getProcessingMs(): int
+    {
+        return $this->processingMs;
+    }
+    
+    /**
+     * @param  int  $processingMs
+     * @return void
+     */
+    private function setProcessingMs(int $processingMs)
+    {
+        $this->processingMs = $processingMs;
+    }
+
+    /**
+     * @return void
+     */
+    private function hydrateProcessingMs(): void
+    {
+        $responseHeaders = $this->getResponseHeaders();
+        if(!empty($responseHeaders))
+        {
+            $processingMs = $responseHeaders['openai-processing-ms'];
+
+            $this->setProcessingMs($processingMs);
         }
     }
 
@@ -589,8 +660,10 @@ class OpenAi
 
         if (!$response) throw new Exception(curl_error($curl));
         
-        // Header Fetch:
         $this->setResponseHeaders($responseHeaders);
+
+        $this->hydrateRateLimitInfo();
+        $this->hydrateProcessingMs();
 
         return $response;
     }
