@@ -543,12 +543,12 @@ class OpenAi
         if(!empty($responseHeaders))
         {
             $rateLimitInfo = [
-                'ratelimit-limit-requests'              => $responseHeaders['x-ratelimit-limit-requests'],
-                'ratelimit-limit-tokens'                => $responseHeaders['x-ratelimit-limit-tokens'],
-                'ratelimit-limit-remaining-requests'    => $responseHeaders['x-ratelimit-limit-remaining-requests'],
-                'ratelimit-limit-remaining-tokens'      => $responseHeaders['x-ratelimit-limit-remaining-tokens'],
-                'ratelimit-limit-reset-requests'        => $responseHeaders['x-ratelimit-limit-reset-requests'],
-                'ratelimit-limit-reset-tokens'          => $responseHeaders['x-ratelimit-limit-reset-tokens'],
+                'ratelimit-limit-requests'              => $responseHeaders['x-ratelimit-limit-requests'][0],
+                'ratelimit-limit-tokens'                => $responseHeaders['x-ratelimit-limit-tokens'][0],
+                'ratelimit-limit-remaining-requests'    => $responseHeaders['x-ratelimit-limit-remaining-requests'][0],
+                'ratelimit-limit-remaining-tokens'      => $responseHeaders['x-ratelimit-limit-remaining-tokens'][0],
+                'ratelimit-limit-reset-requests'        => $responseHeaders['x-ratelimit-limit-reset-requests'][0],
+                'ratelimit-limit-reset-tokens'          => $responseHeaders['x-ratelimit-limit-reset-tokens'][0],
             ];
 
             $this->setRateLimitInfo($rateLimitInfo);
