@@ -580,7 +580,7 @@ class OpenAi
         $responseHeaders = $this->getResponseHeaders();
         if(!empty($responseHeaders))
         {
-            $processingMs = $responseHeaders['openai-processing-ms'];
+            $processingMs = $responseHeaders['openai-processing-ms'][0];
 
             $this->setProcessingMs($processingMs);
         }
