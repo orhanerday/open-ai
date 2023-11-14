@@ -547,7 +547,7 @@ class OpenAi
             $rateLimitInfo = [
                 'ratelimit-limit-requests' => array_key_exists('x-ratelimit-limit-requests',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-requests'] : 0,
                 'ratelimit-limit-tokens' => array_key_exists('x-ratelimit-limit-tokens',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-tokens'] : 0,
-                'ratelimit-limit-remaining-requests' => array_key_exists('x-ratelimit-limit-remaining-requests',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-remaining-requests'] : 0,
+                'ratelimit-remaining-requests' => array_key_exists('x-ratelimit-remaining-requests',$responseHeaders) ? $responseHeaders['x-ratelimit-remaining-requests'] : 0,
                 'ratelimit-remaining-tokens' => array_key_exists('x-ratelimit-remaining-tokens',$responseHeaders) ? $responseHeaders['x-ratelimit-remaining-tokens'] : 0,
                 'ratelimit-reset-requests' => array_key_exists('x-ratelimit-reset-requests',$responseHeaders) ? $responseHeaders['x-ratelimit-reset-requests'] : 0,
                 'ratelimit-reset-tokens' => array_key_exists('x-ratelimit-reset-tokens',$responseHeaders) ? $responseHeaders['x-ratelimit-reset-tokens'] : 0,
