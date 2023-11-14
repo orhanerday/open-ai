@@ -543,12 +543,12 @@ class OpenAi
         if(!empty($responseHeaders))
         {
             $rateLimitInfo = [
-                'ratelimit-limit-requests' => isset($responseHeaders['x-ratelimit-limit-requests']) ? $responseHeaders['x-ratelimit-limit-requests'][0] : 0,
-                'ratelimit-limit-tokens' => isset($responseHeaders['x-ratelimit-limit-tokens']) ? $responseHeaders['x-ratelimit-limit-tokens'][0] : 0,
-                'ratelimit-limit-remaining-requests' => isset($responseHeaders['x-ratelimit-limit-remaining-requests']) ? $responseHeaders['x-ratelimit-limit-remaining-requests'][0] : 0,
-                'ratelimit-limit-remaining-tokens' => isset($responseHeaders['x-ratelimit-limit-remaining-tokens']) ? $responseHeaders['x-ratelimit-limit-remaining-tokens'][0] : 0,
-                'ratelimit-limit-reset-requests' => isset($responseHeaders['x-ratelimit-limit-reset-requests']) ? $responseHeaders['x-ratelimit-limit-reset-requests'][0] : 0,
-                'ratelimit-limit-reset-tokens' => isset($responseHeaders['x-ratelimit-limit-reset-tokens']) ? $responseHeaders['x-ratelimit-limit-reset-tokens'][0] : 0,
+                'ratelimit-limit-requests' => array_key_exists('x-ratelimit-limit-requests',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-requests'] : 0,
+                'ratelimit-limit-tokens' => array_key_exists('x-ratelimit-limit-tokens',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-tokens'] : 0,
+                'ratelimit-limit-remaining-requests' => array_key_exists('x-ratelimit-limit-remaining-requests',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-remaining-requests'] : 0,
+                'ratelimit-limit-remaining-tokens' => array_key_exists('x-ratelimit-limit-remaining-tokens',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-remaining-tokens'] : 0,
+                'ratelimit-limit-reset-requests' => array_key_exists('x-ratelimit-limit-reset-requests',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-reset-requests'] : 0,
+                'ratelimit-limit-reset-tokens' => array_key_exists('x-ratelimit-limit-reset-tokens',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-reset-tokens'] : 0,
             ];
 
             $this->setRateLimitInfo($rateLimitInfo);
@@ -578,9 +578,9 @@ class OpenAi
     private function hydrateProcessingMs(): void
     {
         $responseHeaders = $this->getResponseHeaders();
-        if(!empty($responseHeaders) && isset($responseHeaders['openai-processing-ms']))
+        if(!empty($responseHeaders) && array_key_exists('openai-processing-ms',$responseHeaders))
         {
-            $processingMs = $responseHeaders['openai-processing-ms'][0];
+            $processingMs = $responseHeaders['openai-processing-ms'];
 
             $this->setProcessingMs($processingMs);
         }
@@ -641,10 +641,14 @@ class OpenAi
                     return $len;
 
                 $name = strtolower(trim($header[0]));
-                if (!array_key_exists($name, $responseHeaders))
-                    $responseHeaders[$name] = [trim($header[1])];
-                else
+                if (!array_key_exists($name, $responseHeaders)) {
+                    $responseHeaders[$name] = trim($header[1]);
+                } else {
+                    if (!is_array($responseHeaders[$name])) {
+                        $responseHeaders[$name] = [$responseHeaders[$name]];
+                    }
                     $responseHeaders[$name][] = trim($header[1]);
+                }
 
                 return $len;
             }
