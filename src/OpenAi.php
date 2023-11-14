@@ -16,6 +16,7 @@ class OpenAi
     private string $customUrl = "";
     private string $proxy = "";
     private array $curlInfo = [];
+    private array $responseHeaders;
 
     public function __construct($OPENAI_API_KEY)
     {
@@ -488,6 +489,23 @@ class OpenAi
     }
 
     /**
+     * @return array
+     */
+    public function getResponseHeaders(): array
+    {
+        return $this->responseHeaders;
+    }
+    
+    /**
+     * @param  array  $responseHeaders
+     * @return void
+     */
+    private function setResponseHeaders(array $responseHeaders)
+    {
+        $this->responseHeaders = $responseHeaders;
+    }
+
+    /**
      * @param  string  $org
      */
     public function setORG(string $org)
@@ -524,6 +542,7 @@ class OpenAi
             CURLOPT_CUSTOMREQUEST  => $method,
             CURLOPT_POSTFIELDS     => $post_fields,
             CURLOPT_HTTPHEADER     => $this->headers,
+            CURLOPT_HEADER         => false,
         ];
 
         if ($opts == []) {
@@ -540,6 +559,26 @@ class OpenAi
 
         $curl = curl_init();
 
+        $responseHeaders = [];
+        curl_setopt(
+            $curl,
+            CURLOPT_HEADERFUNCTION,
+            function ($curl, $header) use (&$responseHeaders) {
+                $len = strlen($header);
+                $header = explode(':', $header, 2);
+                if (count($header) < 2) // ignore invalid headers
+                    return $len;
+
+                $name = strtolower(trim($header[0]));
+                if (!array_key_exists($name, $responseHeaders))
+                    $responseHeaders[$name] = [trim($header[1])];
+                else
+                    $responseHeaders[$name][] = trim($header[1]);
+
+                return $len;
+            }
+        );
+
         curl_setopt_array($curl, $curl_info);
         $response = curl_exec($curl);
 
@@ -550,6 +589,9 @@ class OpenAi
 
         if (!$response) throw new Exception(curl_error($curl));
         
+        // Header Fetch:
+        $this->setResponseHeaders($responseHeaders);
+
         return $response;
     }
 
