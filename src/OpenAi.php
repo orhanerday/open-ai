@@ -540,6 +540,8 @@ class OpenAi
     private function hydrateRateLimitInfo(): void
     {
         $responseHeaders = $this->getResponseHeaders();
+        error_log('$responseHeaders: ');
+        error_log(print_r($responseHeaders,true));
         if(!empty($responseHeaders))
         {
             $rateLimitInfo = [
@@ -584,6 +586,32 @@ class OpenAi
 
             $this->setProcessingMs($processingMs);
         }
+    }
+
+    /**
+     * @param  array  &$responseHeaders
+     * @return callable
+     */
+    private function setHeaderFunction(array &$responseHeaders): callable
+    {
+        return function ($curl, $header) use (&$responseHeaders) {
+            $len = strlen($header);
+            $header = explode(':', $header, 2);
+            if (count($header) < 2) // ignore invalid headers
+                return $len;
+
+            $name = strtolower(trim($header[0]));
+            if (!array_key_exists($name, $responseHeaders)) {
+                $responseHeaders[$name] = trim($header[1]);
+            } else {
+                if (!is_array($responseHeaders[$name])) {
+                    $responseHeaders[$name] = [$responseHeaders[$name]];
+                }
+                $responseHeaders[$name][] = trim($header[1]);
+            }
+
+            return $len;
+        };
     }
 
     /**
@@ -634,24 +662,7 @@ class OpenAi
         curl_setopt(
             $curl,
             CURLOPT_HEADERFUNCTION,
-            function ($curl, $header) use (&$responseHeaders) {
-                $len = strlen($header);
-                $header = explode(':', $header, 2);
-                if (count($header) < 2) // ignore invalid headers
-                    return $len;
-
-                $name = strtolower(trim($header[0]));
-                if (!array_key_exists($name, $responseHeaders)) {
-                    $responseHeaders[$name] = trim($header[1]);
-                } else {
-                    if (!is_array($responseHeaders[$name])) {
-                        $responseHeaders[$name] = [$responseHeaders[$name]];
-                    }
-                    $responseHeaders[$name][] = trim($header[1]);
-                }
-
-                return $len;
-            }
+            $this->setHeaderFunction($responseHeaders)
         );
 
         curl_setopt_array($curl, $curl_info);
