@@ -540,8 +540,6 @@ class OpenAi
     private function hydrateRateLimitInfo(): void
     {
         $responseHeaders = $this->getResponseHeaders();
-        error_log('$responseHeaders: ');
-        error_log(print_r($responseHeaders,true));
         if(!empty($responseHeaders))
         {
             $rateLimitInfo = [
