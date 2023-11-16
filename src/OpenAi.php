@@ -6,16 +6,23 @@ use Exception;
 
 class OpenAi
 {
-    private string $engine = "davinci";
-    private string $model = "text-davinci-002";
-    private string $chatModel = "gpt-3.5-turbo";
-    private array $headers;
-    private array $contentTypes;
-    private int $timeout = 0;
-    private object $stream_method;
-    private string $customUrl = "";
-    private string $proxy = "";
-    private array $curlInfo = [];
+    protected string $engine = "davinci";
+    protected string $model = "text-davinci-002";
+    protected string $chatModel = "gpt-3.5-turbo";
+    protected array $headers;
+    protected array $contentTypes;
+    protected int $timeout = 0;
+    protected object $stream_method;
+    protected string $customUrl = "";
+    protected string $proxy = "";
+
+    /**
+     * format user:pass
+     * @var string
+     */
+    protected string $proxyAccess = "";
+
+    protected array $curlInfo = [];
 
     public function __construct($OPENAI_API_KEY)
     {
@@ -448,6 +455,15 @@ class OpenAi
     }
 
     /**
+     * @param  string  $access
+     * @return void
+     */
+    public function setProxyAccess(string $access)
+    {
+        $this->proxyAccess = $access;
+    }
+
+    /**
      * @param  string  $customUrl
      * @deprecated
      */
@@ -503,7 +519,7 @@ class OpenAi
      * @param  array   $opts
      * @return bool|string
      */
-    private function sendRequest(string $url, string $method, array $opts = [])
+    protected function sendRequest(string $url, string $method, array $opts = [])
     {
         $post_fields = json_encode($opts);
 
@@ -534,6 +550,10 @@ class OpenAi
             $curl_info[CURLOPT_PROXY] = $this->proxy;
         }
 
+        if (!empty($this->proxyAccess)) {
+            $curl_info[CURLOPT_PROXYUSERPWD] = $this->proxyAccess;
+        }
+
         if (array_key_exists('stream', $opts) && $opts['stream']) {
             $curl_info[CURLOPT_WRITEFUNCTION] = $this->stream_method;
         }
@@ -549,14 +569,14 @@ class OpenAi
         curl_close($curl);
 
         if (!$response) throw new Exception(curl_error($curl));
-        
+
         return $response;
     }
 
     /**
      * @param  string  $url
      */
-    private function baseUrl(string &$url)
+    protected function baseUrl(string &$url)
     {
         if ($this->customUrl != "") {
             $url = str_replace(Url::ORIGIN, $this->customUrl, $url);
