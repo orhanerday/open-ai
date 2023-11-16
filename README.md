@@ -40,6 +40,8 @@ repository useful! <br /><br /> Orhan*
 
 [![日思录](https://user-images.githubusercontent.com/22305274/222431699-f3a8a146-e27c-4fe3-8c93-1d762559752f.png)](http://tubring.cn/articles/59)
 
+[![logo_new](https://github.com/orhanerday/open-ai/assets/22305274/398b3a1e-7323-46f3-8a53-a9f115cf2281)](https://site-analyzer.ru/articles/openai-gpt-3-first-samples/)
+
 
 
 # Comparison With Other Packages
