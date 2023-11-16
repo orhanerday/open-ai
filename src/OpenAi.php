@@ -16,6 +16,9 @@ class OpenAi
     private string $customUrl = "";
     private string $proxy = "";
     private array $curlInfo = [];
+    private array $responseHeaders;
+    private array $rateLimitInfo;
+    private int $processingMs = 0;
 
     public function __construct($OPENAI_API_KEY)
     {
@@ -498,6 +501,118 @@ class OpenAi
     }
 
     /**
+     * @return array
+     */
+    private function getResponseHeaders(): array
+    {
+        return $this->responseHeaders;
+    }
+    
+    /**
+     * @param  array  $responseHeaders
+     * @return void
+     */
+    private function setResponseHeaders(array $responseHeaders)
+    {
+        $this->responseHeaders = $responseHeaders;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRateLimitInfo(): array
+    {
+        return $this->rateLimitInfo;
+    }
+    
+    /**
+     * @param  array  $rateLimitInfo
+     * @return void
+     */
+    private function setRateLimitInfo(array $rateLimitInfo)
+    {
+        $this->rateLimitInfo = $rateLimitInfo;
+    }
+
+    /**
+     * @return void
+     */
+    private function hydrateRateLimitInfo(): void
+    {
+        $responseHeaders = $this->getResponseHeaders();
+        if(!empty($responseHeaders))
+        {
+            $rateLimitInfo = [
+                'ratelimit-limit-requests' => array_key_exists('x-ratelimit-limit-requests',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-requests'] : null,
+                'ratelimit-limit-tokens' => array_key_exists('x-ratelimit-limit-tokens',$responseHeaders) ? $responseHeaders['x-ratelimit-limit-tokens'] : null,
+                'ratelimit-remaining-requests' => array_key_exists('x-ratelimit-remaining-requests',$responseHeaders) ? $responseHeaders['x-ratelimit-remaining-requests'] : null,
+                'ratelimit-remaining-tokens' => array_key_exists('x-ratelimit-remaining-tokens',$responseHeaders) ? $responseHeaders['x-ratelimit-remaining-tokens'] : null,
+                'ratelimit-reset-requests' => array_key_exists('x-ratelimit-reset-requests',$responseHeaders) ? $responseHeaders['x-ratelimit-reset-requests'] : null,
+                'ratelimit-reset-tokens' => array_key_exists('x-ratelimit-reset-tokens',$responseHeaders) ? $responseHeaders['x-ratelimit-reset-tokens'] : null,
+            ];
+
+            $this->setRateLimitInfo($rateLimitInfo);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getProcessingMs(): int
+    {
+        return $this->processingMs;
+    }
+    
+    /**
+     * @param  int  $processingMs
+     * @return void
+     */
+    private function setProcessingMs(int $processingMs)
+    {
+        $this->processingMs = $processingMs;
+    }
+
+    /**
+     * @return void
+     */
+    private function hydrateProcessingMs(): void
+    {
+        $responseHeaders = $this->getResponseHeaders();
+        if(!empty($responseHeaders) && array_key_exists('openai-processing-ms',$responseHeaders))
+        {
+            $processingMs = $responseHeaders['openai-processing-ms'];
+
+            $this->setProcessingMs($processingMs);
+        }
+    }
+
+    /**
+     * @param  array  &$responseHeaders
+     * @return callable
+     */
+    private function setHeaderFunction(array &$responseHeaders): callable
+    {
+        return function ($curl, $header) use (&$responseHeaders) {
+            $len = strlen($header);
+            $header = explode(':', $header, 2);
+            if (count($header) < 2) // ignore invalid headers
+                return $len;
+
+            $name = strtolower(trim($header[0]));
+            if (!array_key_exists($name, $responseHeaders)) {
+                $responseHeaders[$name] = trim($header[1]);
+            } else {
+                if (!is_array($responseHeaders[$name])) {
+                    $responseHeaders[$name] = [$responseHeaders[$name]];
+                }
+                $responseHeaders[$name][] = trim($header[1]);
+            }
+
+            return $len;
+        };
+    }
+
+    /**
      * @param  string  $url
      * @param  string  $method
      * @param  array   $opts
@@ -524,6 +639,7 @@ class OpenAi
             CURLOPT_CUSTOMREQUEST  => $method,
             CURLOPT_POSTFIELDS     => $post_fields,
             CURLOPT_HTTPHEADER     => $this->headers,
+            CURLOPT_HEADER         => false,
         ];
 
         if ($opts == []) {
@@ -540,6 +656,13 @@ class OpenAi
 
         $curl = curl_init();
 
+        $responseHeaders = [];
+        curl_setopt(
+            $curl,
+            CURLOPT_HEADERFUNCTION,
+            $this->setHeaderFunction($responseHeaders)
+        );
+
         curl_setopt_array($curl, $curl_info);
         $response = curl_exec($curl);
 
@@ -550,6 +673,11 @@ class OpenAi
 
         if (!$response) throw new Exception(curl_error($curl));
         
+        $this->setResponseHeaders($responseHeaders);
+
+        $this->hydrateRateLimitInfo();
+        $this->hydrateProcessingMs();
+
         return $response;
     }
 
