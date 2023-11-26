@@ -325,6 +325,31 @@ $complete = $open_ai->chat([
 ]);
 ```
 
+For returning JSON responses from OpenAI you need to include the phrase JSON in your requests. 
+
+```php
+$complete = $open_ai->chat([
+    'model' => 'gpt-3.5-turbo-1106',
+    'messages' => 'messages' => [
+            [
+                'role' => 'system',
+                'content' => 'You are a zoologist.'
+            ],
+            [
+                'role' => 'system',
+                'content' => 'Respond with JSON. Use this structure: [{"animal":"","description":""}]'
+            ],
+            [
+                'role' => 'user',
+                'content' => 'Supply a list of the most common animals you would see in a zoo.'
+            ],
+    ],
+    'temperature' => 1,
+    'max_tokens' => 3500,
+    'response_format' => [ 'type' => 'json_object' ]
+]);
+```
+
 ## Accessing the Element 
 
 ```php
