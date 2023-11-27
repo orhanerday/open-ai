@@ -429,6 +429,20 @@ class OpenAi
     }
 
     /**
+     * @param        $opts
+     * @return bool|string
+     */
+    public function createAssistant($opts)
+    {
+        $opts['model'] = $opts['model'] ?? $this->chatModel;
+        $this->headers[]  = 'OpenAI-Beta: assistants=v1';
+        $url = Url::assistantsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)
@@ -549,7 +563,7 @@ class OpenAi
         curl_close($curl);
 
         if (!$response) throw new Exception(curl_error($curl));
-        
+
         return $response;
     }
 
