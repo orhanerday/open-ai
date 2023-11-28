@@ -389,3 +389,14 @@ it('should handle delete a thread', function () use ($open_ai) {
     $this->assertStringContainsString('id', $thread);
     $this->assertStringContainsString('"deleted": true', $thread);
 })->group('working');
+
+it('should handle create a message within thread', function () use ($open_ai) {
+    $thread = json_decode($open_ai->createThread(), true);
+    $message = $open_ai->createThreadMessage($thread['id'], [
+        'role' => 'user',
+        'content' => 'How does AI work? Explain it in simple terms.',
+    ]);
+
+    $this->assertStringContainsString('id', $message);
+    $this->assertStringContainsString('"object": "thread.message"', $message);
+})->group('working');
