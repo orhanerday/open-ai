@@ -304,3 +304,17 @@ it('should handle list assistants', function () use ($open_ai) {
     $this->assertStringContainsString('data', $assistants);
     $this->assertStringContainsString('id', $assistants);
 })->group('working');
+
+it('should handle create a assistant file', function () use ($open_ai) {
+    $upload = curl_file_create(__DIR__ . '/../files/assistant-file.txt');
+    $file = json_decode($open_ai->uploadFile([
+        'purpose' => 'assistants',
+        'file' => $upload,
+    ]), true);
+    $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
+
+    $assistantFile = $open_ai->createAssistantFile($assistantId, $file['id']);
+
+    $this->assertStringContainsString('id', $assistantFile);
+    $this->assertStringContainsString('"object": "assistant.file"', $assistantFile);
+})->group('working');

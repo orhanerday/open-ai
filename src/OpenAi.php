@@ -499,6 +499,20 @@ class OpenAi
     }
 
     /**
+     * @param string $id
+     * @param string $fileId
+     * @return bool|string
+     */
+    public function createAssistantFile($id, $fileId)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::assistantsUrl() . '/' . $id . '/files';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', ['file_id' => $fileId]);
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)
