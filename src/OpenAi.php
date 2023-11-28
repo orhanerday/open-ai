@@ -625,6 +625,20 @@ class OpenAi
     }
 
     /**
+     * @param string $id
+     * @param string $messageId
+     * @return bool|string
+     */
+    public function retrieveThreadMessage($id, $messageId)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::threadsUrl() . '/' . $id . '/messages/' . $messageId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)

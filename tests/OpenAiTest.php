@@ -400,3 +400,12 @@ it('should handle create a message within thread', function () use ($open_ai) {
     $this->assertStringContainsString('id', $message);
     $this->assertStringContainsString('"object": "thread.message"', $message);
 })->group('working');
+
+it('should handle retrieve a message within thread', function () use ($open_ai) {
+    $threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
+    $messageId = 'msg_d37P5XgREsm6BItOcppnBO1b';
+    $message = $open_ai->retrieveThreadMessage($threadId, $messageId);
+
+    $this->assertStringContainsString('id', $message);
+    $this->assertStringContainsString('"object": "thread.message"', $message);
+})->group('working');
