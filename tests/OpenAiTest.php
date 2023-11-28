@@ -295,3 +295,12 @@ it('should handle delete a assistant', function () use ($open_ai) {
     $this->assertStringContainsString('id', $assistant);
     $this->assertStringContainsString('"deleted": true', $assistant);
 })->group('working');
+
+it('should handle list assistants', function () use ($open_ai) {
+    $query = ['limit' => 10];
+    $assistants = $open_ai->listAssistants($query);
+
+    $this->assertStringContainsString('"object": "list"', $assistants);
+    $this->assertStringContainsString('data', $assistants);
+    $this->assertStringContainsString('id', $assistants);
+})->group('working');
