@@ -598,6 +598,19 @@ class OpenAi
     }
 
     /**
+     * @param string $id
+     * @return bool|string
+     */
+    public function deleteThread($id)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::threadsUrl() . '/' . $id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)

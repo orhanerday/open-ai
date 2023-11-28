@@ -382,3 +382,10 @@ it('should handle modify a thread', function () use ($open_ai) {
     $this->assertStringContainsString('id', $thread);
     $this->assertStringContainsString('"object": "thread"', $thread);
 })->group('working');
+
+it('should handle delete a thread', function () use ($open_ai) {
+    $thread = $open_ai->deleteThread('thread_GHGU1zEOVD5z2EXs3e8zU55S');
+
+    $this->assertStringContainsString('id', $thread);
+    $this->assertStringContainsString('"deleted": true', $thread);
+})->group('working');
