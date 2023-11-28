@@ -422,3 +422,13 @@ it('should handle modify a message within thread', function () use ($open_ai) {
     $this->assertStringContainsString('id', $message);
     $this->assertStringContainsString('"object": "thread.message"', $message);
 })->group('working');
+
+it('should handle list messages within thread', function () use ($open_ai) {
+    $threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
+    $query = ['limit' => 10];
+    $messages = $open_ai->listThreadMessages($threadId, $query);
+
+    $this->assertStringContainsString('id', $messages);
+    $this->assertStringContainsString('"object": "list"', $messages);
+    $this->assertStringContainsString('data', $messages);
+})->group('working');

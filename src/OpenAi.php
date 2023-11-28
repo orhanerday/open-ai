@@ -654,6 +654,23 @@ class OpenAi
     }
 
     /**
+     * @param string $id
+     * @param array $query
+     * @return bool|string
+     */
+    public function listThreadMessages($id, $query = [])
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::threadsUrl() . '/' . $id . '/messages';
+        if (count($query) > 0) {
+            $url .= '?' . http_build_query($query);
+        }
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)
