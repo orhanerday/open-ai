@@ -328,3 +328,14 @@ it('should handle retrieve a assistant file', function () use ($open_ai) {
     $this->assertStringContainsString('id', $assistantFile);
     $this->assertStringContainsString('"object": "assistant.file"', $assistantFile);
 })->group('working');
+
+it('should handle list assistant files', function () use ($open_ai) {
+    $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
+    $query = ['limit' => 10];
+
+    $assistants = $open_ai->listAssistantFiles($assistantId, $query);
+
+    $this->assertStringContainsString('"object": "list"', $assistants);
+    $this->assertStringContainsString('data', $assistants);
+    $this->assertStringContainsString('id', $assistants);
+})->group('working');
