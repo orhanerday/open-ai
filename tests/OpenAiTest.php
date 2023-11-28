@@ -288,3 +288,10 @@ it('should handle modify a assistant', function () use ($open_ai) {
     $this->assertStringContainsString('"object": "assistant"', $assistant);
     $this->assertStringContainsString('"name": "my modified assistant"', $assistant);
 })->group('working');
+
+it('should handle delete a assistant', function () use ($open_ai) {
+    $assistant = $open_ai->deleteAssistant('asst_rzJqKRfpQI2JMj1gYGKQOZZo');
+
+    $this->assertStringContainsString('id', $assistant);
+    $this->assertStringContainsString('"deleted": true', $assistant);
+})->group('working');
