@@ -364,3 +364,10 @@ it('should handle create a thread', function () use ($open_ai) {
     $this->assertStringContainsString('id', $thread);
     $this->assertStringContainsString('"object": "thread"', $thread);
 })->group('working');
+
+it('should handle retrieve a thread', function () use ($open_ai) {
+    $thread = $open_ai->retrieveThread('thread_GHGU1zEOVD5z2EXs3e8zU55S');
+
+    $this->assertStringContainsString('id', $thread);
+    $this->assertStringContainsString('"object": "thread"', $thread);
+})->group('working');

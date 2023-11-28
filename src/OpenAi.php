@@ -561,13 +561,26 @@ class OpenAi
      * @param array $opts
      * @return bool|string
      */
-    public function createThread($opts)
+    public function createThread($opts = [])
     {
         $this->headers[] = 'OpenAI-Beta: assistants=v1';
         $url = Url::threadsUrl();
         $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param string $id
+     * @return bool|string
+     */
+    public function retrieveThread($id)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::threadsUrl() . '/' . $id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
     }
 
     /**
