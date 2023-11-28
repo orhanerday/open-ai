@@ -255,7 +255,7 @@ it('should handle simple chat completion using the new endpoint', function () us
     $this->assertStringContainsString('text', $result);
 })->group('working');
 
-it('should create a assistant', function () use ($open_ai) {
+it('should handle create a assistant', function () use ($open_ai) {
     $assistant = $open_ai->createAssistant([
         'model' => 'gpt-3.5-turbo',
         'name' => 'my assistant',
@@ -264,6 +264,14 @@ it('should create a assistant', function () use ($open_ai) {
         'tools' => [],
         'file_ids' => [],
     ]);
+
+    $this->assertStringContainsString('id', $assistant);
+    $this->assertStringContainsString('"object": "assistant"', $assistant);
+    $this->assertStringContainsString('"name": "my assistant"', $assistant);
+})->group('working');
+
+it('should handle retrieve a assistant', function () use ($open_ai) {
+    $assistant = $open_ai->retrieveAssistant('asst_rzJqKRfpQI2JMj1gYGKQOZZo');
 
     $this->assertStringContainsString('id', $assistant);
     $this->assertStringContainsString('"object": "assistant"', $assistant);

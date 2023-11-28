@@ -429,17 +429,30 @@ class OpenAi
     }
 
     /**
-     * @param        $opts
+     * @param array $opts
      * @return bool|string
      */
     public function createAssistant($opts)
     {
         $opts['model'] = $opts['model'] ?? $this->chatModel;
-        $this->headers[]  = 'OpenAI-Beta: assistants=v1';
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
         $url = Url::assistantsUrl();
         $this->baseUrl($url);
 
         return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param string $id
+     * @return bool|string
+     */
+    public function retrieveAssistant($id)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::assistantsUrl() . '/' . $id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
     }
 
     /**
