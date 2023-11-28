@@ -432,3 +432,18 @@ it('should handle list messages within thread', function () use ($open_ai) {
     $this->assertStringContainsString('"object": "list"', $messages);
     $this->assertStringContainsString('data', $messages);
 })->group('working');
+
+it('should handle retrieve a file within message', function () use ($open_ai) {
+    $threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
+    $fileId = 'file-CRLcY63DiHphWuBrmDWZVCgA';
+    $message = json_decode($open_ai->createThreadMessage($threadId, [
+        'role' => 'user',
+        'content' => 'How does AI work? Explain it in simple terms.',
+        'file_ids' => [$fileId],
+    ]), true);
+
+    $file = $open_ai->retrieveMessageFile($threadId, $message['id'], $fileId);
+
+    $this->assertStringContainsString('id', $file);
+    $this->assertStringContainsString('"object": "thread.message.file"', $file);
+})->group('working');
