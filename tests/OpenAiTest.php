@@ -349,3 +349,18 @@ it('should handle delete a assistant file', function () use ($open_ai) {
     $this->assertStringContainsString('id', $file);
     $this->assertStringContainsString('"deleted": true', $file);
 })->group('working');
+
+it('should handle create a thread', function () use ($open_ai) {
+    $thread = $open_ai->createThread([
+        'messages' => [
+            [
+                'role' => 'user',
+                'content' => 'Hello, what is AI?',
+                'file_ids' => [],
+            ],
+        ],
+    ]);
+
+    $this->assertStringContainsString('id', $thread);
+    $this->assertStringContainsString('"object": "thread"', $thread);
+})->group('working');
