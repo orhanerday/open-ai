@@ -277,3 +277,14 @@ it('should handle retrieve a assistant', function () use ($open_ai) {
     $this->assertStringContainsString('"object": "assistant"', $assistant);
     $this->assertStringContainsString('"name": "my assistant"', $assistant);
 })->group('working');
+
+it('should handle modify a assistant', function () use ($open_ai) {
+    $assistant = $open_ai->modifyAssistant('asst_rzJqKRfpQI2JMj1gYGKQOZZo', [
+        'name' => 'my modified assistant',
+        'instructions' => 'you should cordially help me again',
+    ]);
+
+    $this->assertStringContainsString('id', $assistant);
+    $this->assertStringContainsString('"object": "assistant"', $assistant);
+    $this->assertStringContainsString('"name": "my modified assistant"', $assistant);
+})->group('working');
