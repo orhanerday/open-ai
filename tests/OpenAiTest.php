@@ -447,3 +447,14 @@ it('should handle retrieve a file within message', function () use ($open_ai) {
     $this->assertStringContainsString('id', $file);
     $this->assertStringContainsString('"object": "thread.message.file"', $file);
 })->group('working');
+
+it('should handle list files within message', function () use ($open_ai) {
+    $threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
+    $messageId = 'msg_CZ47kAGZugAfeHMX6bmJIukP';
+    $query = ['limit' => 10];
+
+    $files = $open_ai->listMessageFiles($threadId, $messageId, $query);
+
+    $this->assertStringContainsString('id', $files);
+    $this->assertStringContainsString('"object": "thread.message.file"', $files);
+})->group('working');
