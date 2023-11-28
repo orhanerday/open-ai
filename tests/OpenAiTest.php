@@ -333,9 +333,19 @@ it('should handle list assistant files', function () use ($open_ai) {
     $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
     $query = ['limit' => 10];
 
-    $assistants = $open_ai->listAssistantFiles($assistantId, $query);
+    $files = $open_ai->listAssistantFiles($assistantId, $query);
 
-    $this->assertStringContainsString('"object": "list"', $assistants);
-    $this->assertStringContainsString('data', $assistants);
-    $this->assertStringContainsString('id', $assistants);
+    $this->assertStringContainsString('"object": "list"', $files);
+    $this->assertStringContainsString('data', $files);
+    $this->assertStringContainsString('id', $files);
+})->group('working');
+
+it('should handle delete a assistant file', function () use ($open_ai) {
+    $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
+    $fileId = 'file-CRLcY63DiHphWuBrmDWZVCgA';
+
+    $file = $open_ai->deleteAssistantFile($assistantId, $fileId);
+
+    $this->assertStringContainsString('id', $file);
+    $this->assertStringContainsString('"deleted": true', $file);
 })->group('working');

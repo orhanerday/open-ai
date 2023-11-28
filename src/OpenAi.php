@@ -544,6 +544,20 @@ class OpenAi
     }
 
     /**
+     * @param string $id
+     * @param string $fileId
+     * @return bool|string
+     */
+    public function deleteAssistantFile($id, $fileId)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::assistantsUrl() . '/' . $id . '/files/' . $fileId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)
