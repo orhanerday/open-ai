@@ -497,3 +497,14 @@ it('should handle modify a run of a thread', function () use ($open_ai) {
     $this->assertStringContainsString('id', $run);
     $this->assertStringContainsString('"object": "thread.run"', $run);
 })->group('working');
+
+it('should handle list runs of a thread', function () use ($open_ai) {
+    $threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
+    $query = ['limit' => 10];
+
+    $runs = $open_ai->listRuns($threadId, $query);
+
+    $this->assertStringContainsString('id', $runs);
+    $this->assertStringContainsString('"object": "list"', $runs);
+    $this->assertStringContainsString('data', $runs);
+})->group('working');
