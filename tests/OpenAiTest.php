@@ -458,3 +458,20 @@ it('should handle list files within message', function () use ($open_ai) {
     $this->assertStringContainsString('id', $files);
     $this->assertStringContainsString('"object": "thread.message.file"', $files);
 })->group('working');
+
+it('should handle create a run of a thread', function () use ($open_ai) {
+    $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
+    $thread = json_decode($open_ai->createThread([
+        'messages' => [
+            [
+                'role' => 'user',
+                'content' => 'Hello, what is AI?',
+                'file_ids' => [],
+            ],
+        ]]), true);
+
+    $run = $open_ai->createRun($thread['id'], ['assistant_id' => $assistantId]);
+
+    $this->assertStringContainsString('id', $run);
+    $this->assertStringContainsString('"object": "thread.run"', $run);
+})->group('working');
