@@ -24,7 +24,7 @@ it('should throw error when set the stream to true and does not set the stream m
         "max_tokens" => 150,
         "frequency_penalty" => 0,
         "presence_penalty" => 0.6,
-        "stream" => true
+        "stream" => true,
     ]))->toThrow(Exception::class, 'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.');
 })->group('working');
 
@@ -118,19 +118,19 @@ it('should handle cancel the fine-tune', function () use ($open_ai) {
     $result = $open_ai->cancelFineTune('file-XGinujblHPwGLSztz8cPS8XY');
 
     $this->assertStringContainsString('training_files', $result);
-})->group('requires-missing-file');;
+})->group('requires-missing-file');
 
 it('should handle list fine-tune event', function () use ($open_ai) {
     $result = $open_ai->listFineTuneEvents('file-XGinujblHPwGLSztz8cPS8XY');
 
     $this->assertStringContainsString('data', $result);
-})->group('requires-missing-file');;
+})->group('requires-missing-file');
 
 it('should handle delete fine-tune model', function () use ($open_ai) {
     $result = $open_ai->deleteFineTune('curie:ft-acmeco-2021-03-03-21-44-20');
 
     $this->assertStringContainsString('deleted', $result);
-})->group('requires-missing-file');;
+})->group('requires-missing-file');
 
 it('should handle answers', function () use ($open_ai) {
     $result = $open_ai->answer([
@@ -243,8 +243,8 @@ it('should handle simple chat completion using the new endpoint', function () us
         'messages' => [
             [
                 "role" => "user",
-                "content" => "Hello!"
-            ]
+                "content" => "Hello!",
+            ],
         ],
         'temperature' => 0.9,
         "max_tokens" => 150,
@@ -273,7 +273,7 @@ it('should handle create a assistant', function () use ($open_ai) {
 })->group('working');
 
 it('should handle retrieve a assistant', function () use ($open_ai) {
-    $assistantId = 'asst_rzJqKRfpQI2JMj1gYGKQOZZo';
+    $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
 
     $assistant = $open_ai->retrieveAssistant($assistantId);
 
@@ -283,7 +283,7 @@ it('should handle retrieve a assistant', function () use ($open_ai) {
 })->group('working');
 
 it('should handle modify a assistant', function () use ($open_ai) {
-    $assistantId = 'asst_rzJqKRfpQI2JMj1gYGKQOZZo';
+    $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
     $data = [
         'name' => 'my modified assistant',
         'instructions' => 'you should cordially help me again',
@@ -297,7 +297,7 @@ it('should handle modify a assistant', function () use ($open_ai) {
 })->group('working');
 
 it('should handle delete a assistant', function () use ($open_ai) {
-    $assistantId = 'asst_rzJqKRfpQI2JMj1gYGKQOZZo';
+    $assistantId = 'asst_DgiOnXK7nRfyvqoXWpFlwESc';
 
     $assistant = $open_ai->deleteAssistant($assistantId);
 
@@ -331,7 +331,7 @@ it('should handle create a assistant file', function () use ($open_ai) {
 
 it('should handle retrieve a assistant file', function () use ($open_ai) {
     $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
-    $fileId = 'file-CRLcY63DiHphWuBrmDWZVCgA';
+    $fileId = 'file-jrNZZZBAPGnhYUKma7CblGoR';
 
     $assistantFile = $open_ai->retrieveAssistantFile($assistantId, $fileId);
 
@@ -352,7 +352,7 @@ it('should handle list assistant files', function () use ($open_ai) {
 
 it('should handle delete a assistant file', function () use ($open_ai) {
     $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
-    $fileId = 'file-CRLcY63DiHphWuBrmDWZVCgA';
+    $fileId = 'file-jrNZZZBAPGnhYUKma7CblGoR';
 
     $file = $open_ai->deleteAssistantFile($assistantId, $fileId);
 
@@ -378,7 +378,7 @@ it('should handle create a thread', function () use ($open_ai) {
 })->group('working');
 
 it('should handle retrieve a thread', function () use ($open_ai) {
-    $threadId = 'thread_GHGU1zEOVD5z2EXs3e8zU55S';
+    $threadId = 'thread_YKDArENVWFDO2Xz3POifFYlp';
 
     $thread = $open_ai->retrieveThread($threadId);
 
@@ -387,7 +387,7 @@ it('should handle retrieve a thread', function () use ($open_ai) {
 })->group('working');
 
 it('should handle modify a thread', function () use ($open_ai) {
-    $threadId = 'thread_GHGU1zEOVD5z2EXs3e8zU55S';
+    $threadId = 'thread_YKDArENVWFDO2Xz3POifFYlp';
     $data = [
         'metadata' => ['test' => '1234abcd'],
     ];
@@ -399,7 +399,7 @@ it('should handle modify a thread', function () use ($open_ai) {
 })->group('working');
 
 it('should handle delete a thread', function () use ($open_ai) {
-    $threadId = 'thread_GHGU1zEOVD5z2EXs3e8zU55S';
+    $threadId = 'thread_YKDArENVWFDO2Xz3POifFYlp';
 
     $thread = $open_ai->deleteThread($threadId);
 
@@ -571,8 +571,8 @@ it('should handle create thread and run', function () use ($open_ai) {
                     'content' => 'Hello, what is AI?',
                     'file_ids' => [],
                 ],
-            ]
-        ]
+            ],
+        ],
     ];
 
     $run = $open_ai->createThreadAndRun($data);
