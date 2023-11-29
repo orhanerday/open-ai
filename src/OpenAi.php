@@ -715,6 +715,35 @@ class OpenAi
     }
 
     /**
+     * @param string $id
+     * @param string $runId
+     * @return bool|string
+     */
+    public function retrieveRun($id, $runId)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::threadsUrl() . '/' . $id . '/runs/' . $runId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param string $id
+     * @param string $runId
+     * @param array $opts
+     * @return bool|string
+     */
+    public function modifyRun($id, $runId, $opts)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::threadsUrl() . '/' . $id . '/runs/' . $runId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)

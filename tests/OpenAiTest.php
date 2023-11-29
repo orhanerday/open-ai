@@ -475,3 +475,25 @@ it('should handle create a run of a thread', function () use ($open_ai) {
     $this->assertStringContainsString('id', $run);
     $this->assertStringContainsString('"object": "thread.run"', $run);
 })->group('working');
+
+it('should handle retrieve a run of a thread', function () use ($open_ai) {
+    $threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
+    $runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
+
+    $run = $open_ai->retrieveRun($threadId, $runId);
+
+    $this->assertStringContainsString('id', $run);
+    $this->assertStringContainsString('"object": "thread.run"', $run);
+})->group('working');
+
+it('should handle modify a run of a thread', function () use ($open_ai) {
+    $threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
+    $runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
+
+    $run = $open_ai->modifyRun($threadId, $runId, [
+        'metadata' => ['test' => 'abcd1234']
+    ]);
+
+    $this->assertStringContainsString('id', $run);
+    $this->assertStringContainsString('"object": "thread.run"', $run);
+})->group('working');
