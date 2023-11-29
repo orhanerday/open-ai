@@ -761,6 +761,21 @@ class OpenAi
     }
 
     /**
+     * @param string $id
+     * @param string $runId
+     * @param array $outputs
+     * @return bool|string
+     */
+    public function submitToolOutputs($id, $runId, $outputs)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::threadsUrl() . '/' . $id . '/runs/' . $runId . '/submit_tool_outputs';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $outputs);
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)

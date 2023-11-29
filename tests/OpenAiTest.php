@@ -508,3 +508,17 @@ it('should handle list runs of a thread', function () use ($open_ai) {
     $this->assertStringContainsString('"object": "list"', $runs);
     $this->assertStringContainsString('data', $runs);
 })->group('working');
+
+it('should handle submit tool outputs within run', function () use ($open_ai) {
+    $threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
+    $runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
+    $outputs = ['tool_outputs' => [
+        ['tool_call_id' => 'call_abc123', 'output' => '28C'],
+    ]];
+
+    $run = $open_ai->submitToolOutputs($threadId, $runId, $outputs);
+
+    $this->assertStringContainsString('id', $run);
+    $this->assertStringContainsString('"object": "thread.run"', $run);
+    $this->assertStringContainsString('tools', $run);
+})->group('working');
