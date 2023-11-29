@@ -554,22 +554,24 @@ it('should handle create thread and run', function () use ($open_ai) {
     $this->assertStringContainsString('"object": "thread.run"', $run);
 })->group('working');
 
+it('should handle retrieve a run step', function () use ($open_ai) {
+    $threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
+    $runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
+    $stepId = 'step_kwLG0vPQjqVyQHVoL7GVK3aG';
+
+    $step = $open_ai->retrieveRunStep($threadId, $runId, $stepId);
+
+    $this->assertStringContainsString('id', $step);
+    $this->assertStringContainsString('"object": "thread.run.step"', $step);
+})->group('working');
+
 it('should handle list run steps', function () use ($open_ai) {
-    $thread = [
-        'assistant_id' => 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz',
-        'thread' => [
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => 'Hello, what is AI?',
-                    'file_ids' => [],
-                ],
-            ]
-        ]
-    ];
+    $threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
+    $runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
 
-    $run = $open_ai->createThreadAndRun($thread);
+    $steps = $open_ai->listRunSteps($threadId, $runId);
 
-    $this->assertStringContainsString('id', $run);
-    $this->assertStringContainsString('"object": "thread.run"', $run);
+    $this->assertStringContainsString('id', $steps);
+    $this->assertStringContainsString('"object": "list"', $steps);
+    $this->assertStringContainsString('data', $steps);
 })->group('working');

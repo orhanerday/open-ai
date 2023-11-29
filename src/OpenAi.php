@@ -803,6 +803,35 @@ class OpenAi
     }
 
     /**
+     * @param string $threadId
+     * @param string $runId
+     * @param string $stepId
+     * @return bool|string
+     */
+    public function retrieveRunStep($threadId, $runId, $stepId)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/steps/' . $stepId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param string $threadId
+     * @param string $runId
+     * @return bool|string
+     */
+    public function listRunSteps($threadId, $runId)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/steps';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)
