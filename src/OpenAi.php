@@ -790,6 +790,19 @@ class OpenAi
     }
 
     /**
+     * @param array $thread
+     * @return bool|string
+     */
+    public function createThreadAndRun($thread)
+    {
+        $this->headers[] = 'OpenAI-Beta: assistants=v1';
+        $url = Url::threadsUrl() . '/runs';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $thread);
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)

@@ -533,3 +533,23 @@ it('should handle cancel a run of a thread', function () use ($open_ai) {
     $this->assertStringContainsString('"object": "thread.run"', $run);
     $this->assertStringContainsString('"status": "cancelling"', $run);
 })->group('working');
+
+it('should handle create thread and run', function () use ($open_ai) {
+    $thread = [
+        'assistant_id' => 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz',
+        'thread' => [
+            'messages' => [
+                [
+                    'role' => 'user',
+                    'content' => 'Hello, what is AI?',
+                    'file_ids' => [],
+                ],
+            ]
+        ]
+    ];
+
+    $run = $open_ai->createThreadAndRun($thread);
+
+    $this->assertStringContainsString('id', $run);
+    $this->assertStringContainsString('"object": "thread.run"', $run);
+})->group('working');
