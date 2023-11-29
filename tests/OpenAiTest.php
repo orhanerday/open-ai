@@ -522,3 +522,14 @@ it('should handle submit tool outputs within run', function () use ($open_ai) {
     $this->assertStringContainsString('"object": "thread.run"', $run);
     $this->assertStringContainsString('tools', $run);
 })->group('working');
+
+it('should handle cancel a run of a thread', function () use ($open_ai) {
+    $threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
+    $runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
+
+    $run = $open_ai->cancelRun($threadId, $runId);
+
+    $this->assertStringContainsString('id', $run);
+    $this->assertStringContainsString('"object": "thread.run"', $run);
+    $this->assertStringContainsString('"status": "cancelling"', $run);
+})->group('working');
