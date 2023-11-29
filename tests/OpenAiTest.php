@@ -256,14 +256,16 @@ it('should handle simple chat completion using the new endpoint', function () us
 })->group('working');
 
 it('should handle create a assistant', function () use ($open_ai) {
-    $assistant = $open_ai->createAssistant([
+    $data = [
         'model' => 'gpt-3.5-turbo',
         'name' => 'my assistant',
         'description' => 'my assistant description',
         'instructions' => 'you should cordially help me',
         'tools' => [],
         'file_ids' => [],
-    ]);
+    ];
+
+    $assistant = $open_ai->createAssistant($data);
 
     $this->assertStringContainsString('id', $assistant);
     $this->assertStringContainsString('"object": "assistant"', $assistant);
@@ -271,7 +273,9 @@ it('should handle create a assistant', function () use ($open_ai) {
 })->group('working');
 
 it('should handle retrieve a assistant', function () use ($open_ai) {
-    $assistant = $open_ai->retrieveAssistant('asst_rzJqKRfpQI2JMj1gYGKQOZZo');
+    $assistantId = 'asst_rzJqKRfpQI2JMj1gYGKQOZZo';
+
+    $assistant = $open_ai->retrieveAssistant($assistantId);
 
     $this->assertStringContainsString('id', $assistant);
     $this->assertStringContainsString('"object": "assistant"', $assistant);
@@ -279,10 +283,13 @@ it('should handle retrieve a assistant', function () use ($open_ai) {
 })->group('working');
 
 it('should handle modify a assistant', function () use ($open_ai) {
-    $assistant = $open_ai->modifyAssistant('asst_rzJqKRfpQI2JMj1gYGKQOZZo', [
+    $assistantId = 'asst_rzJqKRfpQI2JMj1gYGKQOZZo';
+    $data = [
         'name' => 'my modified assistant',
         'instructions' => 'you should cordially help me again',
-    ]);
+    ];
+
+    $assistant = $open_ai->modifyAssistant($assistantId, $data);
 
     $this->assertStringContainsString('id', $assistant);
     $this->assertStringContainsString('"object": "assistant"', $assistant);
@@ -290,7 +297,9 @@ it('should handle modify a assistant', function () use ($open_ai) {
 })->group('working');
 
 it('should handle delete a assistant', function () use ($open_ai) {
-    $assistant = $open_ai->deleteAssistant('asst_rzJqKRfpQI2JMj1gYGKQOZZo');
+    $assistantId = 'asst_rzJqKRfpQI2JMj1gYGKQOZZo';
+
+    $assistant = $open_ai->deleteAssistant($assistantId);
 
     $this->assertStringContainsString('id', $assistant);
     $this->assertStringContainsString('"deleted": true', $assistant);
@@ -298,6 +307,7 @@ it('should handle delete a assistant', function () use ($open_ai) {
 
 it('should handle list assistants', function () use ($open_ai) {
     $query = ['limit' => 10];
+
     $assistants = $open_ai->listAssistants($query);
 
     $this->assertStringContainsString('"object": "list"', $assistants);
@@ -306,12 +316,12 @@ it('should handle list assistants', function () use ($open_ai) {
 })->group('working');
 
 it('should handle create a assistant file', function () use ($open_ai) {
+    $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
     $upload = curl_file_create(__DIR__ . '/../files/assistant-file.txt');
     $file = json_decode($open_ai->uploadFile([
         'purpose' => 'assistants',
         'file' => $upload,
     ]), true);
-    $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
 
     $assistantFile = $open_ai->createAssistantFile($assistantId, $file['id']);
 
@@ -351,7 +361,7 @@ it('should handle delete a assistant file', function () use ($open_ai) {
 })->group('working');
 
 it('should handle create a thread', function () use ($open_ai) {
-    $thread = $open_ai->createThread([
+    $data = [
         'messages' => [
             [
                 'role' => 'user',
@@ -359,32 +369,39 @@ it('should handle create a thread', function () use ($open_ai) {
                 'file_ids' => [],
             ],
         ],
-    ]);
+    ];
+
+    $thread = $open_ai->createThread($data);
 
     $this->assertStringContainsString('id', $thread);
     $this->assertStringContainsString('"object": "thread"', $thread);
 })->group('working');
 
 it('should handle retrieve a thread', function () use ($open_ai) {
-    $thread = $open_ai->retrieveThread('thread_GHGU1zEOVD5z2EXs3e8zU55S');
+    $threadId = 'thread_GHGU1zEOVD5z2EXs3e8zU55S';
+
+    $thread = $open_ai->retrieveThread($threadId);
 
     $this->assertStringContainsString('id', $thread);
     $this->assertStringContainsString('"object": "thread"', $thread);
 })->group('working');
 
 it('should handle modify a thread', function () use ($open_ai) {
-    $thread = $open_ai->modifyThread('thread_GHGU1zEOVD5z2EXs3e8zU55S', [
-        'metadata' => [
-            'test' => '1234abcd',
-        ],
-    ]);
+    $threadId = 'thread_GHGU1zEOVD5z2EXs3e8zU55S';
+    $data = [
+        'metadata' => ['test' => '1234abcd'],
+    ];
+
+    $thread = $open_ai->modifyThread($threadId, $data);
 
     $this->assertStringContainsString('id', $thread);
     $this->assertStringContainsString('"object": "thread"', $thread);
 })->group('working');
 
 it('should handle delete a thread', function () use ($open_ai) {
-    $thread = $open_ai->deleteThread('thread_GHGU1zEOVD5z2EXs3e8zU55S');
+    $threadId = 'thread_GHGU1zEOVD5z2EXs3e8zU55S';
+
+    $thread = $open_ai->deleteThread($threadId);
 
     $this->assertStringContainsString('id', $thread);
     $this->assertStringContainsString('"deleted": true', $thread);
@@ -392,10 +409,12 @@ it('should handle delete a thread', function () use ($open_ai) {
 
 it('should handle create a message within thread', function () use ($open_ai) {
     $thread = json_decode($open_ai->createThread(), true);
-    $message = $open_ai->createThreadMessage($thread['id'], [
+    $data = [
         'role' => 'user',
         'content' => 'How does AI work? Explain it in simple terms.',
-    ]);
+    ];
+
+    $message = $open_ai->createThreadMessage($thread['id'], $data);
 
     $this->assertStringContainsString('id', $message);
     $this->assertStringContainsString('"object": "thread.message"', $message);
@@ -404,6 +423,7 @@ it('should handle create a message within thread', function () use ($open_ai) {
 it('should handle retrieve a message within thread', function () use ($open_ai) {
     $threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
     $messageId = 'msg_d37P5XgREsm6BItOcppnBO1b';
+
     $message = $open_ai->retrieveThreadMessage($threadId, $messageId);
 
     $this->assertStringContainsString('id', $message);
@@ -413,11 +433,11 @@ it('should handle retrieve a message within thread', function () use ($open_ai) 
 it('should handle modify a message within thread', function () use ($open_ai) {
     $threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
     $messageId = 'msg_d37P5XgREsm6BItOcppnBO1b';
-    $message = $open_ai->modifyThreadMessage($threadId, $messageId, [
-        'metadata' => [
-            'test' => '1234abcd',
-        ],
-    ]);
+    $data = [
+        'metadata' => ['test' => '1234abcd'],
+    ];
+
+    $message = $open_ai->modifyThreadMessage($threadId, $messageId, $data);
 
     $this->assertStringContainsString('id', $message);
     $this->assertStringContainsString('"object": "thread.message"', $message);
@@ -426,6 +446,7 @@ it('should handle modify a message within thread', function () use ($open_ai) {
 it('should handle list messages within thread', function () use ($open_ai) {
     $threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
     $query = ['limit' => 10];
+
     $messages = $open_ai->listThreadMessages($threadId, $query);
 
     $this->assertStringContainsString('id', $messages);
@@ -460,17 +481,20 @@ it('should handle list files within message', function () use ($open_ai) {
 })->group('working');
 
 it('should handle create a run of a thread', function () use ($open_ai) {
-    $assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
-    $thread = json_decode($open_ai->createThread([
+    $threadData = [
         'messages' => [
             [
                 'role' => 'user',
                 'content' => 'Hello, what is AI?',
                 'file_ids' => [],
             ],
-        ]]), true);
+        ],
+    ];
+    $newThread = $open_ai->createThread($threadData);
+    $thread = json_decode($newThread, true);
+    $data = ['assistant_id' => 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz'];
 
-    $run = $open_ai->createRun($thread['id'], ['assistant_id' => $assistantId]);
+    $run = $open_ai->createRun($thread['id'], $data);
 
     $this->assertStringContainsString('id', $run);
     $this->assertStringContainsString('"object": "thread.run"', $run);
@@ -489,10 +513,11 @@ it('should handle retrieve a run of a thread', function () use ($open_ai) {
 it('should handle modify a run of a thread', function () use ($open_ai) {
     $threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
     $runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
+    $data = [
+        'metadata' => ['test' => 'abcd1234'],
+    ];
 
-    $run = $open_ai->modifyRun($threadId, $runId, [
-        'metadata' => ['test' => 'abcd1234']
-    ]);
+    $run = $open_ai->modifyRun($threadId, $runId, $data);
 
     $this->assertStringContainsString('id', $run);
     $this->assertStringContainsString('"object": "thread.run"', $run);
@@ -512,9 +537,11 @@ it('should handle list runs of a thread', function () use ($open_ai) {
 it('should handle submit tool outputs within run', function () use ($open_ai) {
     $threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
     $runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
-    $outputs = ['tool_outputs' => [
-        ['tool_call_id' => 'call_abc123', 'output' => '28C'],
-    ]];
+    $outputs = [
+        'tool_outputs' => [
+            ['tool_call_id' => 'call_abc123', 'output' => '28C'],
+        ],
+    ];
 
     $run = $open_ai->submitToolOutputs($threadId, $runId, $outputs);
 
@@ -535,7 +562,7 @@ it('should handle cancel a run of a thread', function () use ($open_ai) {
 })->group('working');
 
 it('should handle create thread and run', function () use ($open_ai) {
-    $thread = [
+    $data = [
         'assistant_id' => 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz',
         'thread' => [
             'messages' => [
@@ -548,7 +575,7 @@ it('should handle create thread and run', function () use ($open_ai) {
         ]
     ];
 
-    $run = $open_ai->createThreadAndRun($thread);
+    $run = $open_ai->createThreadAndRun($data);
 
     $this->assertStringContainsString('id', $run);
     $this->assertStringContainsString('"object": "thread.run"', $run);
@@ -568,8 +595,9 @@ it('should handle retrieve a run step', function () use ($open_ai) {
 it('should handle list run steps', function () use ($open_ai) {
     $threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
     $runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
+    $query = ['limit' => 10];
 
-    $steps = $open_ai->listRunSteps($threadId, $runId);
+    $steps = $open_ai->listRunSteps($threadId, $runId, $query);
 
     $this->assertStringContainsString('id', $steps);
     $this->assertStringContainsString('"object": "list"', $steps);
