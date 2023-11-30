@@ -160,4 +160,22 @@ class Url
     {
         return self::OPEN_AI_URL . "/chat/completions";
     }
+
+    /**
+     * @param
+     * @return string
+     */
+    public static function assistantsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/assistants";
+    }
+
+    /**
+     * @param
+     * @return string
+     */
+    public static function threadsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/threads";
+    }
 }
