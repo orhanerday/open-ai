@@ -34,6 +34,7 @@ class OpenAi
     {
         $config = config('openai');
         $default = $config['default'] ?? '';
+
         return $config[$default] ?? [];
     }
 
@@ -56,6 +57,7 @@ class OpenAi
                 "api-key: " . $config['api_key'] ?? $OPENAI_API_KEY,
             ];
         }
+
         return [
             $this->contentTypes["application/json"],
             "Authorization: Bearer " . $config['api_key'] ?? $OPENAI_API_KEY,
@@ -245,7 +247,7 @@ class OpenAi
     public function chat($opts, $stream = null)
     {
         if ($stream != null && array_key_exists('stream', $opts)) {
-            if (!$opts['stream']) {
+            if (! $opts['stream']) {
                 throw new Exception(
                     'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
                 );
@@ -258,6 +260,7 @@ class OpenAi
 
         $url = Url::chatUrl();
         $this->baseUrl($url);
+
         return $this->sendRequest($url, 'POST', $opts);
     }
 
@@ -977,7 +980,7 @@ class OpenAi
             unset($curl_info[CURLOPT_POSTFIELDS]);
         }
 
-        if (!empty($this->proxy)) {
+        if (! empty($this->proxy)) {
             $curl_info[CURLOPT_PROXY] = $this->proxy;
         }
 
@@ -999,10 +1002,11 @@ class OpenAi
         Log::channel('openai_request')->debug(json_encode($info));
 
 
-        if (!$response) {
+        if (! $response) {
             throw new Exception(curl_error($curl));
         }
         Log::channel('openai_request')->info($response);
+
         return $response;
     }
 
@@ -1014,7 +1018,7 @@ class OpenAi
         $configUrl = $this->makeConfigUrl();
         if ($configUrl) {
             $url = str_replace(Url::OPEN_AI_URL, $configUrl, $url);
-        } else if ($this->customUrl) {
+        } elseif ($this->customUrl) {
             $url = str_replace(Url::ORIGIN, $this->customUrl, $url);
         }
         //azure open ai append api version
