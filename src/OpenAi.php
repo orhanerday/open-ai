@@ -3,6 +3,7 @@
 namespace Orhanerday\OpenAi;
 
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class OpenAi
 {
@@ -10,11 +11,11 @@ class OpenAi
     private string $origin = '';
     private string $apiVersion = Url::API_VERSION;
     private string $engine = "davinci";
-    private string $model = "text-davinci-002";
-    private string $chatModel = "gpt-3.5-turbo";
+    private string $defaultModel = "text-davinci-002";
+    private string $model = "";
     private array $headers;
     private array $contentTypes;
-    private int $timeout = 0;
+    private int $timeout = 60;
     private object $stream_method;
     private string $customUrl = "";
     private string $proxy = "";
@@ -44,15 +45,20 @@ class OpenAi
     protected function getHeaders(string $OPENAI_API_KEY = ''): array
     {
         $config = $this->getConfig();
-        if ($config['driver'] == self::AZURE_OPEN_AI) {
+        $default = $config['default'] ?? '';
+        //change model
+        if (isset($config['model'])) {
+            $this->defaultModel = $config['model'];
+        }
+        if ($default == self::AZURE_OPEN_AI) {
             return [
                 $this->contentTypes["application/json"],
-                "api-key: " . $config['app_key'] ?? $OPENAI_API_KEY,
+                "api-key: " . $config['api_key'] ?? $OPENAI_API_KEY,
             ];
         }
         return [
             $this->contentTypes["application/json"],
-            "Authorization: Bearer " . $config['app_key'] ?? $OPENAI_API_KEY,
+            "Authorization: Bearer " . $config['api_key'] ?? $OPENAI_API_KEY,
         ];
     }
 
@@ -121,8 +127,8 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-
-        $opts['model'] = $opts['model'] ?? $this->model;
+        $this->model = $opts['model'] ?? '';
+        $opts['model'] = $opts['model'] ?? $this->defaultModel;
         $url = Url::completionsURL();
         $this->baseUrl($url);
 
@@ -247,8 +253,9 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
+        $this->model = $opts['model'] ?? '';
+        $opts['model'] = $opts['model'] ?? $this->defaultModel;
 
-        $opts['model'] = $opts['model'] ?? $this->chatModel;
         $url = Url::chatUrl();
         $this->baseUrl($url);
         return $this->sendRequest($url, 'POST', $opts);
@@ -459,7 +466,8 @@ class OpenAi
      */
     public function createAssistant($data)
     {
-        $data['model'] = $data['model'] ?? $this->chatModel;
+        $this->model = $data['model'] ?? '';
+        $data['model'] = $data['model'] ?? $this->defaultModel;
         $this->headers[] = 'OpenAI-Beta: assistants=v1';
         $url = Url::assistantsUrl();
         $this->baseUrl($url);
@@ -961,6 +969,10 @@ class OpenAi
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_SSL_VERIFYPEER => false,
         ];
+        //service check verifypeer
+        if (config('app.env') == 'production') {
+            $curl_info[CURLOPT_SSL_VERIFYPEER] = true;
+        }
         if ($opts == []) {
             unset($curl_info[CURLOPT_POSTFIELDS]);
         }
@@ -973,8 +985,10 @@ class OpenAi
             $curl_info[CURLOPT_WRITEFUNCTION] = $this->stream_method;
         }
         $curl = curl_init();
-        //dd($curl_info);
         curl_setopt_array($curl, $curl_info);
+
+        Log::channel('openai_request')->info(json_encode($curl_info));
+
         $response = curl_exec($curl);
 
         $info = curl_getinfo($curl);
@@ -982,10 +996,13 @@ class OpenAi
 
         curl_close($curl);
 
+        Log::channel('openai_request')->debug(json_encode($info));
+
+
         if (!$response) {
             throw new Exception(curl_error($curl));
         }
-
+        Log::channel('openai_request')->info($response);
         return $response;
     }
 
@@ -1018,7 +1035,10 @@ class OpenAi
         $models = $config['models'] ?? [];
         $driver = $config['driver'] ?? '';
         if ($driver == self::AZURE_OPEN_AI) {
-            $model = $models[$this->chatModel] ?? $this->model;
+            $model = $models[$config['model']] ?? $this->defaultModel;
+            if ($this->model) {
+                $model = $models[$this->model] ?? $this->model;
+            }
             $base_url = $base_url . 'openai/deployments/' . $model;
             $this->setCustomURL($base_url);
         }
