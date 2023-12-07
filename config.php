@@ -7,7 +7,9 @@ return [
 
     //openai服务商
     'open_ai' => [
-        'app_key' => env('OPENAI_SECRET_KEY'),
+        'driver' => 'open_ai',
+        'model' => 'gpt-3.5-turbo',
+        'api_key' => env('OPENAI_SECRET_KEY'),
         'organization' => env('OPENAI_ORGANIZATION'),
     ],
 
