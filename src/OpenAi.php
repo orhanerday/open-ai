@@ -46,7 +46,7 @@ class OpenAi
     protected function getHeaders(string $OPENAI_API_KEY = ''): array
     {
         $config = $this->getConfig();
-        $default = $config['default'] ?? '';
+        $default = $config['driver'] ?? '';
         //change model
         if (isset($config['model'])) {
             $this->defaultModel = $config['model'];
@@ -972,6 +972,7 @@ class OpenAi
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_SSL_VERIFYPEER => false,
         ];
+        //dd($curl_info, $this->headers);
         //service check verifypeer
         if (config('app.env') == 'production') {
             $curl_info[CURLOPT_SSL_VERIFYPEER] = true;
