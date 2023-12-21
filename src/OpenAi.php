@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Log;
 class OpenAi
 {
     private const AZURE_OPEN_AI = 'azure_open_ai';
+    private const FUNCTION_IMAGE = 'image';
+    private const FUNCTION_CREATE_IMAGE_VERSION = 'createImageVariation';
+    private const FUNCTION_IMAGE_EDIT = 'imageEdit';
     private string $origin = '';
     private string $apiVersion = Url::API_VERSION;
     private string $engine = "davinci";
@@ -15,11 +18,17 @@ class OpenAi
     private string $model = "";
     private array $headers;
     private array $contentTypes;
+    private string $apiKey = '';
     private int $timeout = 60;
     private object $stream_method;
     private string $customUrl = "";
     private string $proxy = "";
     private array $curlInfo = [];
+    private array $imageAiFunctions = [
+        self::FUNCTION_CREATE_IMAGE_VERSION,
+        self::FUNCTION_IMAGE_EDIT,
+        self::FUNCTION_IMAGE,
+    ];
 
     public function __construct($OPENAI_API_KEY = '')
     {
@@ -27,7 +36,7 @@ class OpenAi
             "application/json" => "Content-Type: application/json",
             "multipart/form-data" => "Content-Type: multipart/form-data",
         ];
-        $this->headers = $this->getHeaders($OPENAI_API_KEY);
+        $this->apiKey = $OPENAI_API_KEY;
     }
 
     protected function getConfig()
@@ -43,15 +52,21 @@ class OpenAi
      * @param string $OPENAI_API_KEY
      * @return string[]
      */
-    protected function getHeaders(string $OPENAI_API_KEY = ''): array
+    protected function getHeaders(string $OPENAI_API_KEY = '', $type = ''): array
     {
         $config = $this->getConfig();
-        $default = $config['driver'] ?? '';
+        $driver = $config['driver'] ?? '';
         //change model
         if (isset($config['model'])) {
             $this->defaultModel = $config['model'];
         }
-        if ($default == self::AZURE_OPEN_AI) {
+        if ($driver == self::AZURE_OPEN_AI) {
+            if ($type == 'dalle') {
+                return [
+                    $this->contentTypes["application/json"],
+                    "api-key: ". $config['dalle_api_key'] ?? $OPENAI_API_KEY,
+                ];
+            }
             return [
                 $this->contentTypes["application/json"],
                 "api-key: " . $config['api_key'] ?? $OPENAI_API_KEY,
@@ -155,6 +170,7 @@ class OpenAi
      */
     public function image($opts)
     {
+        $this->model = $opts['model'] ?? '';
         $url = Url::imageUrl() . "/generations";
         $this->baseUrl($url);
 
@@ -179,6 +195,7 @@ class OpenAi
      */
     public function createImageVariation($opts)
     {
+        $this->model = $opts['model'] ?? '';
         $url = Url::imageUrl() . "/variations";
         $this->baseUrl($url);
 
@@ -952,7 +969,6 @@ class OpenAi
     private function sendRequest(string $url, string $method, array $opts = [])
     {
         $post_fields = json_encode($opts);
-
         if (array_key_exists('file', $opts) || array_key_exists('image', $opts)) {
             $this->headers[0] = $this->contentTypes["multipart/form-data"];
             $post_fields = $opts;
@@ -972,7 +988,6 @@ class OpenAi
             CURLOPT_HTTPHEADER => $this->headers,
             CURLOPT_SSL_VERIFYPEER => false,
         ];
-        //dd($curl_info, $this->headers);
         //service check verifypeer
         if (config('app.env') == 'production') {
             $curl_info[CURLOPT_SSL_VERIFYPEER] = true;
@@ -1016,7 +1031,8 @@ class OpenAi
      */
     private function baseUrl(string &$url)
     {
-        $configUrl = $this->makeConfigUrl();
+        $parentFunction = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'] ?? '';
+        $configUrl = $this->makeConfigUrl($parentFunction);
         if ($configUrl) {
             $url = str_replace(Url::OPEN_AI_URL, $configUrl, $url);
         } elseif ($this->customUrl) {
@@ -1031,23 +1047,41 @@ class OpenAi
     /**
      * @return mixed|string
      */
-    protected function makeConfigUrl(): mixed
+    protected function makeConfigUrl($function = ''): mixed
     {
         $config = $this->getConfig();
+        $this->headers = $this->getHeaders($this->apiKey);
         $base_url = $config['base_url'] ?? '';
         $this->origin = $config['driver'] ?? '';
         $this->apiVersion = $config['api_version'] ?? $this->apiVersion;
         $models = $config['models'] ?? [];
         $driver = $config['driver'] ?? '';
+
+        //Î¢Èí
         if ($driver == self::AZURE_OPEN_AI) {
             $model = $models[$config['model']] ?? $this->defaultModel;
             if ($this->model) {
                 $model = $models[$this->model] ?? $this->model;
             }
+            //Æ´½ÓÁ´½Ó
             $base_url = $base_url . 'openai/deployments/' . $model;
+            if (in_array($function, $this->imageAiFunctions)) {
+                //ÇĞ»»Í·²¿ÊÚÈ¨
+                $this->headers = $this->getHeaders($this->apiKey, 'dalle');
+                $base_url = $config['dalle_url'] ?? '';
+                if ($function == self::FUNCTION_IMAGE) {
+                    if ($model == 'dall-e-2') {
+                        $base_url = $base_url . 'openai/images/generations:submit';
+                    }else {
+                        $base_url = $base_url . 'openai/deployments/' . $model;
+                    }
+                }else {
+                    $base_url = 'openai/operations/images/' . $model;
+                }
+            }
+
             $this->setCustomURL($base_url);
         }
-
         return $base_url;
     }
 }
