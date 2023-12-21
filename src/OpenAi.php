@@ -67,6 +67,7 @@ class OpenAi
                     "api-key: ". $config['dalle_api_key'] ?? $OPENAI_API_KEY,
                 ];
             }
+
             return [
                 $this->contentTypes["application/json"],
                 "api-key: " . $config['api_key'] ?? $OPENAI_API_KEY,
@@ -1072,16 +1073,17 @@ class OpenAi
                 if ($function == self::FUNCTION_IMAGE) {
                     if ($model == 'dall-e-2') {
                         $base_url = $base_url . 'openai/images/generations:submit';
-                    }else {
+                    } else {
                         $base_url = $base_url . 'openai/deployments/' . $model;
                     }
-                }else {
+                } else {
                     $base_url = 'openai/operations/images/' . $model;
                 }
             }
 
             $this->setCustomURL($base_url);
         }
+
         return $base_url;
     }
 }
