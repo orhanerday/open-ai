@@ -91,6 +91,7 @@ class OpenAi
         $token = $explode[0] ?? '';
         if (count($explode) > 1) {
             $path = storage_path('app/openai_token/' . md5($tokens));
+
             try {
                 $token_number = file_get_contents($path);
             } catch (\Exception $e) {
@@ -100,6 +101,7 @@ class OpenAi
             file_put_contents($path, ($token_number + 1));
             $token = $token_number % count($explode) == 0 ? $explode[0] : $explode[1];
         }
+
         return $token;
     }
 
