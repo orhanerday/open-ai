@@ -56,20 +56,20 @@ class OpenAi
     {
         $config = $this->getConfig();
         $driver = $config['driver'] ?? '';
+        $aip_key = $config['api_key'] ?? $OPENAI_API_KEY;
+        $aip_key = $this->polling($aip_key);
         //change model
         if (isset($config['model'])) {
             $this->defaultModel = $config['model'];
         }
+
         if ($driver == self::AZURE_OPEN_AI) {
             if ($type == 'dalle') {
-                return [
-                    $this->contentTypes["application/json"],
-                    "api-key: ". $config['dalle_api_key'] ?? $OPENAI_API_KEY,
-                ];
+                $aip_key = $config['dalle_api_key'] ?? $OPENAI_API_KEY;
             }
             return [
                 $this->contentTypes["application/json"],
-                "api-key: " . $config['api_key'] ?? $OPENAI_API_KEY,
+                "api-key: " . $aip_key,
             ];
         }
 
@@ -77,6 +77,29 @@ class OpenAi
             $this->contentTypes["application/json"],
             "Authorization: Bearer " . $config['api_key'] ?? $OPENAI_API_KEY,
         ];
+    }
+
+    /**
+     * @description polling ","
+     * @return void
+     */
+    protected function polling($tokens)
+    {
+        //æ‹†åˆ†tokenè½®è¯¢
+        $explode = explode(',', $tokens);
+        $token = $explode[0] ?? '';
+        if (count($explode) > 1) {
+            $path = storage_path('app/openai_token/' . md5($tokens));
+            try {
+                $token_number = file_get_contents($path);
+            } catch (\Exception $e) {
+                $token_number = 0;
+            }
+            //æ ¹æ®$token_numberåˆ‡æ¢æ•°ç»„
+            file_put_contents($path, ($token_number + 1));
+            $token = $token_number % count($explode) == 0 ? $explode[0] : $explode[1];
+        }
+        return $token;
     }
 
     /**
@@ -1057,31 +1080,32 @@ class OpenAi
         $models = $config['models'] ?? [];
         $driver = $config['driver'] ?? '';
 
-        //Î¢Èí
+        //å¾®è½¯
         if ($driver == self::AZURE_OPEN_AI) {
             $model = $models[$config['model']] ?? $this->defaultModel;
             if ($this->model) {
                 $model = $models[$this->model] ?? $this->model;
             }
-            //Æ´½ÓÁ´½Ó
+            //æ‹¼æ¥é“¾æ¥
             $base_url = $base_url . 'openai/deployments/' . $model;
             if (in_array($function, $this->imageAiFunctions)) {
-                //ÇĞ»»Í·²¿ÊÚÈ¨
+                //åˆ‡æ¢å¤´éƒ¨æˆæƒ
                 $this->headers = $this->getHeaders($this->apiKey, 'dalle');
                 $base_url = $config['dalle_url'] ?? '';
                 if ($function == self::FUNCTION_IMAGE) {
                     if ($model == 'dall-e-2') {
                         $base_url = $base_url . 'openai/images/generations:submit';
-                    }else {
+                    } else {
                         $base_url = $base_url . 'openai/deployments/' . $model;
                     }
-                }else {
+                } else {
                     $base_url = 'openai/operations/images/' . $model;
                 }
             }
 
             $this->setCustomURL($base_url);
         }
+
         return $base_url;
     }
 }
