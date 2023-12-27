@@ -67,6 +67,7 @@ class OpenAi
             if ($type == 'dalle') {
                 $aip_key = $config['dalle_api_key'] ?? $OPENAI_API_KEY;
             }
+
             return [
                 $this->contentTypes["application/json"],
                 "api-key: " . $aip_key,
