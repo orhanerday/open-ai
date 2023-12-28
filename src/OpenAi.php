@@ -116,34 +116,6 @@ class OpenAi
     }
 
     /**
-<<<<<<< HEAD
-=======
-     * @description polling ","
-     * @return void
-     */
-    protected function polling($tokens)
-    {
-        //拆分token轮询
-        $explode = explode(',', $tokens);
-        $token = $explode[0] ?? '';
-        if (count($explode) > 1) {
-            $path = storage_path('app/openai_token/' . md5($tokens));
-
-            try {
-                $token_number = file_get_contents($path);
-            } catch (\Exception $e) {
-                $token_number = 0;
-            }
-            //根据$token_number切换数组
-            file_put_contents($path, ($token_number + 1));
-            $token = $token_number % count($explode) == 0 ? $explode[0] : $explode[1];
-        }
-
-        return $token;
-    }
-
-    /**
->>>>>>> a1ce7856a5ac511d5dbe31185cdd403f0c501c2e
      * @return array
      * Remove this method from your code before deploying
      */
