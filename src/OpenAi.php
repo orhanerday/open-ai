@@ -32,7 +32,6 @@ class OpenAi
     private array $config = [];
     private array $configs = [];
 
-
     public function __construct($OPENAI_API_KEY = '')
     {
         $this->contentTypes = [
@@ -56,6 +55,7 @@ class OpenAi
         if (empty($driver_config)) {
             throw new Exception('No default driver');
         }
+
         return $this->polling($driver_config);
     }
 
@@ -80,6 +80,7 @@ class OpenAi
             $current = $token_number % count($config);
             $current_config = $config[$current] ?? $config[0];
         }
+
         return $current_config;
     }
 
