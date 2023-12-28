@@ -30,6 +30,6 @@ To get involved:
 
 ## Contact
 
-For inquiries, collaboration opportunities, or to report any concerns related to the orhanerday Open-Source Initiative, please contact us at [contact@orhanerday.org](mailto:orhan@duck.com).
+For inquiries, collaboration opportunities, or to report any concerns related to the orhanerday Open-Source Initiative, please contact us at [orhan@duck.com](mailto:orhan@duck.com).
 
 Thank you for being a part of the orhanerday Open-Source Initiative! Together, let's build a vibrant and inclusive open-source community.
