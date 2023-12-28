@@ -29,6 +29,9 @@ class OpenAi
         self::FUNCTION_IMAGE_EDIT,
         self::FUNCTION_IMAGE,
     ];
+    private array $config = [];
+    private array $configs = [];
+
 
     public function __construct($OPENAI_API_KEY = '')
     {
@@ -39,12 +42,45 @@ class OpenAi
         $this->apiKey = $OPENAI_API_KEY;
     }
 
+    //获取配置
     protected function getConfig()
     {
         $config = config('openai');
         $default = $config['default'] ?? '';
+        $driver_config = [];
+        foreach ($config as $key => $value) {
+            if (isset($value['driver']) && $value['driver'] == $default) {
+                $driver_config[] = $value;
+            }
+        }
+        if (empty($driver_config)) {
+            throw new Exception('No default driver');
+        }
+        return $this->polling($driver_config);
+    }
 
-        return $config[$default] ?? [];
+    /**
+     * @description polling ","
+     * @return void
+     */
+    protected function polling($config)
+    {
+        $current_config = [];
+        //拆分token轮询;
+        if (count($config) > 1) {
+            $path = storage_path('app/openai_token/' . md5(json_encode($config)));
+
+            try {
+                $token_number = file_get_contents($path);
+            } catch (\Exception $e) {
+                $token_number = 0;
+            }
+            //根据$token_number切换数组
+            file_put_contents($path, ($token_number + 1));
+            $current = $token_number % count($config);
+            $current_config = $config[$current] ?? $config[0];
+        }
+        return $current_config;
     }
 
     /**
@@ -54,10 +90,9 @@ class OpenAi
      */
     protected function getHeaders(string $OPENAI_API_KEY = '', $type = ''): array
     {
-        $config = $this->getConfig();
+        $config = $this->config ?? $this->getConfig();
         $driver = $config['driver'] ?? '';
         $aip_key = $config['api_key'] ?? $OPENAI_API_KEY;
-        $aip_key = $this->polling($aip_key);
         //change model
         if (isset($config['model'])) {
             $this->defaultModel = $config['model'];
@@ -78,29 +113,6 @@ class OpenAi
             $this->contentTypes["application/json"],
             "Authorization: Bearer " . $config['api_key'] ?? $OPENAI_API_KEY,
         ];
-    }
-
-    /**
-     * @description polling ","
-     * @return void
-     */
-    protected function polling($tokens)
-    {
-        //拆分token轮询
-        $explode = explode(',', $tokens);
-        $token = $explode[0] ?? '';
-        if (count($explode) > 1) {
-            $path = storage_path('app/openai_token/' . md5($tokens));
-            try {
-                $token_number = file_get_contents($path);
-            } catch (\Exception $e) {
-                $token_number = 0;
-            }
-            //根据$token_number切换数组
-            file_put_contents($path, ($token_number + 1));
-            $token = $token_number % count($explode) == 0 ? $explode[0] : $explode[1];
-        }
-        return $token;
     }
 
     /**
@@ -298,7 +310,6 @@ class OpenAi
         }
         $this->model = $opts['model'] ?? '';
         $opts['model'] = $opts['model'] ?? $this->defaultModel;
-
         $url = Url::chatUrl();
         $this->baseUrl($url);
 
@@ -1074,6 +1085,7 @@ class OpenAi
     protected function makeConfigUrl($function = ''): mixed
     {
         $config = $this->getConfig();
+        $this->config = $config;
         $this->headers = $this->getHeaders($this->apiKey);
         $base_url = $config['base_url'] ?? '';
         $this->origin = $config['driver'] ?? '';
