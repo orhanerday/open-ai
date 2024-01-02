@@ -59,11 +59,7 @@ class OpenAi
             throw new Exception('No default driver');
         }
 
-<<<<<<< HEAD
         return $this->polling($driver_config) ;
-=======
-        return $this->polling($driver_config);
->>>>>>> 5aee0210a2b2507779df365700c58f4e2c12096f
     }
 
     /**
