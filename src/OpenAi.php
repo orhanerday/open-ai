@@ -46,7 +46,7 @@ class OpenAi
     {
         $config = config('openai');
         $default = $config['default'] ?? '';
-        if (!isset($config['polling']) || !$config['polling']) {
+        if (! isset($config['polling']) || ! $config['polling']) {
             return $config[$default] ?? [];
         }
         $driver_config = [];
