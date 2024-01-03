@@ -9,9 +9,9 @@ class Url
     public const OPEN_AI_URL = self::ORIGIN . "/" . self::API_VERSION;
 
     /**
-     * @deprecated
      * @param string $engine
      * @return string
+     * @deprecated
      */
     public static function completionURL(string $engine): string
     {
