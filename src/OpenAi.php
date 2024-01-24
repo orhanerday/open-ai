@@ -839,6 +839,18 @@ class OpenAi
     }
 
     /**
+     * @param $opts
+     * @return bool|string
+     */
+    public function tts($opts)
+    {
+        $url = Url::ttsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)

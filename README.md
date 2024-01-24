@@ -123,6 +123,7 @@ Please visit https://orhanerday.gitbook.io/openai-php-api-1/
 - Embeddings
     - [x] [Create embeddings](https://beta.openai.com/docs/api-reference/embeddings/create)
 - Audio
+    - [x] [Text to Speech (TTS)](https://platform.openai.com/docs/guides/text-to-speech)
     - [x] [Create transcription](https://platform.openai.com/docs/api-reference/audio/create)
     - [x] [Create translation](https://platform.openai.com/docs/api-reference/audio/create)
 - Files
@@ -659,6 +660,20 @@ $engines = $open_ai->engines();
 ```
 
 ## Audio
+
+### Text To Speech (TTS)
+
+```php
+
+$result = $open_ai->tts([
+    "model" => "tts-1", // tts-1-hd
+    "input" => "I'm going to use the stones again. Hey, we'd be going in short-handed, you know",
+    "voice" => "alloy", // echo, fable, onyx, nova, and shimmer
+]);
+
+// Save audio file
+file_put_contents('tts-result.mp3', $result);
+```
 
 ### Create Transcription
 
