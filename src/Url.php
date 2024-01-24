@@ -185,6 +185,6 @@ class Url
      */
     public static function ttsUrl(): string
     {
-        return self::OPEN_AI_URL . "/threads";
+        return self::OPEN_AI_URL . "/audio/speech";
     }
 }
