@@ -178,4 +178,13 @@ class Url
     {
         return self::OPEN_AI_URL . "/threads";
     }
+
+    /**
+     * @param
+     * @return string
+     */
+    public static function ttsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/audio/speech";
+    }
 }
