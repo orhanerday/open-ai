@@ -264,6 +264,41 @@ _Run the server with the following command_
 php -S localhost:8000 -t .
 ```
 
+## NVIDIA NIM INTEGRATION
+
+orhanerday/open-ai supports Nvidia NIM. The below example is MixtralAI. Check https://build.nvidia.com/explore/discover for more examples.
+
+```php
+<?php
+
+require __DIR__ . '/vendor/autoload.php'; // remove this line if you use a PHP Framework.
+
+use Orhanerday\OpenAi\OpenAi;
+
+$nvidia_ai_key = getenv('NVIDIA_AI_API_KEY');
+error_log($open_ai_key);
+$open_ai = new OpenAi($nvidia_ai_key);
+$open_ai->setBaseURL("https://integrate.api.nvidia.com");
+$chat = $open_ai->chat([
+    'model' => 'mistralai/mixtral-8x7b-instruct-v0.1',
+    'messages' => [["role" => "user", "content" => "Write a limmerick about the wonders of GPU computing."]],
+    'temperature' => 0.5,
+    'max_tokens' => 1024,
+    'top_p' => 1,
+]);
+
+var_dump($chat);
+echo "<br>";
+echo "<br>";
+echo "<br>";
+// decode response
+$d = json_decode($chat);
+// Get Content
+echo ($d->choices[0]->message->content);
+
+```
+
+
 ## Usage
 
 ### Load your key from an environment variable.
