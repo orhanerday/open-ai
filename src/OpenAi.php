@@ -968,10 +968,14 @@ class OpenAi
         $info = curl_getinfo($curl);
         $this->curlInfo = $info;
 
+        if (! $response) {
+            $error = curl_error($curl);
+        }
+        
         curl_close($curl);
 
-        if (! $response) {
-            throw new Exception(curl_error($curl));
+        if (! empty($error)) {
+            throw new Exception($error);
         }
 
         return $response;
