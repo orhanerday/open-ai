@@ -330,7 +330,7 @@ For returning JSON responses from OpenAI you need to include the phrase JSON in 
 ```php
 $complete = $open_ai->chat([
     'model' => 'gpt-3.5-turbo-1106',
-    'messages' => 'messages' => [
+    'messages' => [
             [
                 'role' => 'system',
                 'content' => 'You are a zoologist.'
