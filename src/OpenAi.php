@@ -709,8 +709,18 @@ class OpenAi
      * @param array $data
      * @return bool|string
      */
-    public function createRun($threadId, $data)
+    public function createRun($threadId, $data, $stream = null)
     {
+        if (array_key_exists('stream', $data) && $data['stream']) {
+            if ($stream == null) {
+                throw new Exception(
+                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                );
+            }
+
+            $this->stream_method = $stream;
+        }
+        
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs';
         $this->baseUrl($url);
@@ -770,8 +780,18 @@ class OpenAi
      * @param array $outputs
      * @return bool|string
      */
-    public function submitToolOutputs($threadId, $runId, $outputs)
+    public function submitToolOutputs($threadId, $runId, $outputs, $stream = null)
     {
+        if (array_key_exists('stream', $outputs) && $outputs['stream']) {
+            if ($stream == null) {
+                throw new Exception(
+                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+                );
+            }
+
+            $this->stream_method = $stream;
+        }
+        
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/submit_tool_outputs';
         $this->baseUrl($url);
