@@ -933,7 +933,7 @@ class OpenAi
     /**
      * @return void
      */
-    public function addAssistantsBetaHeader(){ 
+    private function addAssistantsBetaHeader(){ 
         $this->headers[] = 'OpenAI-Beta: assistants='.$this->assistantsBetaVersion;
     }
     
