@@ -872,18 +872,6 @@ class OpenAi
     }
 
     /**
-     * @param $opts
-     * @return string
-     */
-    public function vectorStores($opts)
-    {
-        $url = Url::vectorStoresUrl();
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $opts);
-    }
-
-    /**
      * @param array $opts
      * @return string
      */
@@ -897,6 +885,23 @@ class OpenAi
     }
 
     /**
+     * @param array $query
+     * @return string
+     */
+    public function vectorStoresList(array $query)
+    {
+        $url = Url::vectorStoresUrl();
+        $this->addAssistantsBetaHeader();
+        $this->baseUrl($url);
+
+        if (count($query) > 0) {
+            $url .= '?' . http_build_query($query);
+        }
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
      * @param string $vectorStoresId
      * @return string
      */
@@ -905,7 +910,6 @@ class OpenAi
         $url = Url::vectorStoresUrl() . '/' . $vectorStoresId;
         $this->addAssistantsBetaHeader();
         $this->baseUrl($url);
-
 
         return $this->sendRequest($url, 'GET');
     }
@@ -941,7 +945,7 @@ class OpenAi
      * @param array $opts
      * @return string
      */
-    public function vectorStoresFilesCreate(string $vectorStoresId, array $opts)
+    public function vectorStoresFilesCreateOrAppend(string $vectorStoresId, array $opts)
     {
         $url = Url::vectorStoresFilesUrl($vectorStoresId);
         $this->addAssistantsBetaHeader();
