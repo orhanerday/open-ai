@@ -720,7 +720,7 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-        
+
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs';
         $this->baseUrl($url);
@@ -791,7 +791,7 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-        
+
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/submit_tool_outputs';
         $this->baseUrl($url);
@@ -872,6 +872,130 @@ class OpenAi
     }
 
     /**
+     * @param $opts
+     * @return string
+     */
+    public function vectorStores($opts)
+    {
+        $url = Url::vectorStoresUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param array $opts
+     * @return string
+     */
+    public function vectorStoresCreate(array $opts)
+    {
+        $url = Url::vectorStoresUrl();
+        $this->addAssistantsBetaHeader();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param string $vectorStoresId
+     * @return string
+     */
+    public function vectorStoresSearch(string $vectorStoresId)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoresId;
+        $this->addAssistantsBetaHeader();
+        $this->baseUrl($url);
+
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param $opts
+     * @return string
+     */
+    public function vectorStoresEdit(array $opts)
+    {
+        $url = Url::vectorStoresUrl();
+        $this->addAssistantsBetaHeader();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param $opts
+     * @return string
+     */
+    public function vectorStoresDelete(string $vectorStoresId)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoresId;
+        $this->addAssistantsBetaHeader();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
+     * @param string $vectorStoresId
+     * @param array $opts
+     * @return string
+     */
+    public function vectorStoresFilesCreate(string $vectorStoresId, array $opts)
+    {
+        $url = Url::vectorStoresFilesUrl($vectorStoresId);
+        $this->addAssistantsBetaHeader();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    /**
+     * @param string $vectorStoresId
+     * @param array $query
+     * @return string
+     */
+    public function vectorStoresFilesList(string $vectorStoresId, array $query)
+    {
+        $url = Url::vectorStoresFilesUrl($vectorStoresId);
+        if (count($query) > 0) {
+            $url .= '?' . http_build_query($query);
+        }
+        $this->addAssistantsBetaHeader();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param string $vectorStoresId
+     * @param string $filesId
+     * @return string
+     */
+    public function vectorStoresFilesSearch(string $vectorStoresId, string $filesId)
+    {
+        $url = Url::vectorStoresFilesUrl($vectorStoresId) . "/" . $filesId;
+        $this->addAssistantsBetaHeader();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param string $vectorStoresId
+     * @param string $filesId
+     * @return string
+     */
+    public function vectorStoresFilesDelete(string $vectorStoresId, string $filesId)
+    {
+        $url = Url::vectorStoresFilesUrl($vectorStoresId) . "/" . $filesId;
+        $this->addAssistantsBetaHeader();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)
@@ -939,7 +1063,7 @@ class OpenAi
             $this->headers[] = "OpenAI-Organization: $org";
         }
     }
-    
+
     /**
      * @param  string  $org
      */
@@ -953,10 +1077,10 @@ class OpenAi
     /**
      * @return void
      */
-    private function addAssistantsBetaHeader(){ 
+    private function addAssistantsBetaHeader(){
         $this->headers[] = 'OpenAI-Beta: assistants='.$this->assistantsBetaVersion;
     }
-    
+
 
     /**
      * @param  string  $url

@@ -187,4 +187,22 @@ class Url
     {
         return self::OPEN_AI_URL . "/audio/speech";
     }
+
+    /**
+     * @param
+     * @return string
+     */
+    public static function vectorStoresUrl(): string
+    {
+        return self::OPEN_AI_URL . "/vector_stores";
+    }
+
+    /**
+     * @param string $vectorStoresId
+     * @return string
+     */
+    public static function vectorStoresFilesUrl(string $vectorStoresId): string
+    {
+        return self::OPEN_AI_URL . "/vector_stores/" . $vectorStoresId . "/files";
+    }
 }
