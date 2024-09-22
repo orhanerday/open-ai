@@ -311,16 +311,17 @@ use Orhanerday\OpenAi\OpenAi;
 $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
 ```
 
-## Requesting organization
+## Requesting organization, project (optional)
 
-For users who belong to multiple organizations, you can pass a header to specify which organization is used for an API
+For users who belong to multiple organizations, projects, you can pass a header to specify which organization, project is used for an API
 request.
 Usage from these API requests will count against the specified organization's subscription quota.
 
 ````php
 $open_ai_key = getenv('OPENAI_API_KEY');
 $open_ai = new OpenAi($open_ai_key);
-$open_ai->setORG("org-IKN2E1nI3kFYU8ywaqgFRKqi");
+$open_ai->setORG('<YOUR-ORG-ID>');
+$open_ai->setProject('<YOUR-PROJECT-ID>');
 ````
 
 ## Base URL
