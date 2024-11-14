@@ -2,6 +2,7 @@
 
 namespace Orhanerday\OpenAi;
 
+use CURLFile;
 use Exception;
 
 class OpenAi
@@ -9,7 +10,8 @@ class OpenAi
     private string $engine = "davinci";
     private string $model = "text-davinci-002";
     private string $chatModel = "gpt-3.5-turbo";
-    private string $assistantsBetaVersion = "v1";
+
+    private string $assistantsBetaVersion = "v2";
     private array $headers;
     private array $contentTypes;
     private int $timeout = 0;
@@ -720,7 +722,7 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-        
+
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs';
         $this->baseUrl($url);
@@ -791,7 +793,7 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-        
+
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/submit_tool_outputs';
         $this->baseUrl($url);
@@ -872,6 +874,105 @@ class OpenAi
     }
 
     /**
+     * @param string $name
+     * @return bool|string
+     * @throws Exception
+     */
+    public function createVectorStore(string $name)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', ['name' => $name]);
+    }
+
+    /**
+     * @param string $id
+     * @return bool|string
+     * @throws Exception
+     */
+    public function retrieveVectorStore(string $id)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl() . '/' . $id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * Perform a file upload for each curl file in the files array, then attach them to the given vector store.
+     * Poll the file batch every 3s until it is completed, then return the file batch.
+     * @param string $vectorStoreId
+     * @param CURLFile[] $files
+     * @return bool|string
+     * @throws Exception
+     */
+    public function uploadFilesToVectorStoreAndPoll(string $vectorStoreId, array $files)
+    {
+        $fileIds = [];
+        foreach ($files as $file) {
+            $file = $this->uploadFile([
+                'file' => $file,
+                'purpose' => 'assistants',
+            ]);
+            $file = json_decode($file, true);
+            $fileIds[] = $file['id'];
+        }
+
+        $fileBatch = $this->createVectorFileBatch($vectorStoreId, $fileIds);
+        $fileBatch = json_decode($fileBatch, true);
+
+        while (true) {
+            $fileBatch = $this->retrieveVectorFileBatch($vectorStoreId, $fileBatch['id']);
+            $fileBatch = json_decode($fileBatch, true);
+
+            switch ($fileBatch['status']) {
+                case 'processing':
+                    break;
+                case 'cancelled':
+                case 'failed':
+                    throw new Exception('File batch failed');
+                case 'completed':
+                    return $fileBatch;
+            }
+
+            sleep(3);
+        }
+    }
+
+    /**
+     * @param string $vectorStoreId
+     * @param array $fileIds
+     * @return bool|string
+     * @throws Exception
+     */
+    public function createVectorFileBatch(string $vectorStoreId, array $fileIds)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl() . '/' . $vectorStoreId . '/file_batches';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', ['file_ids' => $fileIds]);
+    }
+
+    /**
+     * @param string $vectorStoreId
+     * @param string $fileBatchId
+     * @return bool|string
+     * @throws Exception
+     */
+    public function retrieveVectorFileBatch(string $vectorStoreId, string $fileBatchId)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl() . '/' . $vectorStoreId . '/file_batches/' . $fileBatchId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)
@@ -939,7 +1040,7 @@ class OpenAi
             $this->headers[] = "OpenAI-Organization: $org";
         }
     }
-    
+
     /**
      * @param  string  $org
      */
@@ -953,10 +1054,10 @@ class OpenAi
     /**
      * @return void
      */
-    private function addAssistantsBetaHeader(){ 
+    private function addAssistantsBetaHeader()
+    {
         $this->headers[] = 'OpenAI-Beta: assistants='.$this->assistantsBetaVersion;
     }
-    
 
     /**
      * @param  string  $url
