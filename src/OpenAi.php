@@ -903,13 +903,13 @@ class OpenAi
 
     /**
      * Perform a file upload for each curl file in the files array, then attach them to the given vector store.
-     * Poll the file batch every 3s until it is completed, then return the file batch.
+     * Poll the file batch every 3s until it is completed, then return the file batch and openai file object ids.
      * @param string $vectorStoreId
      * @param CURLFile[] $files
-     * @return bool|string
+     * @return array{fileIds: array, fileBatch: bool|string}
      * @throws Exception
      */
-    public function uploadFilesToVectorStoreAndPoll(string $vectorStoreId, array $files)
+    public function uploadFilesToVectorStoreAndPoll(string $vectorStoreId, array $files): array
     {
         $fileIds = [];
         foreach ($files as $file) {
@@ -935,7 +935,7 @@ class OpenAi
                 case 'failed':
                     throw new Exception('File batch failed');
                 case 'completed':
-                    return $fileBatch;
+                    return ['fileIds' => $fileIds, 'fileBatch' => $fileBatch];
             }
 
             sleep(3);
