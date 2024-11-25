@@ -902,6 +902,21 @@ class OpenAi
     }
 
     /**
+     * @param string $vectorStoreId
+     * @param string $fileId
+     * @return bool|string
+     * @throws Exception
+     */
+    public function createVectorStoreFile(string $vectorStoreId, string $fileId)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl() . '/' . $vectorStoreId . '/files';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', ['file_id' => $fileId]);
+    }
+
+    /**
      * Perform a file upload for each curl file in the files array, then attach them to the given vector store.
      * Poll the file batch every 3s until it is completed, then return the file batch and openai file object ids.
      * @param string $vectorStoreId
