@@ -2,7 +2,6 @@
 
 namespace Orhanerday\OpenAi;
 
-use CURLFile;
 use Exception;
 
 class OpenAi
@@ -917,44 +916,18 @@ class OpenAi
     }
 
     /**
-     * Perform a file upload for each curl file in the files array, then attach them to the given vector store.
-     * Poll the file batch every 3s until it is completed, then return the file batch and openai file object ids.
      * @param string $vectorStoreId
-     * @param CURLFile[] $files
-     * @return array{fileIds: array, fileBatch: bool|string}
+     * @param string $fileId
+     * @return bool|string
      * @throws Exception
      */
-    public function uploadFilesToVectorStoreAndPoll(string $vectorStoreId, array $files): array
+    public function retrieveVectorStoreFile(string $vectorStoreId, string $fileId)
     {
-        $fileIds = [];
-        foreach ($files as $file) {
-            $file = $this->uploadFile([
-                'file' => $file,
-                'purpose' => 'assistants',
-            ]);
-            $file = json_decode($file, true);
-            $fileIds[] = $file['id'];
-        }
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl() . '/' . $vectorStoreId . '/files/' . $fileId;
+        $this->baseUrl($url);
 
-        $fileBatch = $this->createVectorFileBatch($vectorStoreId, $fileIds);
-        $fileBatch = json_decode($fileBatch, true);
-
-        while (true) {
-            $fileBatch = $this->retrieveVectorFileBatch($vectorStoreId, $fileBatch['id']);
-            $fileBatch = json_decode($fileBatch, true);
-
-            switch ($fileBatch['status']) {
-                case 'processing':
-                    break;
-                case 'cancelled':
-                case 'failed':
-                    throw new Exception('File batch failed');
-                case 'completed':
-                    return ['fileIds' => $fileIds, 'fileBatch' => $fileBatch];
-            }
-
-            sleep(3);
-        }
+        return $this->sendRequest($url, 'GET');
     }
 
     /**
@@ -1071,7 +1044,10 @@ class OpenAi
      */
     private function addAssistantsBetaHeader()
     {
-        $this->headers[] = 'OpenAI-Beta: assistants='.$this->assistantsBetaVersion;
+        $assistantsBetaHeader = 'OpenAI-Beta: assistants=' . $this->assistantsBetaVersion;
+        if (!in_array($assistantsBetaHeader, $this->headers)) {
+            $this->headers[] = $assistantsBetaHeader;
+        }
     }
 
     /**
