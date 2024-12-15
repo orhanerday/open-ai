@@ -9,7 +9,8 @@ class OpenAi
     private string $engine = "davinci";
     private string $model = "text-davinci-002";
     private string $chatModel = "gpt-3.5-turbo";
-    private string $assistantsBetaVersion = "v1";
+
+    private string $assistantsBetaVersion = "v2";
     private array $headers;
     private array $contentTypes;
     private int $timeout = 0;
@@ -720,7 +721,7 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-        
+
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs';
         $this->baseUrl($url);
@@ -791,7 +792,7 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-        
+
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/submit_tool_outputs';
         $this->baseUrl($url);
@@ -872,6 +873,94 @@ class OpenAi
     }
 
     /**
+     * @param string $name
+     * @return bool|string
+     * @throws Exception
+     */
+    public function createVectorStore(string $name)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', ['name' => $name]);
+    }
+
+    /**
+     * @param string $id
+     * @return bool|string
+     * @throws Exception
+     */
+    public function retrieveVectorStore(string $id)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl() . '/' . $id;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param string $vectorStoreId
+     * @param string $fileId
+     * @return bool|string
+     * @throws Exception
+     */
+    public function createVectorStoreFile(string $vectorStoreId, string $fileId)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl() . '/' . $vectorStoreId . '/files';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', ['file_id' => $fileId]);
+    }
+
+    /**
+     * @param string $vectorStoreId
+     * @param string $fileId
+     * @return bool|string
+     * @throws Exception
+     */
+    public function retrieveVectorStoreFile(string $vectorStoreId, string $fileId)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl() . '/' . $vectorStoreId . '/files/' . $fileId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
+     * @param string $vectorStoreId
+     * @param array $fileIds
+     * @return bool|string
+     * @throws Exception
+     */
+    public function createVectorFileBatch(string $vectorStoreId, array $fileIds)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl() . '/' . $vectorStoreId . '/file_batches';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', ['file_ids' => $fileIds]);
+    }
+
+    /**
+     * @param string $vectorStoreId
+     * @param string $fileBatchId
+     * @return bool|string
+     * @throws Exception
+     */
+    public function retrieveVectorFileBatch(string $vectorStoreId, string $fileBatchId)
+    {
+        $this->addAssistantsBetaHeader();
+        $url = Url::vectorStoreUrl() . '/' . $vectorStoreId . '/file_batches/' . $fileBatchId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    /**
      * @param  int  $timeout
      */
     public function setTimeout(int $timeout)
@@ -939,7 +1028,7 @@ class OpenAi
             $this->headers[] = "OpenAI-Organization: $org";
         }
     }
-    
+
     /**
      * @param  string  $org
      */
@@ -953,10 +1042,13 @@ class OpenAi
     /**
      * @return void
      */
-    private function addAssistantsBetaHeader(){ 
-        $this->headers[] = 'OpenAI-Beta: assistants='.$this->assistantsBetaVersion;
+    private function addAssistantsBetaHeader()
+    {
+        $assistantsBetaHeader = 'OpenAI-Beta: assistants=' . $this->assistantsBetaVersion;
+        if (!in_array($assistantsBetaHeader, $this->headers)) {
+            $this->headers[] = $assistantsBetaHeader;
+        }
     }
-    
 
     /**
      * @param  string  $url

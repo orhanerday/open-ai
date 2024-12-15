@@ -187,4 +187,9 @@ class Url
     {
         return self::OPEN_AI_URL . "/audio/speech";
     }
+
+    public static function vectorStoreUrl(): string
+    {
+        return self::OPEN_AI_URL . "/vector_stores";
+    }
 }
