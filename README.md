@@ -8,7 +8,7 @@
 
 # Unfortunately, I don’t have as much time to maintain the project as I used to. Of course, I will continue to implement new APIs and critical fixes as needed. However, I have limited support, earning only $175 in contributions since January 2022.
 
-## Maintaining this project has become increasingly challenging. If you want to ensure this project stays alive and continues to improve, please please consider supporting it. Your help means a lot. Thank you!
+## Maintaining this project has become increasingly challenging. If you want to ensure this project stays alive and continues to faster improve, please please consider supporting it. Your help means a lot. Thank you!
 * [Buy me a coffee](https://www.buymeacoffee.com/orhane)
 * [Patreon](https://patreon.com/orhann)
 > ### ChatGPT API is currently supported, [click here](#chat-as-known-as-chatgpt-api) for the implementation introductions.
