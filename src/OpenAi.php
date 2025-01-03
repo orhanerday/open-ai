@@ -939,7 +939,17 @@ class OpenAi
             $this->headers[] = "OpenAI-Organization: $org";
         }
     }
-    
+
+    /**
+     * @param  string  $project
+     */
+    public function setProject(string $project)
+    {
+        if ($project != "") {
+            $this->headers[] = "OpenAI-Project: $project";
+        }
+    }
+
     /**
      * @param  string  $org
      */
