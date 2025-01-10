@@ -1003,6 +1003,7 @@ class OpenAi
 
         curl_setopt_array($curl, $curl_info);
         $response = curl_exec($curl);
+        $curl_error = curl_error($curl);
 
         $info = curl_getinfo($curl);
         $this->curlInfo = $info;
@@ -1010,7 +1011,7 @@ class OpenAi
         curl_close($curl);
 
         if (! $response) {
-            throw new Exception(curl_error($curl));
+            throw new Exception($curl_error);
         }
 
         return $response;
