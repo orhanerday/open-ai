@@ -18,7 +18,7 @@ class OpenAi
     private string $proxy = "";
     private array $curlInfo = [];
 
-    public function __construct($OPENAI_API_KEY)
+    public function __construct($OPENAI_API_KEY = '')
     {
         $this->contentTypes = [
             "application/json" => "Content-Type: application/json",
@@ -939,7 +939,19 @@ class OpenAi
             $this->headers[] = "OpenAI-Organization: $org";
         }
     }
-    
+
+    /**
+     * @param string $token
+     */
+    public function setApiKey(string $token)
+    {
+        if ($token != "") {
+            $this->headers[1] = "Authorization: Bearer $token";
+        }
+
+        return $this;
+    }
+
     /**
      * @param  string  $org
      */
@@ -967,6 +979,12 @@ class OpenAi
     private function sendRequest(string $url, string $method, array $opts = [])
     {
         $post_fields = json_encode($opts);
+
+        if ($this->headers[1] === 'Authorization: Bearer ') {
+            throw new Exception(
+                'Please provide an API key.'
+            );
+        }
 
         if (array_key_exists('file', $opts) || array_key_exists('image', $opts)) {
             $this->headers[0] = $this->contentTypes["multipart/form-data"];
