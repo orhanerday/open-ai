@@ -720,7 +720,7 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-        
+
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs';
         $this->baseUrl($url);
@@ -791,7 +791,7 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-        
+
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/submit_tool_outputs';
         $this->baseUrl($url);
@@ -965,10 +965,10 @@ class OpenAi
     /**
      * @return void
      */
-    private function addAssistantsBetaHeader(){ 
+    private function addAssistantsBetaHeader()
+    {
         $this->headers[] = 'OpenAI-Beta: assistants='.$this->assistantsBetaVersion;
     }
-    
 
     /**
      * @param  string  $url
