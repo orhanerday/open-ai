@@ -18,7 +18,7 @@ class OpenAi
     private string $proxy = "";
     private array $curlInfo = [];
 
-    public function __construct($OPENAI_API_KEY)
+    public function __construct($OPENAI_API_KEY = '')
     {
         $this->contentTypes = [
             "application/json" => "Content-Type: application/json",
@@ -720,7 +720,7 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-        
+
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs';
         $this->baseUrl($url);
@@ -791,7 +791,7 @@ class OpenAi
 
             $this->stream_method = $stream;
         }
-        
+
         $this->addAssistantsBetaHeader();
         $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/submit_tool_outputs';
         $this->baseUrl($url);
@@ -939,7 +939,19 @@ class OpenAi
             $this->headers[] = "OpenAI-Organization: $org";
         }
     }
-    
+
+    /**
+     * @param string $token
+     */
+    public function setApiKey(string $token)
+    {
+        if ($token != "") {
+            $this->headers[1] = "Authorization: Bearer $token";
+        }
+
+        return $this;
+    }
+
     /**
      * @param  string  $org
      */
@@ -953,10 +965,10 @@ class OpenAi
     /**
      * @return void
      */
-    private function addAssistantsBetaHeader(){ 
+    private function addAssistantsBetaHeader()
+    {
         $this->headers[] = 'OpenAI-Beta: assistants='.$this->assistantsBetaVersion;
     }
-    
 
     /**
      * @param  string  $url
@@ -967,6 +979,12 @@ class OpenAi
     private function sendRequest(string $url, string $method, array $opts = [])
     {
         $post_fields = json_encode($opts);
+
+        if ($this->headers[1] === 'Authorization: Bearer ') {
+            throw new Exception(
+                'Please provide an API key.'
+            );
+        }
 
         if (array_key_exists('file', $opts) || array_key_exists('image', $opts)) {
             $this->headers[0] = $this->contentTypes["multipart/form-data"];
