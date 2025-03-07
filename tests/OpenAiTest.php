@@ -618,8 +618,22 @@ it('should throw error when API key is not set', function () use ($open_ai_with_
 
 $open_ai_with_set_api_key = (new OpenAi())->setApiKey(getenv('OPENAI_API_KEY'));
 
-it('should handle simple completion with API key set', function () use ($open_ai_with_set_api_key) {
+it('should handle simple completion with new setApiKey method', function () use ($open_ai_with_set_api_key) {
     $result = $open_ai_with_set_api_key->completion([
+        'prompt' => "Hello",
+        'temperature' => 0.9,
+        "max_tokens" => 150,
+        "frequency_penalty" => 0,
+        "presence_penalty" => 0.6,
+    ]);
+
+    $this->assertStringContainsString('text', $result);
+})->group('api-keys');
+
+$open_ai_backward_compatible = (new OpenAi(getenv('OPENAI_API_KEY')));
+
+it('should handle simple completion in backward compatible manner', function () use ($open_ai_backward_compatible) {
+    $result = $open_ai_backward_compatible->completion([
         'prompt' => "Hello",
         'temperature' => 0.9,
         "max_tokens" => 150,
