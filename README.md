@@ -64,11 +64,11 @@ Fully open-source and secure community-maintained, PHP SDK for accessing the Ope
 
 > #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
 > #### Free support is available. [Join our discord server](#join-our-discord-server)
-> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://beta.openai.com/docs/introduction) and [examples](https://beta.openai.com/examples). Also you can get help from our discord channel that called [#api-support](https://discord.gg/R9CpVUdqQR)
+> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://platform.openai.com/docs/overview) and [examples](https://platform.openai.com/docs/examples). Also you can get help from our discord channel that called [#api-support](https://discord.gg/R9CpVUdqQR)
 
 ## News
 
-- orhanerday/open-ai added to community libraries php [section](https://beta.openai.com/docs/libraries/php).
+- orhanerday/open-ai added to community libraries php [section](https://platform.openai.com/docs/libraries/php).
 - orhanerday/open-ai featured
   on [PHPStorm blog post](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API),
   thanks JetBrains!
@@ -111,40 +111,40 @@ Please visit https://orhanerday.gitbook.io/openai-php-api-1/
 - Chat
     - [x] [ChatGPT API](#chat-as-known-as-chatgpt-api)
 - Models
-    - [x] [List models](https://beta.openai.com/docs/api-reference/models/list)
-    - [x] [Retrieve model](https://beta.openai.com/docs/api-reference/models/retrieve)
+    - [x] [List models](https://platform.openai.com/docs/api-reference/models/list)
+    - [x] [Retrieve model](https://platform.openai.com/docs/api-reference/models/retrieve)
 - Completions
-    - [x] [Create completion](https://beta.openai.com/docs/api-reference/completions/create)
+    - [x] [Create completion](https://platform.openai.com/docs/api-reference/completions/create)
 - Edits
-    - [x] [Create edits](https://beta.openai.com/docs/api-reference/edits/create)
+    - [x] [Create edits](https://platform.openai.com/docs/api-reference/edits/create)
 - Images
-    - [x] [Create image](https://beta.openai.com/docs/api-reference/images/create)
-    - [x] [Create image edit](https://beta.openai.com/docs/api-reference/images/create-edit)
-    - [x] [Create image variation](https://beta.openai.com/docs/api-reference/images/create-variation)
+    - [x] [Create image](https://platform.openai.com/docs/api-reference/images/create)
+    - [x] [Create image edit](https://platform.openai.com/docs/api-reference/images/create-edit)
+    - [x] [Create image variation](https://platform.openai.com/docs/api-reference/images/create-variation)
 - Embeddings
-    - [x] [Create embeddings](https://beta.openai.com/docs/api-reference/embeddings/create)
+    - [x] [Create embeddings](https://platform.openai.com/docs/api-reference/embeddings/create)
 - Audio
     - [x] [Text to Speech (TTS)](https://platform.openai.com/docs/guides/text-to-speech)
     - [x] [Create transcription](https://platform.openai.com/docs/api-reference/audio/create)
     - [x] [Create translation](https://platform.openai.com/docs/api-reference/audio/create)
 - Files
-    - [x] [List files](https://beta.openai.com/docs/api-reference/files/list)
-    - [x] [Upload file](https://beta.openai.com/docs/api-reference/files/upload)
-    - [x] [Delete file](https://beta.openai.com/docs/api-reference/files/delete)
-    - [x] [Retrieve file](https://beta.openai.com/docs/api-reference/files/retrieve)
-    - [x] [Retrieve file content](https://beta.openai.com/docs/api-reference/files/retrieve-content)
+    - [x] [List files](https://platform.openai.com/docs/api-reference/files/list)
+    - [x] [Upload file](https://platform.openai.com/docs/api-reference/files/upload)
+    - [x] [Delete file](https://platform.openai.com/docs/api-reference/files/delete)
+    - [x] [Retrieve file](https://platform.openai.com/docs/api-reference/files/retrieve)
+    - [x] [Retrieve file content](https://platform.openai.com/docs/api-reference/files/retrieve-content)
 - Fine-tunes
-    - [x] [Create fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/create)
-    - [x] [List fine-tunes (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/list)
-    - [x] [Retrieve fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/retrieve)
-    - [x] [Cancel fine-tune (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/cancel)
-    - [x] [List fine-tune events (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/events)
-    - [x] [Delete fine-tune model (beta)](https://beta.openai.com/docs/api-reference/fine-tunes/delete-model)
+    - [x] [Create fine-tune (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/create)
+    - [x] [List fine-tunes (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/list)
+    - [x] [Retrieve fine-tune (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/retrieve)
+    - [x] [Cancel fine-tune (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/cancel)
+    - [x] [List fine-tune events (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/events)
+    - [x] [Delete fine-tune model (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/delete-model)
 - Moderation
-    - [x] [Create moderation](https://beta.openai.com/docs/api-reference/moderations/create)
+    - [x] [Create moderation](https://platform.openai.com/docs/api-reference/moderations/create)
 - ~~Engines~~ *(deprecated)*
-    - ~~[List engines](https://beta.openai.com/docs/api-reference/engines/list)~~
-    - ~~[Retrieve engine](https://beta.openai.com/docs/api-reference/engines/retrieve)~~
+    - ~~[List engines](https://platform.openai.com/docs/api-reference/engines/list)~~
+    - ~~[Retrieve engine](https://platform.openai.com/docs/api-reference/engines/retrieve)~~
 - Assistants (beta)
     - [x] [Create assistant](https://platform.openai.com/docs/api-reference/assistants/createAssistant)
     - [x] [Retrieve assistant](https://platform.openai.com/docs/api-reference/assistants/getAssistant)
@@ -610,7 +610,7 @@ $search = $open_ai->search([
 
 Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.
 
-Related guide: [Embeddings](https://beta.openai.com/docs/guides/embeddings)
+Related guide: [Embeddings](https://platform.openai.com/docs/guides/embeddings)
 
 ### Create embeddings
 
@@ -680,7 +680,7 @@ $flags = $open_ai->moderation([
 ]);
 ```
 
-Know more about Content Moderations here: [OpenAI Moderations](https://beta.openai.com/docs/api-reference/moderations)
+Know more about Content Moderations here: [OpenAI Moderations](https://platform.openai.com/docs/api-reference/moderations)
 
 ## List engines
 
