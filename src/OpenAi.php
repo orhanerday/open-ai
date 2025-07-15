@@ -945,7 +945,7 @@ class OpenAi
      */
     public function setApiKey(string $token)
     {
-        if ($token != "") {
+        if (empty(trim($token))) {
             $this->headers[1] = "Authorization: Bearer $token";
         }
 
@@ -980,7 +980,7 @@ class OpenAi
     {
         $post_fields = json_encode($opts);
 
-        if ($this->headers[1] === 'Authorization: Bearer ') {
+        if ('Authorization: Bearer' === trim($this->headers[1])) {
             throw new Exception(
                 'Please provide an API key.'
             );
