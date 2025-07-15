@@ -941,6 +941,8 @@ class OpenAi
     }
 
     /**
+     * Set API Key.
+     *
      * @param string $token
      */
     public function setApiKey(string $token)
