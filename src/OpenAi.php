@@ -947,7 +947,7 @@ class OpenAi
      */
     public function setApiKey(string $token)
     {
-        if (empty(trim($token))) {
+        if (!empty(trim($token))) {
             $this->headers[1] = "Authorization: Bearer $token";
         }
 
