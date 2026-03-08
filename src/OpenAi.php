@@ -1007,7 +1007,9 @@ class OpenAi
         $info = curl_getinfo($curl);
         $this->curlInfo = $info;
 
-        curl_close($curl);
+        if (\PHP_MAJOR_VERSION < 8) {
+            curl_close($curl);
+        }
 
         if (! $response) {
             throw new Exception(curl_error($curl));
