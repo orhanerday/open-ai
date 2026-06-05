@@ -337,6 +337,22 @@ $open_ai = new OpenAi($open_ai_key,$originURL);
 $open_ai->setBaseURL("https://ai.example.com/");
 ````
 
+This also works for OpenAI-compatible local model servers, private gateways,
+and governed AI control planes:
+
+````php
+$open_ai_key = getenv('OPENAI_API_KEY');
+$open_ai = new OpenAi($open_ai_key);
+$open_ai->setBaseURL(getenv('OPENAI_BASE_URL') ?: "https://api.openai.com");
+
+$chat = $open_ai->chat([
+    'model' => getenv('OPENAI_MODEL') ?: 'gpt-4o-mini',
+    'messages' => [
+        ['role' => 'user', 'content' => 'Summarize this request.'],
+    ],
+]);
+````
+
 ## Use Proxy
 
 You can use some proxy servers for your requests api;
