@@ -10,6 +10,7 @@ class Url
 
     /**
      * @deprecated
+     *
      * @param string $engine
      * @return string
      */
@@ -27,7 +28,6 @@ class Url
     }
 
     /**
-     *
      * @return string
      */
     public static function editsUrl(): string
@@ -45,7 +45,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function enginesUrl(): string
@@ -63,7 +62,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function classificationsUrl(): string
@@ -72,7 +70,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function moderationUrl(): string
@@ -81,7 +78,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function transcriptionsUrl(): string
@@ -90,7 +86,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function translationsUrl(): string
@@ -99,7 +94,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function filesUrl(): string
@@ -108,7 +102,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function fineTuneUrl(): string
@@ -117,7 +110,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function fineTuneModel(): string
@@ -126,7 +118,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function answersUrl(): string
@@ -135,7 +126,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function imageUrl(): string
@@ -144,7 +134,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function embeddings(): string
@@ -153,7 +142,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function chatUrl(): string
@@ -162,7 +150,41 @@ class Url
     }
 
     /**
-     * @param
+     * Responses API endpoint.
+     *
+     * @return string
+     */
+    public static function responsesUrl(): string
+    {
+        return self::OPEN_AI_URL . "/responses";
+    }
+
+    /**
+     * Retrieve a specific response.
+     *
+     * @param string $responseId
+     * @return string
+     */
+    public static function responseUrl(string $responseId): string
+    {
+        return self::OPEN_AI_URL . "/responses/" . rawurlencode($responseId);
+    }
+
+    /**
+     * Cancel a background response.
+     *
+     * @param string $responseId
+     * @return string
+     */
+    public static function cancelResponseUrl(string $responseId): string
+    {
+        return self::OPEN_AI_URL
+            . "/responses/"
+            . rawurlencode($responseId)
+            . "/cancel";
+    }
+
+    /**
      * @return string
      */
     public static function assistantsUrl(): string
@@ -171,7 +193,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function threadsUrl(): string
@@ -180,7 +201,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function ttsUrl(): string
