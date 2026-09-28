@@ -1,6 +1,6 @@
 {
     "name": "orhanerday/open-ai",
-    "description": "OpenAI GPT-3 Api Client in PHP",
+    "description": "PHP client library for the OpenAI API",
     "keywords": [
         "orhanerday",
         "open-ai"
