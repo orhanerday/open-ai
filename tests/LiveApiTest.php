@@ -495,16 +495,9 @@ it('creates retrieves lists and cancels its own vector store file batch', functi
         $store = ($this->decode)($this->client->createVectorStore());
         $storeId = $store['id'];
         $batch = ($this->decode)($this->client->createVectorStoreFileBatch($storeId, ['file_ids' => [$fileId]]));
-        // Give OpenAI a moment to register the batch before cancelling to avoid an HTTP 500 internal server error
-        // Note: OpenAI's endpoint sometimes throws a 500 if the batch completes instantly, so we catch it.
-        try {
-            $cancelled = ($this->decode)($this->client->cancelVectorStoreFileBatch($storeId, $batch['id']));
-            expect($cancelled['id'])->toBe($batch['id']);
-        } catch (\Exception $e) {
-            if (strpos($e->getMessage(), 'HTTP 500') === false && strpos($e->getMessage(), 'HTTP 400') === false) {
-                throw $e;
-            }
-        }
+        // Cancel promptly; waiting for indexing can race with batch completion.
+        $cancelled = ($this->decode)($this->client->cancelVectorStoreFileBatch($storeId, $batch['id']));
+        expect($cancelled['id'])->toBe($batch['id']);
         $retrieved = ($this->decode)($this->client->retrieveVectorStoreFileBatch($storeId, $batch['id']));
         expect($retrieved['id'])->toBe($batch['id']);
         $files = ($this->decode)($this->client->listVectorStoreFileBatchFiles($storeId, $batch['id'], ['limit' => 1]));

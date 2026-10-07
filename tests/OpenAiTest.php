@@ -39,7 +39,7 @@ it('applies custom cURL options', function () {
     $client = new OpenAi('unused-local-key');
     // Using a custom curl option to intentionally break the request
     $client->setCURLOptions([
-        CURLOPT_URL => 'unsupported-protocol://custom-curl-options-test'
+        CURLOPT_URL => 'unsupported-protocol://custom-curl-options-test',
     ]);
 
     try {
@@ -51,16 +51,27 @@ it('applies custom cURL options', function () {
 })->group('transport');
 
 it('applies custom API versions', function () {
-    $client = new OpenAi('unused-local-key');
-    // We override both URL and Version to ensure they stack correctly
-    $client->setBaseURL('unsupported-protocol://custom-api-version-test');
-    $client->setApiVersion('api/v3');
+    $root = sys_get_temp_dir() . '/openai-version-' . bin2hex(random_bytes(8));
+    $directory = $root . '/api/v3/files/test';
+    mkdir($directory, 0700, true);
+    file_put_contents($directory . '/content', 'custom version content');
 
     try {
-        $client->listModels();
-        $this->fail('Expected custom API version to override URL and fail.');
-    } catch (Exception $exception) {
-        expect($exception->getCode())->toBe(CURLE_UNSUPPORTED_PROTOCOL);
+        $client = new OpenAi('unused-local-key');
+        $normalizedPath = str_replace('\\', '/', $root);
+        $baseUrl = 'file://' . ($normalizedPath[0] === '/' ? '' : '/') . $normalizedPath;
+        $client->setBaseURL($baseUrl);
+        $client->setApiVersion('api/v3');
+
+        expect($client->retrieveFileContent('test'))->toBe('custom version content');
+        expect($client->getCURLInfo()['url'])->toBe($baseUrl . '/api/v3/files/test/content');
+    } finally {
+        unlink($directory . '/content');
+        rmdir($directory);
+        rmdir($root . '/api/v3/files');
+        rmdir($root . '/api/v3');
+        rmdir($root . '/api');
+        rmdir($root);
     }
 })->group('transport');
 

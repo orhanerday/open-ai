@@ -168,11 +168,11 @@ $open_ai->setProxy("http://127.0.0.1:1086");
 
 ### Custom cURL options
 
-Inject custom options directly into the underlying cURL requests (useful for bypassing SSL in local dev or adding complex proxy authentication):
+Set cURL options for each request:
 
 ```php
 $open_ai->setCURLOptions([
-    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_CONNECTTIMEOUT => 10,
     CURLOPT_TIMEOUT => 300,
 ]);
 ```

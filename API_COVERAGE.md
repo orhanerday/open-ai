@@ -178,20 +178,21 @@ This points to an API-side problem; cancellation has not been successfully valid
 The real test stays enabled and fails when the API returns that error.
 One reproducible request ID was `req_1904dc07962a4c949bb8b194e7cc0786`.
 
-Final local `composer test` result: **42 passed, 1 failed, 1 skipped** (196 assertions) on PHP 8.4.
-The failure is vector file-batch cancellation; the custom voice account test is explicitly skipped.
-Docker runtime verification on Linux ARM64 also completed on 2026-10-07:
+Latest full Docker verification on Linux ARM64 completed on 2026-10-07, including both configured
+API credentials, Usage/Costs, deferred key configuration, custom cURL options, and API path prefixes:
 
-| Runtime | Native transport and webhook tests | Real API tests |
-| --- | --- | --- |
-| PHP 7.4.33 / Pest 1.23.1 | 16 passed (31 assertions) | 25 passed, 2 failed, 1 skipped; image streaming passed on an isolated rerun |
-| PHP 8.4.26 / Pest 4.7.8 | 16 passed (31 assertions) | 26 passed, 1 failed, 1 skipped |
+| Runtime | Native transport and webhook tests | Full suite | Assertions |
+| --- | --- | --- | --- |
+| PHP 7.4.33 / Pest 1.23.1 | 22 passed | 68 passed, 1 failed, 1 skipped | 440 |
+| PHP 8.4.26 / Pest 4.7.8 | 22 passed | 68 passed, 1 failed, 1 skipped | 438 |
 
-Vector file-batch cancellation returned HTTP 500 on both runtimes. The additional PHP 7.4 failure
-was an OpenSSL TLS read error during image-edit streaming; the same test passed when rerun alone.
+Vector file-batch cancellation returned HTTP 500 on both runtimes. The failure is kept visible;
+HTTP 400/500 errors are not swallowed by the test. Request IDs from these runs were
+`req_c5c8c6a205ad4c72a98f6de38f676811` and `req_ea153b6c396b4b0594ff22adeae32766`.
 Custom voice consent listing was skipped because the account capability flag was not enabled.
+Image generation/edit streaming and all sixteen organization reporting cases passed on both runtimes.
 All source and test files passed syntax checks in both containers. Docker logs and JUnit reports
-are saved locally under ignored `build/docker/`; no cURL mocks were used.
+are saved locally under ignored `build/docker/pr-validation/`; no cURL mocks were used.
 All 29 official documentation links in the current guides resolved successfully during this audit.
 
 Run `vendor/bin/pest --group=live --filter 'vector store file batch'` with your key to reproduce.

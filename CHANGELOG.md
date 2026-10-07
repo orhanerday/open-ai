@@ -12,6 +12,7 @@ All notable changes to `open-ai` will be documented in this file.
 - Preserve cURL connection errors and valid empty response bodies; reject malformed JSON request data.
 - Allow construction without an API key; add `setApiKey()` for deferred configuration and key replacement, and reject requests without configured authentication (#156).
 - Add all ten organization Usage endpoints and Costs, with query filters and cursor pagination (#155).
+- Add custom cURL options and configurable API path prefixes for compatible providers (#149, #152).
 - Remove cURL mocks; run real API tests when a key is available, with test-owned resource cleanup and explicit skips for missing credentials or fixtures.
 - See [MIGRATING.md](MIGRATING.md) for breaking changes.
 

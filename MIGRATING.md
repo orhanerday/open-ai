@@ -82,6 +82,11 @@ and `starting_after`. Streaming creation and retrieval each require their own ca
 `setHeader()` accepts either `['OpenAI-Beta: responses_multi_agent=v1']` or an associative
 array such as `['OpenAI-Beta' => 'responses_multi_agent=v1']`, preserving other headers.
 
+`setApiVersion('api/v3')` replaces the default `v1` path prefix. `setBaseURL()` configures
+the origin; full deployment URLs with query strings still require a separate routing adapter.
+`setCURLOptions()` applies transport options after the library defaults, including timeout
+and proxy authentication settings. These options can also replace the request URL or headers.
+
 ## Additional REST support
 
 Stored chat completion CRUD, Decisions, webhook management, voice consents, fine-tuning
