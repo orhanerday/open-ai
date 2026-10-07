@@ -160,7 +160,18 @@ One reproducible request ID was `req_1904dc07962a4c949bb8b194e7cc0786`.
 
 Final local `composer test` result: **42 passed, 1 failed, 1 skipped** (196 assertions) on PHP 8.4.
 The failure is vector file-batch cancellation; the custom voice account test is explicitly skipped.
-Source and tests parse with the PHP 7.4 target; PHP 7.4 runtime execution is delegated to CI.
+Docker runtime verification on Linux ARM64 also completed on 2026-10-07:
+
+| Runtime | Native transport and webhook tests | Real API tests |
+| --- | --- | --- |
+| PHP 7.4.33 / Pest 1.23.1 | 16 passed (31 assertions) | 25 passed, 2 failed, 1 skipped; image streaming passed on an isolated rerun |
+| PHP 8.4.26 / Pest 4.7.8 | 16 passed (31 assertions) | 26 passed, 1 failed, 1 skipped |
+
+Vector file-batch cancellation returned HTTP 500 on both runtimes. The additional PHP 7.4 failure
+was an OpenSSL TLS read error during image-edit streaming; the same test passed when rerun alone.
+Custom voice consent listing was skipped because the account capability flag was not enabled.
+All source and test files passed syntax checks in both containers. Docker logs and JUnit reports
+are saved locally under ignored `build/docker/`; no cURL mocks were used.
 All 29 official documentation links in the current guides resolved successfully during this audit.
 
 Run `vendor/bin/pest --group=live --filter 'vector store file batch'` with your key to reproduce.
