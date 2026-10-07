@@ -70,7 +70,7 @@ Checkpoint permission operations require an admin API key.
 `composer test` runs native cURL checks and the real OpenAI API suite. Export `OPENAI_API_KEY`
 or put it in `.env`; without a key the live tests are explicitly skipped.
 `composer test-live` runs only API tests. Live tests may incur API charges and clean up their
-own resources. There are no cURL mocks. See [endpoint support](README.md#endpoint-support) for endpoint
+own resources. There are no cURL mocks. See [API_COVERAGE.md](API_COVERAGE.md) for endpoint
 coverage and operations requiring additional fixtures or account access.
 
 ## Query parameters and headers

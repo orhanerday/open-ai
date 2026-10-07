@@ -1,115 +1,66 @@
-# OpenAI API Client in PHP
-
-<br />
-
-<br />
-
-
-### Feel free to support this project:
-
-* [Buy me a coffee](https://www.buymeacoffee.com/orhane)
-* [Patreon](https://patreon.com/orhann)
-
-<br />
-
-*A message from creator,<br />Thank you for visiting the __@orhanerday/open-ai__ repository! If you find this repository helpful or useful, we encourage you to **star** it
-on GitHub. Starring a repository is a way to show your support for the project. It also helps to increase the visibility
-of the project and to let the community know that it is valuable. Thanks again for your support and we hope you find the
-repository useful! <br /><br /> Orhan*
-
-<br />
-
-<br />
-
+# OpenAI PHP Client
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
-[![Total Downloads](https://img.shields.io/packagist/dt/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
 
-<br />
+A community-maintained PHP client for the OpenAI REST API, with streaming support.
+Requires PHP 7.4+ and the cURL and JSON extensions.
 
-<br />
+See [API_COVERAGE.md](API_COVERAGE.md) for endpoint coverage and
+[MIGRATING.md](MIGRATING.md) for the upcoming 6.0.0 breaking changes.
 
-<img src="./openai-elephpant.svg" width="1250" height="300" alt="orhanerday-open-ai-logo">
+## Installation
 
-<br />
+```bash
+composer require orhanerday/open-ai
+```
 
-<br />
+## Quick start
 
-# Featured in
+Set `OPENAI_API_KEY` in your environment.
 
+Linux or macOS:
 
-[![Jetbrains Blog](https://user-images.githubusercontent.com/22305274/222431781-86591161-ccd5-4889-bd80-97a0fd0fdf0d.png)](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API)
+```bash
+export OPENAI_API_KEY='your-api-key'
+```
 
-[![Laravel News](https://user-images.githubusercontent.com/22305274/222430084-be097d59-e6bc-408d-8adb-7b751d5a05b2.png)](https://laravel-news.com/openai-sdk-for-php)
+PowerShell:
 
-[![日思录](https://user-images.githubusercontent.com/22305274/222431699-f3a8a146-e27c-4fe3-8c93-1d762559752f.png)](http://tubring.cn/articles/59)
+```powershell
+$Env:OPENAI_API_KEY = "your-api-key"
+```
 
-![logo_new](https://github.com/orhanerday/open-ai/assets/22305274/398b3a1e-7323-46f3-8a53-a9f115cf2281)
+Windows Command Prompt:
 
+```cmd
+set "OPENAI_API_KEY=your-api-key"
+```
 
+Save this as `example.php`:
 
-# Comparison With Other Packages
+```php
+<?php
 
-| Project Name           | Required PHP Version (Lower is better) | Description                                                                                                                                                | Type (Official / Community) | Support                                                                                                                                  |
-|------------------------|----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| **orhanerday/open-ai** | **PHP 7.4+**                           | **Community-maintained OpenAI PHP SDK with Responses, Chat, Images, and streaming support.** | Community                   | Available, ([Community driven Discord Server](https://discord.gg/xpGUD528XJ) or personal mail [orhann@duck.com](mailto:orhann@duck.com)) |
-| openai-** */c****t     | PHP 8.1+                               | OpenAI PHP API client.                                                                                                                                     | Community                   | -                                                                                                                                        |
+require __DIR__ . '/vendor/autoload.php';
 
+use Orhanerday\OpenAi\OpenAi;
 
-<br />
+$open_ai = new OpenAi(getenv('OPENAI_API_KEY'));
+$result = $open_ai->chat([
+    'model' => 'gpt-4o-mini',
+    'messages' => [['role' => 'user', 'content' => 'Hello']],
+]);
 
-## About this package
+$response = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+echo $response['choices'][0]['message']['content'];
+```
 
-An open-source, community-maintained PHP SDK for the OpenAI API.
+Run it with `php example.php`. See [Handling results](#handling-results) for HTTP errors.
 
-> #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
-> #### Free support is available. [Join our discord server](#join-our-discord-server)
-> #### To get started with this package, you'll first want to be familiar with the [OpenAI API documentation](https://platform.openai.com/docs/overview) and [examples](https://platform.openai.com/docs/examples). Also you can get help from our discord channel that called [#api-support](https://discord.gg/R9CpVUdqQR)
-
-## News
-
-- orhanerday/open-ai added to community libraries php [section](https://platform.openai.com/docs/libraries/php).
-- orhanerday/open-ai featured
-  on [PHPStorm blog post](https://blog.jetbrains.com/phpstorm/2022/12/php-annotated-december-2022/#:~:text=orhanerday/open%2Dai%20%E2%80%93%20A%20PHP%20SDK%20for%20accessing%20the%20OpenAI%20GPT%2D3%20API),
-  thanks JetBrains!
-
-> Requires PHP 7.4+
-
-## Join our discord server
-
-![Discord Banner 2](https://discordapp.com/api/guilds/1047074572488417330/widget.png?style=banner2)
-
-[Click here to join the Discord server](https://discord.gg/xpGUD528XJ)
-
-## Support this project
-
-As you may know, OpenAI PHP is an open-source project wrapping tool for OpenAI. We rely on the support of our community
-to continue developing and maintaining the project, and one way that you can help is by making a donation.
-
-Donations allow us to cover expenses such as hosting costs(for testing), development tools, and other resources that are
-necessary to keep the project running smoothly. Every contribution, no matter how small, helps us to continue improving
-OpenAI PHP for everyone.
-
-If you have benefited from using OpenAI PHP and would like to support its continued development, we would greatly
-appreciate a donation of any amount. You can make a donation through;
-
-* [Buy me a coffee](https://www.buymeacoffee.com/orhane)
-* [Patreon](https://patreon.com/orhann)
-
-Thank you for considering a donation to Orhanerday/OpenAI PHP SDK. Your support is greatly appreciated and helps to
-ensure that the project can continue to grow and improve.
-
-*Sincerely,*
-
-**Orhan Erday** / Creator.
-
-# Documentation
-Use the examples below, [endpoint support](README.md#endpoint-support), and [MIGRATING.md](MIGRATING.md) for this release.
-
-# Endpoint Support
+## Supported APIs
 
 - Chat
-    - [x] [ChatGPT API](#chat-as-known-as-chatgpt-api)
+    - [x] [Chat completions](#chat-completions)
     - [x] Stored completions: retrieve, update, delete, list, and list messages
 - Models
     - [x] [List models](https://developers.openai.com/api/reference/resources/models/methods/list)
@@ -157,143 +108,12 @@ Use the examples below, [endpoint support](README.md#endpoint-support), and [MIG
 - Webhooks
     - [x] [Endpoint management and signature verification](#webhooks)
 
-See [endpoint support](README.md#endpoint-support) for exact routes, guide support, and testing limits.
+See [API_COVERAGE.md](API_COVERAGE.md) for exact routes, guide support, and testing limits.
 WebSocket mode and mid-turn steering require a separate WebSocket client.
 
-## Upcoming major release
+## Configuration
 
-The current refactor targets **6.0.0** because 5.x releases already exist. See [MIGRATING.md](MIGRATING.md) for breaking changes and replacements.
-
-## Installation
-
-You can install the package via composer:
-
-```bash
-composer require orhanerday/open-ai
-```
-
-## Quick Start ⚡
-
-Before you get starting, you should set OPENAI_API_KEY as ENV key, and set OpenAI key as env value with the following
-commands;
-
-_Powershell_
-
-```powershell
-$Env:OPENAI_API_KEY = "sk-gjtv....."
-```
-
-_Cmd_
-
-```cmd
-set OPENAI_API_KEY=sk-gjtv.....
-```
-
-_Linux or macOS_
-
-```shell
-export OPENAI_API_KEY=sk-gjtv.....
-```
-
-> Getting issues while setting up env? Please read
-> the [article](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety) or you can check
-> my [StackOverflow answer](https://stackoverflow.com/a/73904271/15196622) for the Windows® ENV setup.
-
-Create your `index.php` file and paste the following code part into the file.
-
-```php
-<?php
-
-require __DIR__ . '/vendor/autoload.php'; // remove this line if you use a PHP Framework.
-
-use Orhanerday\OpenAi\OpenAi;
-
-$open_ai_key = getenv('OPENAI_API_KEY');
-$open_ai = new OpenAi($open_ai_key);
-
-$chat = $open_ai->chat([
-   'model' => 'gpt-4o-mini',
-   'messages' => [
-       [
-           "role" => "system",
-           "content" => "You are a helpful assistant."
-       ],
-       [
-           "role" => "user",
-           "content" => "Who won the world series in 2020?"
-       ],
-       [
-           "role" => "assistant",
-           "content" => "The Los Angeles Dodgers won the World Series in 2020."
-       ],
-       [
-           "role" => "user",
-           "content" => "Where was it played?"
-       ],
-   ],
-   'temperature' => 1.0,
-   'max_tokens' => 4000,
-   'frequency_penalty' => 0,
-   'presence_penalty' => 0,
-]);
-
-
-var_dump($chat);
-echo "<br>";
-echo "<br>";
-echo "<br>";
-// decode response
-$d = json_decode($chat);
-// Get Content
-echo($d->choices[0]->message->content);
-```
-
-_Run the server with the following command_
-
-```shell
-php -S localhost:8000 -t .
-```
-
-## NVIDIA NIM INTEGRATION
-
-orhanerday/open-ai supports Nvidia NIM. The below example is MixtralAI. Check https://build.nvidia.com/explore/discover for more examples.
-
-```php
-<?php
-
-require __DIR__ . '/vendor/autoload.php'; // remove this line if you use a PHP Framework.
-
-use Orhanerday\OpenAi\OpenAi;
-
-$nvidia_ai_key = getenv('NVIDIA_AI_API_KEY');
-error_log($open_ai_key);
-$open_ai = new OpenAi($nvidia_ai_key);
-$open_ai->setBaseURL("https://integrate.api.nvidia.com");
-$chat = $open_ai->chat([
-    'model' => 'mistralai/mixtral-8x7b-instruct-v0.1',
-    'messages' => [["role" => "user", "content" => "Write a limmerick about the wonders of GPU computing."]],
-    'temperature' => 0.5,
-    'max_tokens' => 1024,
-    'top_p' => 1,
-]);
-
-var_dump($chat);
-echo "<br>";
-echo "<br>";
-echo "<br>";
-// decode response
-$d = json_decode($chat);
-// Get Content
-echo ($d->choices[0]->message->content);
-
-```
-
-
-## Usage
-
-### Load your key from an environment variable.
-
-> According to the following code `$open_ai` is the base variable for all open-ai operations.
+The examples below use an `OpenAi` instance:
 
 ```php
 use Orhanerday\OpenAi\OpenAi;
@@ -301,123 +121,63 @@ use Orhanerday\OpenAi\OpenAi;
 $open_ai = new OpenAi(getenv('OPENAI_API_KEY'));
 ```
 
-## Requesting organization
+### Organization
 
-For users who belong to multiple organizations, you can pass a header to specify which organization is used for an API
-request.
-Usage from these API requests will count against the specified organization's subscription quota.
+Specify the organization for API requests:
 
-````php
-$open_ai_key = getenv('OPENAI_API_KEY');
-$open_ai = new OpenAi($open_ai_key);
-$open_ai->setORG("org-IKN2E1nI3kFYU8ywaqgFRKqi");
-````
+```php
+$open_ai->setORG('org-your-organization');
+```
 
-## Base URL
+### Base URL
 
-You can specify Origin URL with `setBaseURL()` method;
+Set the origin for an OpenAI-compatible API:
 
-````php
-$open_ai_key = getenv('OPENAI_API_KEY');
-$open_ai = new OpenAi($open_ai_key);
-$open_ai->setBaseURL("https://ai.example.com");
-````
+```php
+$open_ai->setBaseURL('https://ai.example.com');
+```
 
-## Use Proxy
+### Proxy
 
-You can use some proxy servers for your requests api;
+Route requests through a proxy:
 
-````php
+```php
 $open_ai->setProxy("http://127.0.0.1:1086");
-````
+```
 
-## Set header
+### Headers
 
- ```php
+```php
 $open_ai->setHeader(["Connection: keep-alive"]);
 ```
 
-## Get cURL request info
+### Request information
 
-You can get transport metadata after the request, including the HTTP status code:
+Inspect transport metadata after a request:
 
-````php
-$open_ai = new OpenAi($open_ai_key);
-echo $open_ai->listModels(); // you should execute the request FIRST!
-var_dump($open_ai->getCURLInfo()); // You can call the request
-````
+```php
+$open_ai->listModels();
+$info = $open_ai->getCURLInfo();
+echo $info['http_code'];
+```
 
-## Chat (as known as ChatGPT API)
+## Chat completions
 
-Given a chat conversation, the model will return a chat completion response.
-
- ```php
-$complete = $open_ai->chat([
+```php
+$result = $open_ai->chat([
     'model' => 'gpt-4o-mini',
-    'messages' => [
-        [
-            "role" => "system",
-            "content" => "You are a helpful assistant."
-        ],
-        [
-            "role" => "user",
-            "content" => "Who won the world series in 2020?"
-        ],
-        [
-            "role" => "assistant",
-            "content" => "The Los Angeles Dodgers won the World Series in 2020."
-        ],
-        [
-            "role" => "user",
-            "content" => "Where was it played?"
-        ],
-    ],
-    'temperature' => 1.0,
-    'max_tokens' => 4000,
-    'frequency_penalty' => 0,
-    'presence_penalty' => 0,
+    'messages' => [['role' => 'user', 'content' => 'Hello']],
 ]);
 ```
 
-## Accessing the Element
+### Read response text
 
 ```php
-<?php
-// Dummy Response For Chat API
-$j = '
-{
-   "id":"chatcmpl-*****",
-   "object":"chat.completion",
-   "created":1679748856,
-   "model":"gpt-4o-mini",
-   "usage":{
-      "prompt_tokens":9,
-      "completion_tokens":10,
-      "total_tokens":19
-   },
-   "choices":[
-      {
-         "message":{
-            "role":"assistant",
-            "content":"This is a test of the AI language model."
-         },
-         "finish_reason":"length",
-         "index":0
-      }
-   ]
-}
-';
-
-// decode response
-$d = json_decode($j);
-
-// Get Content
-echo($d->choices[0]->message->content);
+$response = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+echo $response['choices'][0]['message']['content'];
 ```
 
-> ### Related: [ChatGPT Clone Project](#chatgpt-clone-project)
-
-### Stream Example
+### Stream example
 
 Both `chat()` and `createResponse()` accept a callback when `stream` is `true`.
 The callback receives raw server-sent event chunks and must return the number of bytes consumed.
@@ -465,11 +225,6 @@ events.onerror = () => events.close();
 
 See the [official streaming guide](https://developers.openai.com/api/docs/guides/streaming-responses) for event handling.
 
-#### ChatGPT Clone Project
-
-The [ChatGPT clone](https://github.com/orhanerday/ChatGPT) is a separate example application.
-Check its API usage against this release's [migration guide](MIGRATING.md).
-
 ## Images
 
 Use a supported GPT Image model explicitly. GPT Image responses contain base64 image data.
@@ -508,7 +263,7 @@ To create a variation, use `imageEdit()` with a prompt describing the desired ch
 
 ## Embeddings
 
-Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.
+Create a vector representation of text.
 
 Related guide: [Embeddings](https://platform.openai.com/docs/guides/embeddings)
 
@@ -523,27 +278,27 @@ $result = $open_ai->embeddings([
 
 ## Content Moderations
 
-Given a input text, outputs if the model classifies it as violating OpenAI's content policy.
+Classify content using the moderation endpoint.
 
 ```php
 $flags = $open_ai->moderation([
     'model' => 'omni-moderation-latest',
-    'input' => 'I want to kill them.'
+    'input' => 'I hate ducks!'
 ]);
 ```
 
-Know more about Content Moderations here: [OpenAI Moderations](https://developers.openai.com/api/reference/resources/moderations)
+API reference: [OpenAI Moderations](https://developers.openai.com/api/reference/resources/moderations)
 
 ## Audio
 
-### Text To Speech (TTS)
+### Text to speech (TTS)
 
 `tts($opts)` wraps `/v1/audio/speech` for existing integrations. Its currently documented speech models are deprecated;
 see [OpenAI's deprecations](https://developers.openai.com/api/docs/deprecations) and the
 [Realtime guide](https://developers.openai.com/api/docs/guides/realtime) when planning a new voice integration.
 Pass a model supported by the speech endpoint explicitly; Realtime models use a different API.
 
-### Create Transcription
+### Create transcription
 
 Transcribe a recording using a file you supply:
 
@@ -556,7 +311,7 @@ $result = $open_ai->transcribe([
 
 See the [official file transcription guide](https://developers.openai.com/api/docs/guides/speech-to-text).
 
-### Create Translation
+### Create translation
 
 `translate($opts)` wraps `/v1/audio/translations` for existing integrations. For new workflows, transcribe with
 `gpt-transcribe`, then send the transcript to `createResponse()` with translation instructions.
@@ -590,7 +345,7 @@ $uploaded = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
 $fileId = $uploaded['id'];
 ```
 
-### Upload file with HTML Form
+### Upload file with an HTML form
 
 ```php
 <form action="index.php" method="post" enctype="multipart/form-data">
@@ -627,13 +382,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 ### Delete file
 
- ```php
+```php
 $result = $open_ai->deleteFile($fileId);
 ```
 
 ### Retrieve file
 
- ```php
+```php
 $file = $open_ai->retrieveFile($fileId);
 ```
 
@@ -642,7 +397,7 @@ $file = $open_ai->retrieveFile($fileId);
 Use an ID for a downloadable file purpose, such as a fine-tuning or batch file. OpenAI rejects
 content downloads for `user_data` files, even though retrieving their metadata succeeds.
 
- ```php
+```php
 $file = $open_ai->retrieveFileContent($downloadableFileId);
 ```
 
@@ -712,21 +467,17 @@ Construct a separate `OpenAi` client with an **admin API key** for checkpoint pe
 
 ## Models
 
-List and describe the various models available in the API.
+List or retrieve model metadata.
 
 ### List models
 
-Lists the currently available models, and provides basic information about each one such as the owner and availability.
-
- ```php
+```php
 $result = $open_ai->listModels();
 ```
 
 ### Retrieve model
 
-Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
-
- ```php
+```php
 $result = $open_ai->retrieveModel("gpt-4o-mini");
 ```
 
@@ -749,7 +500,7 @@ $result = $open_ai->createResponse([
 
 Token counting and explicit compaction use `countResponseInputTokens($opts)` and `compactResponse($opts)`.
 File inputs, tools, structured output, conversation state, automatic compaction, and background mode are
-passed through as request options; see [endpoint support](README.md#endpoint-support).
+passed through as request options; see [API_COVERAGE.md](API_COVERAGE.md).
 To resume a response created with `background => true` and `stream => true`:
 
 ```php
@@ -902,21 +653,21 @@ Stored chat tests poll briefly because persistence can be asynchronous.
 
 Models can be selected with `OPENAI_CHAT_MODEL`, `OPENAI_IMAGE_MODEL`, `OPENAI_COMPACTION_MODEL`,
 `OPENAI_DECISION_MODEL`, and `OPENAI_REALTIME_MODEL`. Defaults follow the examples and current guides.
-Additional account-dependent tests and required fixtures are documented in [endpoint support](README.md#endpoint-support).
+Additional account-dependent tests and required fixtures are documented in [API_COVERAGE.md](API_COVERAGE.md).
 Push/PR CI runs native transport and signature checks on PHP 7.4 and 8.4; manually dispatch the Tests
 workflow with an `OPENAI_API_KEY` repository secret to run the live suite.
 
 ## Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing
 
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
 ## Security Vulnerabilities
 
-Please report security vulnerabilities to [orhanerday@gmail.com](mailto:orhanerday@gmail.com)
+Report security vulnerabilities to [orhanerday@gmail.com](mailto:orhanerday@gmail.com)
 
 ## Credits
 
@@ -925,12 +676,4 @@ Please report security vulnerabilities to [orhanerday@gmail.com](mailto:orhanerd
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Donation
-
-<a href="https://www.buymeacoffee.com/orhane" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=orhanerday/open-ai&type=Date)](https://star-history.com/#orhanerday/open-ai&Date)
+[MIT](LICENSE.md).
