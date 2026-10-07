@@ -80,3 +80,10 @@ List and retrieval methods accept query options, including `include` arrays and 
 and `starting_after`. Streaming creation and retrieval each require their own callback.
 `setHeader()` accepts either `['OpenAI-Beta: responses_multi_agent=v1']` or an associative
 array such as `['OpenAI-Beta' => 'responses_multi_agent=v1']`, preserving other headers.
+
+## Additional REST support
+
+Stored chat completion CRUD, Decisions, webhook management, voice consents, fine-tuning
+graders, job pause/resume, checkpoint permission listing, and Realtime REST call control
+are available. Webhook signatures can be checked with `Webhook::unwrap()` using the
+original request body. WebSocket connections and mid-turn steering require a separate client.

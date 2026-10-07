@@ -260,6 +260,43 @@ it('updates a conversation and manages its own items', function () {
     }
 })->group('live');
 
+it('stores and manages its own chat completion', function () {
+    $tag = bin2hex(random_bytes(8));
+    $chat = ($this->decode)($this->client->chat([
+        'model' => getenv('OPENAI_CHAT_MODEL') ?: 'gpt-4o-mini',
+        'messages' => [['role' => 'user', 'content' => 'Reply with hello.']],
+        'store' => true,
+        'metadata' => ['test' => $tag],
+        'max_completion_tokens' => 32,
+    ]));
+    $id = $chat['id'];
+
+    try {
+        $deadline = time() + 30;
+        do {
+            $raw = ($this->retry)(fn () => $this->client->retrieveChatCompletion($id));
+            if ($this->client->getCURLInfo()['http_code'] !== 404) {
+                break;
+            }
+            usleep(500000);
+        } while (time() < $deadline);
+        $retrieved = ($this->decode)($raw);
+        expect($retrieved['id'])->toBe($id);
+        $updated = ($this->decode)(($this->retry)(fn () => $this->client->updateChatCompletion($id, ['metadata' => ['test' => $tag, 'updated' => 'yes']])));
+        expect($updated['metadata']['updated'])->toBe('yes');
+        $listed = ($this->decode)(($this->retry)(fn () => $this->client->listChatCompletions(['limit' => 1, 'order' => 'desc', 'metadata' => ['test' => $tag]])));
+        expect($listed['data'][0]['id'])->toBe($id);
+        $messages = ($this->decode)($this->client->listChatCompletionMessages($id, ['limit' => 1]));
+        expect($messages['data'])->toHaveCount(1);
+    } finally {
+        $cleanup = $this->client->deleteChatCompletion($id);
+        if ($this->client->getCURLInfo()['http_code'] !== 404) {
+            $deleted = ($this->decode)($cleanup);
+            expect($deleted['deleted'])->toBeTrue();
+        }
+    }
+})->group('live');
+
 it('uploads real multipart parts completes and cancels uploads', function () {
     $content = "{\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"},{\"role\":\"assistant\",\"content\":\"Hi\"}]}\n";
     $path = tempnam(sys_get_temp_dir(), 'openai_part_');
@@ -352,6 +389,18 @@ it('compacts a response using a configured supported model', function () {
     expect($result['output'])->not->toBeEmpty();
 })->group('live');
 
+it('evaluates a decision using a configured beta model', function () {
+    $model = getenv('OPENAI_DECISION_MODEL') ?: 'gpt-6-luna';
+    $result = ($this->decode)($this->client->createDecision([
+        'model' => $model,
+        'input' => 'The support desk mascot is a purple owl.',
+        'questions' => [['type' => 'predicate', 'name' => 'owl', 'instructions' => 'The mascot is an owl.']],
+    ]));
+    expect($result['answers'][0]['type'])->toBe('predicate');
+    expect($result['answers'][0]['name'])->toBe('owl');
+    expect($result['answers'][0]['probability'])->toBeGreaterThanOrEqual(0)->toBeLessThanOrEqual(1);
+})->group('live');
+
 it('creates a real short-lived Realtime client secret', function () {
     $result = ($this->decode)($this->client->createRealtimeClientSecret([
         'session' => ['type' => 'realtime', 'model' => getenv('OPENAI_REALTIME_MODEL') ?: 'gpt-realtime-2.1-mini'],
@@ -360,6 +409,27 @@ it('creates a real short-lived Realtime client secret', function () {
     // Never print or snapshot the secret.
     expect(isset($result['value']) && is_string($result['value']) && $result['value'] !== '')->toBeTrue();
     expect($result['expires_at'])->toBeInt()->toBeGreaterThan(time());
+})->group('live');
+
+it('validates and runs a real fine-tuning grader', function () {
+    $grader = ['type' => 'string_check', 'name' => 'exact match', 'operation' => 'eq', 'input' => '{{sample.output_text}}', 'reference' => 'hello'];
+    $validated = ($this->decode)($this->client->validateFineTuningGrader(['grader' => $grader]));
+    expect($validated['grader']['type'])->toBe('string_check');
+    $result = ($this->decode)($this->client->runFineTuningGrader(['grader' => $grader, 'model_sample' => 'hello']));
+    expect((float) $result['reward'])->toBe(1.0);
+})->group('live');
+
+it('lists real webhook endpoints', function () {
+    $result = ($this->decode)($this->client->listWebhookEndpoints(['limit' => 1]));
+    expect($result['data'])->toBeArray();
+})->group('live');
+
+it('lists real voice consent recordings', function () {
+    if (! getenv('OPENAI_TEST_CUSTOM_VOICES')) {
+        $this->markTestSkipped('Set OPENAI_TEST_CUSTOM_VOICES=1 when custom voices are enabled for your organization.');
+    }
+    $result = ($this->decode)($this->client->listVoiceConsents(['limit' => 1]));
+    expect($result['data'])->toBeArray();
 })->group('live');
 
 it('cancels its own background response', function () {

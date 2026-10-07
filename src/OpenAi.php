@@ -892,4 +892,225 @@ class OpenAi
 
         return $this->sendRequest($url, 'GET', $opts);
     }
+
+    public function retrieveChatCompletion($completionId, $opts = [])
+    {
+        $url = Url::chatUrl() . '/' . rawurlencode($completionId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function listChatCompletions($opts = [])
+    {
+        $url = Url::chatUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function updateChatCompletion($completionId, $opts)
+    {
+        $url = Url::chatUrl() . '/' . rawurlencode($completionId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function deleteChatCompletion($completionId)
+    {
+        $url = Url::chatUrl() . '/' . rawurlencode($completionId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function listChatCompletionMessages($completionId, $opts = [])
+    {
+        $url = Url::chatUrl() . '/' . rawurlencode($completionId) . '/messages';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function createDecision($opts)
+    {
+        $url = Url::decisionsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function createWebhookEndpoint($opts)
+    {
+        $url = Url::webhookEndpointsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function listWebhookEndpoints($opts = [])
+    {
+        $url = Url::webhookEndpointsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function retrieveWebhookEndpoint($endpointId)
+    {
+        $url = Url::webhookEndpointsUrl() . '/' . rawurlencode($endpointId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    public function updateWebhookEndpoint($endpointId, $opts)
+    {
+        $url = Url::webhookEndpointsUrl() . '/' . rawurlencode($endpointId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function deleteWebhookEndpoint($endpointId)
+    {
+        $url = Url::webhookEndpointsUrl() . '/' . rawurlencode($endpointId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function rotateWebhookEndpointSecret($endpointId, $opts = [])
+    {
+        $url = Url::webhookEndpointsUrl() . '/' . rawurlencode($endpointId) . '/rotate_secret';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function testWebhookEndpoint($endpointId, $opts)
+    {
+        $url = Url::webhookEndpointsUrl() . '/' . rawurlencode($endpointId) . '/test';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    // Audio voices, fine-tuning graders, and Realtime REST operations
+
+    public function createVoice($opts)
+    {
+        $url = Url::voicesUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts, null, array_key_exists('audio_sample', $opts));
+    }
+
+    public function createVoiceConsent($opts)
+    {
+        $url = Url::voiceConsentsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts, null, true);
+    }
+
+    public function listVoiceConsents($opts = [])
+    {
+        $url = Url::voiceConsentsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function retrieveVoiceConsent($consentId)
+    {
+        $url = Url::voiceConsentsUrl() . '/' . rawurlencode($consentId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    public function updateVoiceConsent($consentId, $opts)
+    {
+        $url = Url::voiceConsentsUrl() . '/' . rawurlencode($consentId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function deleteVoiceConsent($consentId)
+    {
+        $url = Url::voiceConsentsUrl() . '/' . rawurlencode($consentId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function runFineTuningGrader($opts)
+    {
+        $url = Url::fineTuningGradersUrl() . '/run';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function validateFineTuningGrader($opts)
+    {
+        $url = Url::fineTuningGradersUrl() . '/validate';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function createRealtimeTranslationClientSecret($opts)
+    {
+        $url = Url::realtimeTranslationClientSecretsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function acceptRealtimeCall($callId, $opts)
+    {
+        $url = Url::realtimeCallsUrl() . '/' . rawurlencode($callId) . '/accept';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function hangupRealtimeCall($callId)
+    {
+        $url = Url::realtimeCallsUrl() . '/' . rawurlencode($callId) . '/hangup';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    public function referRealtimeCall($callId, $opts)
+    {
+        $url = Url::realtimeCallsUrl() . '/' . rawurlencode($callId) . '/refer';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function rejectRealtimeCall($callId, $opts = [])
+    {
+        $url = Url::realtimeCallsUrl() . '/' . rawurlencode($callId) . '/reject';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function createRealtimeCall($opts)
+    {
+        if (isset($opts['session']) && is_array($opts['session'])) {
+            $opts['session'] = json_encode($opts['session'], JSON_THROW_ON_ERROR);
+        }
+        $url = Url::realtimeCallsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts, null, true);
+    }
 }

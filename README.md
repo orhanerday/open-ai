@@ -110,6 +110,7 @@ Use the examples below, [endpoint support](README.md#endpoint-support), and [MIG
 
 - Chat
     - [x] [ChatGPT API](#chat-as-known-as-chatgpt-api)
+    - [x] Stored completions: retrieve, update, delete, list, and list messages
 - Models
     - [x] [List models](https://developers.openai.com/api/reference/resources/models/methods/list)
     - [x] [Retrieve model](https://developers.openai.com/api/reference/resources/models/methods/retrieve)
@@ -122,6 +123,7 @@ Use the examples below, [endpoint support](README.md#endpoint-support), and [MIG
     - [x] [Text to Speech (TTS)](#text-to-speech-tts)
     - [x] [Create transcription](#create-transcription)
     - [x] [Create translation](#create-translation)
+    - [x] Custom voice creation and voice consent CRUD
 - Files
     - [x] [List files](#list-files)
     - [x] [Upload file](#upload-file)
@@ -135,7 +137,7 @@ Use the examples below, [endpoint support](README.md#endpoint-support), and [MIG
     - [x] [Cancel fine-tune](#cancel-fine-tune)
     - [x] [List fine-tune events](#list-fine-tune-events)
     - [x] [Delete fine-tune model](#delete-fine-tune-model)
-    - [x] Pause/resume, checkpoints and permissions
+    - [x] Pause/resume, checkpoints and permissions, grader validation and execution
 - Moderation
     - [x] [Create moderation](#content-moderations)
 - Responses API
@@ -149,7 +151,11 @@ Use the examples below, [endpoint support](README.md#endpoint-support), and [MIG
 - Uploads API
     - [x] [Uploads](#uploads-api)
 - Realtime API
-    - [x] [Realtime client secrets](#realtime-api)
+    - [x] [Realtime REST operations](#realtime-api)
+- Decisions API
+    - [x] [Decisions](#decisions-api)
+- Webhooks
+    - [x] [Endpoint management and signature verification](#webhooks)
 
 See [endpoint support](README.md#endpoint-support) for exact routes, guide support, and testing limits.
 WebSocket mode and mid-turn steering require a separate WebSocket client.
@@ -826,7 +832,51 @@ $result = $open_ai->createRealtimeClientSecret([
 ]);
 ```
 
+`createRealtimeTranslationClientSecret()` issues translation session credentials.
+`createRealtimeCall()` accepts an SDP offer and a session array, returning the raw SDP answer.
+`acceptRealtimeCall()`, `hangupRealtimeCall()`, `referRealtimeCall()`, and `rejectRealtimeCall()`
+control existing calls. These REST wrappers do not implement a WebRTC media or WebSocket client.
+
 See the [client-secret API reference](https://developers.openai.com/api/reference/resources/realtime/subresources/client_secrets/methods/create).
+
+## Decisions API
+
+```php
+$result = $open_ai->createDecision([
+    'model' => 'gpt-6-luna',
+    'input' => 'The support desk mascot is a purple owl.',
+    'questions' => [[
+        'type' => 'predicate',
+        'name' => 'owl',
+        'instructions' => 'The mascot is an owl.',
+    ]],
+]);
+```
+
+See the [Decisions guide](https://developers.openai.com/api/docs/guides/decisions) for beta availability and question types.
+
+## Webhooks
+
+Use `createWebhookEndpoint()`, `listWebhookEndpoints()`, `retrieveWebhookEndpoint()`,
+`updateWebhookEndpoint()`, `deleteWebhookEndpoint()`, `rotateWebhookEndpointSecret()`, and
+`testWebhookEndpoint()` to manage subscriptions. Testing an endpoint sends an event to its configured URL.
+These methods use `/v1/webhook_endpoints`.
+
+Verify incoming events using the original request body and the webhook signing secret:
+
+```php
+use Orhanerday\OpenAi\Webhook;
+
+$event = Webhook::unwrap(
+    file_get_contents('php://input'),
+    getallheaders(),
+    getenv('OPENAI_WEBHOOK_SECRET')
+);
+```
+
+Verification throws on invalid signatures, missing headers, or timestamps outside the default five-minute tolerance.
+Your application should handle retries idempotently using the webhook ID. See the
+[webhooks guide](https://developers.openai.com/api/docs/guides/webhooks).
 
 ## Testing
 
@@ -851,7 +901,7 @@ Responses, conversations, stored chats, uploads, and vector stores. They never l
 Stored chat tests poll briefly because persistence can be asynchronous.
 
 Models can be selected with `OPENAI_CHAT_MODEL`, `OPENAI_IMAGE_MODEL`, `OPENAI_COMPACTION_MODEL`,
-and `OPENAI_REALTIME_MODEL`. Defaults follow the examples and current guides.
+`OPENAI_DECISION_MODEL`, and `OPENAI_REALTIME_MODEL`. Defaults follow the examples and current guides.
 Additional account-dependent tests and required fixtures are documented in [endpoint support](README.md#endpoint-support).
 Push/PR CI runs native transport and signature checks on PHP 7.4 and 8.4; manually dispatch the Tests
 workflow with an `OPENAI_API_KEY` repository secret to run the live suite.

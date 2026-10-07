@@ -140,4 +140,39 @@ class Url
     {
         return self::OPEN_AI_URL . "/realtime/client_secrets";
     }
+
+    public static function decisionsUrl(): string
+    {
+        return self::OPEN_AI_URL . '/decisions';
+    }
+
+    public static function webhookEndpointsUrl(): string
+    {
+        return self::OPEN_AI_URL . '/webhook_endpoints';
+    }
+
+    public static function voicesUrl(): string
+    {
+        return self::OPEN_AI_URL . '/audio/voices';
+    }
+
+    public static function voiceConsentsUrl(): string
+    {
+        return self::OPEN_AI_URL . '/audio/voice_consents';
+    }
+
+    public static function fineTuningGradersUrl(): string
+    {
+        return self::OPEN_AI_URL . '/fine_tuning/alpha/graders';
+    }
+
+    public static function realtimeCallsUrl(): string
+    {
+        return self::OPEN_AI_URL . '/realtime/calls';
+    }
+
+    public static function realtimeTranslationClientSecretsUrl(): string
+    {
+        return self::OPEN_AI_URL . '/realtime/translations/client_secrets';
+    }
 }
