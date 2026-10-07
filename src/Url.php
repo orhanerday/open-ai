@@ -9,70 +9,6 @@ class Url
     public const OPEN_AI_URL = self::ORIGIN . "/" . self::API_VERSION;
 
     /**
-     * @deprecated
-     * @param string $engine
-     * @return string
-     */
-    public static function completionURL(string $engine): string
-    {
-        return self::OPEN_AI_URL . "/engines/$engine/completions";
-    }
-
-    /**
-     * @return string
-     */
-    public static function completionsURL(): string
-    {
-        return self::OPEN_AI_URL . "/completions";
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public static function editsUrl(): string
-    {
-        return self::OPEN_AI_URL . "/edits";
-    }
-
-    /**
-     * @param string $engine
-     * @return string
-     */
-    public static function searchURL(string $engine): string
-    {
-        return self::OPEN_AI_URL . "/engines/$engine/search";
-    }
-
-    /**
-     * @param
-     * @return string
-     */
-    public static function enginesUrl(): string
-    {
-        return self::OPEN_AI_URL . "/engines";
-    }
-
-    /**
-     * @param string $engine
-     * @return string
-     */
-    public static function engineUrl(string $engine): string
-    {
-        return self::OPEN_AI_URL . "/engines/$engine";
-    }
-
-    /**
-     * @param
-     * @return string
-     */
-    public static function classificationsUrl(): string
-    {
-        return self::OPEN_AI_URL . "/classifications";
-    }
-
-    /**
-     * @param
      * @return string
      */
     public static function moderationUrl(): string
@@ -81,7 +17,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function transcriptionsUrl(): string
@@ -90,7 +25,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function translationsUrl(): string
@@ -99,7 +33,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function filesUrl(): string
@@ -108,7 +41,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function fineTuneUrl(): string
@@ -116,8 +48,12 @@ class Url
         return self::OPEN_AI_URL . "/fine_tuning/jobs";
     }
 
+    public static function fineTuningCheckpointsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/fine_tuning/checkpoints";
+    }
+
     /**
-     * @param
      * @return string
      */
     public static function fineTuneModel(): string
@@ -126,16 +62,6 @@ class Url
     }
 
     /**
-     * @param
-     * @return string
-     */
-    public static function answersUrl(): string
-    {
-        return self::OPEN_AI_URL . "/answers";
-    }
-
-    /**
-     * @param
      * @return string
      */
     public static function imageUrl(): string
@@ -144,7 +70,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function embeddings(): string
@@ -153,7 +78,6 @@ class Url
     }
 
     /**
-     * @param
      * @return string
      */
     public static function chatUrl(): string
@@ -162,29 +86,58 @@ class Url
     }
 
     /**
-     * @param
-     * @return string
-     */
-    public static function assistantsUrl(): string
-    {
-        return self::OPEN_AI_URL . "/assistants";
-    }
-
-    /**
-     * @param
-     * @return string
-     */
-    public static function threadsUrl(): string
-    {
-        return self::OPEN_AI_URL . "/threads";
-    }
-
-    /**
-     * @param
      * @return string
      */
     public static function ttsUrl(): string
     {
         return self::OPEN_AI_URL . "/audio/speech";
+    }
+
+    /**
+     * @return string
+     */
+    public static function responsesUrl(): string
+    {
+        return self::OPEN_AI_URL . "/responses";
+    }
+
+    /**
+     * @return string
+     */
+    public static function conversationsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/conversations";
+    }
+
+    /**
+     * @return string
+     */
+    public static function vectorStoresUrl(): string
+    {
+        return self::OPEN_AI_URL . "/vector_stores";
+    }
+
+    /**
+     * @return string
+     */
+    public static function batchesUrl(): string
+    {
+        return self::OPEN_AI_URL . "/batches";
+    }
+
+    /**
+     * @return string
+     */
+    public static function uploadsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/uploads";
+    }
+
+    /**
+     * @return string
+     */
+    public static function realtimeClientSecretsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/realtime/client_secrets";
     }
 }

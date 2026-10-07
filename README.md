@@ -5,10 +5,10 @@
 <br />
 
 
-## If you want to ensure this project stays alive and continues to faster improve, please please consider supporting it. Your help means a lot. Thank you!
+### Feel free to support this project:
+
 * [Buy me a coffee](https://www.buymeacoffee.com/orhane)
 * [Patreon](https://patreon.com/orhann)
-> ### ChatGPT API is currently supported, [click here](#chat-as-known-as-chatgpt-api) for the implementation introductions.
 
 <br />
 
@@ -44,7 +44,7 @@ repository useful! <br /><br /> Orhan*
 
 [![日思录](https://user-images.githubusercontent.com/22305274/222431699-f3a8a146-e27c-4fe3-8c93-1d762559752f.png)](http://tubring.cn/articles/59)
 
-[![logo_new](https://github.com/orhanerday/open-ai/assets/22305274/398b3a1e-7323-46f3-8a53-a9f115cf2281)](https://site-analyzer.ru/articles/openai-gpt-3-first-samples/)
+![logo_new](https://github.com/orhanerday/open-ai/assets/22305274/398b3a1e-7323-46f3-8a53-a9f115cf2281)
 
 
 
@@ -52,7 +52,7 @@ repository useful! <br /><br /> Orhan*
 
 | Project Name           | Required PHP Version (Lower is better) | Description                                                                                                                                                | Type (Official / Community) | Support                                                                                                                                  |
 |------------------------|----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| **orhanerday/open-ai** | **PHP 7.4+**                           | **Most downloaded, forked, contributed, huge community supported, and used PHP SDK for OpenAI GPT-3 and DALL-E. It also supports chatGPT-like streaming.** | Community                   | Available, ([Community driven Discord Server](https://discord.gg/xpGUD528XJ) or personal mail [orhann@duck.com](mailto:orhann@duck.com)) |
+| **orhanerday/open-ai** | **PHP 7.4+**                           | **Community-maintained OpenAI PHP SDK with Responses, Chat, Images, and streaming support.** | Community                   | Available, ([Community driven Discord Server](https://discord.gg/xpGUD528XJ) or personal mail [orhann@duck.com](mailto:orhann@duck.com)) |
 | openai-** */c****t     | PHP 8.1+                               | OpenAI PHP API client.                                                                                                                                     | Community                   | -                                                                                                                                        |
 
 
@@ -60,7 +60,7 @@ repository useful! <br /><br /> Orhan*
 
 ## About this package
 
-Fully open-source and secure community-maintained, PHP SDK for accessing the OpenAI GPT-3 API.
+An open-source, community-maintained PHP SDK for the OpenAI API.
 
 > #### For more information, you can read laravel news [blog post](https://laravel-news.com/openai-sdk-for-php).
 > #### Free support is available. [Join our discord server](#join-our-discord-server)
@@ -104,79 +104,59 @@ ensure that the project can continue to grow and improve.
 **Orhan Erday** / Creator.
 
 # Documentation
-Please visit https://orhanerday.gitbook.io/openai-php-api-1/
+Use the examples below, [endpoint support](README.md#endpoint-support), and [MIGRATING.md](MIGRATING.md) for this release.
 
 # Endpoint Support
 
 - Chat
     - [x] [ChatGPT API](#chat-as-known-as-chatgpt-api)
 - Models
-    - [x] [List models](https://platform.openai.com/docs/api-reference/models/list)
-    - [x] [Retrieve model](https://platform.openai.com/docs/api-reference/models/retrieve)
-- Completions
-    - [x] [Create completion](https://platform.openai.com/docs/api-reference/completions/create)
-- Edits
-    - [x] [Create edits](https://platform.openai.com/docs/api-reference/edits/create)
+    - [x] [List models](https://developers.openai.com/api/reference/resources/models/methods/list)
+    - [x] [Retrieve model](https://developers.openai.com/api/reference/resources/models/methods/retrieve)
 - Images
-    - [x] [Create image](https://platform.openai.com/docs/api-reference/images/create)
-    - [x] [Create image edit](https://platform.openai.com/docs/api-reference/images/create-edit)
-    - [x] [Create image variation](https://platform.openai.com/docs/api-reference/images/create-variation)
+    - [x] [Create image](https://developers.openai.com/api/reference/resources/images/methods/generate)
+    - [x] [Create image edit](https://developers.openai.com/api/reference/resources/images/methods/edit)
 - Embeddings
-    - [x] [Create embeddings](https://platform.openai.com/docs/api-reference/embeddings/create)
+    - [x] [Create embeddings](https://developers.openai.com/api/reference/resources/embeddings/methods/create)
 - Audio
-    - [x] [Text to Speech (TTS)](https://platform.openai.com/docs/guides/text-to-speech)
-    - [x] [Create transcription](https://platform.openai.com/docs/api-reference/audio/create)
-    - [x] [Create translation](https://platform.openai.com/docs/api-reference/audio/create)
+    - [x] [Text to Speech (TTS)](#text-to-speech-tts)
+    - [x] [Create transcription](#create-transcription)
+    - [x] [Create translation](#create-translation)
 - Files
-    - [x] [List files](https://platform.openai.com/docs/api-reference/files/list)
-    - [x] [Upload file](https://platform.openai.com/docs/api-reference/files/upload)
-    - [x] [Delete file](https://platform.openai.com/docs/api-reference/files/delete)
-    - [x] [Retrieve file](https://platform.openai.com/docs/api-reference/files/retrieve)
-    - [x] [Retrieve file content](https://platform.openai.com/docs/api-reference/files/retrieve-content)
+    - [x] [List files](#list-files)
+    - [x] [Upload file](#upload-file)
+    - [x] [Delete file](#delete-file)
+    - [x] [Retrieve file](#retrieve-file)
+    - [x] [Retrieve file content](#retrieve-file-content)
 - Fine-tunes
-    - [x] [Create fine-tune (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/create)
-    - [x] [List fine-tunes (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/list)
-    - [x] [Retrieve fine-tune (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/retrieve)
-    - [x] [Cancel fine-tune (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/cancel)
-    - [x] [List fine-tune events (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/events)
-    - [x] [Delete fine-tune model (beta)](https://platform.openai.com/docs/api-reference/fine-tunes/delete-model)
+    - [x] [Create fine-tune](#create-fine-tune)
+    - [x] [List fine-tunes](#list-fine-tune)
+    - [x] [Retrieve fine-tune](#retrieve-fine-tune)
+    - [x] [Cancel fine-tune](#cancel-fine-tune)
+    - [x] [List fine-tune events](#list-fine-tune-events)
+    - [x] [Delete fine-tune model](#delete-fine-tune-model)
+    - [x] Pause/resume, checkpoints and permissions
 - Moderation
-    - [x] [Create moderation](https://platform.openai.com/docs/api-reference/moderations/create)
-- ~~Engines~~ *(deprecated)*
-    - ~~[List engines](https://platform.openai.com/docs/api-reference/engines/list)~~
-    - ~~[Retrieve engine](https://platform.openai.com/docs/api-reference/engines/retrieve)~~
-- Assistants (beta)
-    - [x] [Create assistant](https://platform.openai.com/docs/api-reference/assistants/createAssistant)
-    - [x] [Retrieve assistant](https://platform.openai.com/docs/api-reference/assistants/getAssistant)
-    - [x] [Modify assistant](https://platform.openai.com/docs/api-reference/assistants/modifyAssistant)
-    - [x] [Delete assistant](https://platform.openai.com/docs/api-reference/assistants/deleteAssistant)
-    - [x] [Lists assistants](https://platform.openai.com/docs/api-reference/assistants/listAssistants)
-    - [x] [Create assistant file](https://platform.openai.com/docs/api-reference/assistants/createAssistantFile)
-    - [x] [Retrieve assistant file](https://platform.openai.com/docs/api-reference/assistants/getAssistantFile)
-    - [x] [Delete assistant file](https://platform.openai.com/docs/api-reference/assistants/deleteAssistantFile)
-    - [x] [List assistant files](https://platform.openai.com/docs/api-reference/assistants/listAssistantFiles)
-- Threads (beta)
-    - [x] [Create thread](https://platform.openai.com/docs/api-reference/threads/createThread)
-    - [x] [Retrieve thread](https://platform.openai.com/docs/api-reference/threads/getThread)
-    - [x] [Modify thread](https://platform.openai.com/docs/api-reference/threads/modifyThread)
-    - [x] [Delete thread](https://platform.openai.com/docs/api-reference/threads/deleteThread)
-- Messages (beta)
-    - [x] [Create message](https://platform.openai.com/docs/api-reference/messages/createMessage)
-    - [x] [Retrieve message](https://platform.openai.com/docs/api-reference/messages/getMessage)
-    - [x] [Modify message](https://platform.openai.com/docs/api-reference/messages/modifyMessage)
-    - [x] [Lists messages](https://platform.openai.com/docs/api-reference/messages/listMessages)
-    - [x] [Retrieve message file](https://platform.openai.com/docs/api-reference/messages/getMessageFile)
-    - [x] [List message files](https://platform.openai.com/docs/api-reference/messages/listMessageFiles)
-- Runs (beta)
-    - [x] [Create run](https://platform.openai.com/docs/api-reference/runs/createRun)
-    - [x] [Retrieve run](https://platform.openai.com/docs/api-reference/runs/getRun)
-    - [x] [Modify run](https://platform.openai.com/docs/api-reference/runs/modifyRun)
-    - [x] [Lists runs](https://platform.openai.com/docs/api-reference/runs/listRuns)
-    - [x] [Submit tool outputs](https://platform.openai.com/docs/api-reference/runs/submitToolOutputs)
-    - [x] [Cancel run](https://platform.openai.com/docs/api-reference/runs/cancelRun)
-    - [x] [Create thread and run](https://platform.openai.com/docs/api-reference/runs/createThreadAndRun)
-    - [x] [Retrieve run step](https://platform.openai.com/docs/api-reference/runs/getRunStep)
-    - [x] [List run steps](https://platform.openai.com/docs/api-reference/runs/listRunSteps)
+    - [x] [Create moderation](#content-moderations)
+- Responses API
+    - [x] [Responses](#responses-api)
+- Conversations API
+    - [x] [Conversations](#conversations-api)
+- Vector Stores API
+    - [x] [Vector Stores](#vector-stores-api)
+- Batches API
+    - [x] [Batches](#batches-api)
+- Uploads API
+    - [x] [Uploads](#uploads-api)
+- Realtime API
+    - [x] [Realtime client secrets](#realtime-api)
+
+See [endpoint support](README.md#endpoint-support) for exact routes, guide support, and testing limits.
+WebSocket mode and mid-turn steering require a separate WebSocket client.
+
+## Upcoming major release
+
+The current refactor targets **6.0.0** because 5.x releases already exist. See [MIGRATING.md](MIGRATING.md) for breaking changes and replacements.
 
 ## Installation
 
@@ -226,7 +206,7 @@ $open_ai_key = getenv('OPENAI_API_KEY');
 $open_ai = new OpenAi($open_ai_key);
 
 $chat = $open_ai->chat([
-   'model' => 'gpt-3.5-turbo',
+   'model' => 'gpt-4o-mini',
    'messages' => [
        [
            "role" => "system",
@@ -312,7 +292,7 @@ echo ($d->choices[0]->message->content);
 ```php
 use Orhanerday\OpenAi\OpenAi;
 
-$open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
+$open_ai = new OpenAi(getenv('OPENAI_API_KEY'));
 ```
 
 ## Requesting organization
@@ -333,8 +313,8 @@ You can specify Origin URL with `setBaseURL()` method;
 
 ````php
 $open_ai_key = getenv('OPENAI_API_KEY');
-$open_ai = new OpenAi($open_ai_key,$originURL);
-$open_ai->setBaseURL("https://ai.example.com/");
+$open_ai = new OpenAi($open_ai_key);
+$open_ai->setBaseURL("https://ai.example.com");
 ````
 
 ## Use Proxy
@@ -348,13 +328,12 @@ $open_ai->setProxy("http://127.0.0.1:1086");
 ## Set header
 
  ```php
-$open_ai->setHeader(["Connection"=>"keep-alive"]);
+$open_ai->setHeader(["Connection: keep-alive"]);
 ```
 
 ## Get cURL request info
 
-> ### !!! WARNING:Your API key will expose if you add this method to your code, therefore remove the method before deployment. Be careful !
-You can get cURL info after the request.
+You can get transport metadata after the request, including the HTTP status code:
 
 ````php
 $open_ai = new OpenAi($open_ai_key);
@@ -368,7 +347,7 @@ Given a chat conversation, the model will return a chat completion response.
 
  ```php
 $complete = $open_ai->chat([
-    'model' => 'gpt-3.5-turbo',
+    'model' => 'gpt-4o-mini',
     'messages' => [
         [
             "role" => "system",
@@ -404,7 +383,7 @@ $j = '
    "id":"chatcmpl-*****",
    "object":"chat.completion",
    "created":1679748856,
-   "model":"gpt-3.5-turbo-0301",
+   "model":"gpt-4o-mini",
    "usage":{
       "prompt_tokens":9,
       "completion_tokens":10,
@@ -432,179 +411,94 @@ echo($d->choices[0]->message->content);
 
 > ### Related: [ChatGPT Clone Project](#chatgpt-clone-project)
 
-## Completions
-
-Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of
-alternative tokens at each position.
-
- ```php
-$complete = $open_ai->completion([
-    'model' => 'gpt-3.5-turbo-instruct',
-    'prompt' => 'Hello',
-    'temperature' => 0.9,
-    'max_tokens' => 150,
-    'frequency_penalty' => 0,
-    'presence_penalty' => 0.6,
-]);
-```
-
 ### Stream Example
 
-This feature might sound familiar from [ChatGPT](https://chat.openai.com/chat).
+Both `chat()` and `createResponse()` accept a callback when `stream` is `true`.
+The callback receives raw server-sent event chunks and must return the number of bytes consumed.
+Forward chunks unchanged so event boundaries survive browser parsing.
 
-<hr>
+```php
+$open_ai = new OpenAi(getenv('OPENAI_API_KEY'));
+
+header('Content-Type: text/event-stream');
+header('Cache-Control: no-cache');
+
+$open_ai->createResponse([
+    'model' => 'gpt-4o-mini',
+    'input' => 'Hello',
+    'stream' => true,
+    'store' => false,
+], function ($curl, $data) {
+    echo $data;
+    if (ob_get_level() > 0) {
+        ob_flush();
+    }
+    flush();
+
+    return strlen($data);
+});
+```
+
+For a browser client, listen for the named Responses events:
+
+```html
+<div id="output"></div>
+<script>
+const events = new EventSource('/stream.php');
+const output = document.getElementById('output');
+
+events.addEventListener('response.output_text.delta', event => {
+    output.textContent += JSON.parse(event.data).delta;
+});
+events.addEventListener('response.completed', () => events.close());
+events.addEventListener('response.failed', () => events.close());
+events.addEventListener('response.incomplete', () => events.close());
+events.onerror = () => events.close();
+</script>
+```
+
+See the [official streaming guide](https://developers.openai.com/api/docs/guides/streaming-responses) for event handling.
 
 #### ChatGPT Clone Project
 
-Video of demo:
+The [ChatGPT clone](https://github.com/orhanerday/ChatGPT) is a separate example application.
+Check its API usage against this release's [migration guide](MIGRATING.md).
 
-https://user-images.githubusercontent.com/22305274/219878695-c76a58c0-5081-402c-a1b5-2b1fd971735a.mp4
+## Images
 
-ChatGPT clone is a simple web application powered by the OpenAI library and built with PHP. It allows users to chat with
-an AI language model that responds in real-time. Chat history is saved using cookies, and the project requires the use
-of an API key and enabled SQLite3.
-
-Url of The ChatGPT-Clone Repo https://github.com/orhanerday/ChatGPT
-
-<hr>
-
-Whether to stream back partial progress. If set, tokens will be sent as
-data-only [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#event_stream_format)
-as they become available, with the stream terminated by a data: [DONE] message.
-
- ````php
-$open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
-
-$opts = [
-    'prompt' => "Hello",
-    'temperature' => 0.9,
-    "max_tokens" => 150,
-    "frequency_penalty" => 0,
-    "presence_penalty" => 0.6,
-    "stream" => true,
-];
-
-header('Content-type: text/event-stream');
-header('Cache-Control: no-cache');
-
-$open_ai->completion($opts, function ($curl_info, $data) {
-    echo $data . "<br><br>";
-    echo PHP_EOL;
-    ob_flush();
-    flush();
-    return strlen($data);
-});
-
-````
-
-Add this part inside `<body>` of the HTML
-
- ````php
-
-<div id="divID">Hello</div>
-<script>
-    var eventSource = new EventSource("/");
-    var div = document.getElementById('divID');
-
-
-    eventSource.onmessage = function (e) {
-       if(e.data == "[DONE]")
-       {
-           div.innerHTML += "<br><br>Hello";
-       }
-        div.innerHTML += JSON.parse(e.data).choices[0].text;
-    };
-    eventSource.onerror = function (e) {
-        console.log(e);
-    };
-</script>
-````
-
-You should see a response like the in video;
-
-https://user-images.githubusercontent.com/22305274/209847128-f72c9345-dd34-46f0-bbc5-daf1d7b6121f.mp4
-
-## Edits
-
-Creates a new edit for the provided input, instruction, and parameters
-
- ```php
-    $result = $open_ai->createEdit([
-        "model" => "text-davinci-edit-001",
-        "input" => "What day of the wek is it?",
-        "instruction" => "Fix the spelling mistakes",
-    ]);
-```
-
-## Images (DALL·E)
-
-> All DALL·E Examples available in this [repo](https://github.com/orhanerday/DALLE-Examples).
-
-Given a prompt, the model will return one or more generated images as urls or base64 encoded.
+Use a supported GPT Image model explicitly. GPT Image responses contain base64 image data.
+See the [official image guide](https://developers.openai.com/api/docs/guides/image-generation) for supported models and parameters.
 
 ### Create image
 
-Creates an image given a prompt.
-
- ```php
-$complete = $open_ai->image([
-    "prompt" => "A cat drinking milk",
-    "n" => 1,
-    "size" => "256x256",
-    "response_format" => "url",
+```php
+$result = $open_ai->image([
+    'model' => 'gpt-image-2.5-flare',
+    'prompt' => 'A cat drinking milk',
+    'n' => 1,
+    'size' => '1024x1024',
 ]);
+
+$image = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+file_put_contents('cat.png', base64_decode($image['data'][0]['b64_json']));
 ```
 
 ### Create image edit
 
-Creates an edited or extended image given an original image and a prompt.
-> You need HTML upload for image edit or variation? Please
-> check [DALL·E Examples](https://github.com/orhanerday/DALLE-Examples)
-
-````php
-$otter = curl_file_create(__DIR__ . './files/otter.png');
-$mask = curl_file_create(__DIR__ . './files/mask.jpg');
-
-$result = $open_ai->imageEdit([
-    "image" => $otter,
-    "mask" => $mask,
-    "prompt" => "A cute baby sea otter wearing a beret",
-    "n" => 2,
-    "size" => "1024x1024",
-]);
-````
-
-### Create image variation
-
-Creates a variation of a given image.
-
-````php
-$otter = curl_file_create(__DIR__ . './files/otter.png');
-
-$result = $open_ai->createImageVariation([
-    "image" => $otter,
-    "n" => 2,
-    "size" => "256x256",
-]);
-````
-
-## Searches
-
-**_(Deprecated)_**
-> This endpoint is deprecated and will be removed on December 3rd, 2022
-> OpenAI developed new methods with better
-> performance. [Learn more.](https://help.openai.com/en/articles/6272952-search-transition-guide)
-
-Given a query and a set of documents or labels, the model ranks each document based on its semantic similarity to the
-provided query.
+Supply your own input image. A single local file is sent as multipart form data.
+For multiple inputs, use the JSON `images` field with uploaded file IDs or image URLs.
 
 ```php
-$search = $open_ai->search([
-    'engine' => 'ada',
-    'documents' => ['White House', 'hospital', 'school'],
-    'query' => 'the president',
+$result = $open_ai->imageEdit([
+    'model' => 'gpt-image-2.5-flare',
+    'image' => new CURLFile('/path/to/input.png', 'image/png', 'input.png'),
+    'prompt' => 'Add a beret to the animal in this image',
+    'n' => 1,
+    'size' => '1024x1024',
 ]);
 ```
+
+To create a variation, use `imageEdit()` with a prompt describing the desired changes.
 
 ## Embeddings
 
@@ -616,57 +510,8 @@ Related guide: [Embeddings](https://platform.openai.com/docs/guides/embeddings)
 
 ```php
 $result = $open_ai->embeddings([
-    "model" => "text-similarity-babbage-001",
+    "model" => "text-embedding-3-small",
     "input" => "The food was delicious and the waiter..."
-]);
-```
-
-## Answers
-
-**_(Deprecated)_**
-
-> This endpoint is deprecated and will be removed on December 3rd, 2022
-> We’ve developed new methods with better
-> performance. [Learn more](https://help.openai.com/en/articles/6233728-answers-transition-guide).
-
-Given a question, a set of documents, and some examples, the API generates an answer to the question based on the
-information in the set of documents. This is useful for question-answering applications on sources of truth, like
-company documentation or a knowledge base.
-
-  ```php
-$answer = $open_ai->answer([
-    'documents' => ['Puppy A is happy.', 'Puppy B is sad.'],
-    'question' => 'which puppy is happy?',
-    'search_model' => 'ada',
-    'model' => 'curie',
-    'examples_context' => 'In 2017, U.S. life expectancy was 78.6 years.',
-    'examples' => [['What is human life expectancy in the United States?', '78 years.']],
-    'max_tokens' => 5,
-    'stop' => ["\n", '<|endoftext|>'],
-]);
-```
-
-## Classifications
-
-**_(Deprecated)_**
-> This endpoint is deprecated and will be removed on December 3rd, 2022
-> OpenAI developed new methods with better
-> performance. [Learn more.](https://help.openai.com/en/articles/6272941-classifications-transition-guide)
-
-Given a query and a set of labeled examples, the model will predict the most likely label for the query. Useful as a
-drop-in replacement for any ML classification or text-to-label task.
-
- ```php
-$classification = $open_ai->classification([
-    'examples' => [
-        ['A happy moment', 'Positive'],
-        ['I am sad.', 'Negative'],
-        ['I am feeling awesome', 'Positive'],
-    ],
-    'labels' => ['Positive', 'Negative', 'Neutral'],
-    'query' => 'It is a raining day =>(',
-    'search_model' => 'ada',
-    'model' => 'curie',
 ]);
 ```
 
@@ -676,108 +521,45 @@ Given a input text, outputs if the model classifies it as violating OpenAI's con
 
 ```php
 $flags = $open_ai->moderation([
+    'model' => 'omni-moderation-latest',
     'input' => 'I want to kill them.'
 ]);
 ```
 
-Know more about Content Moderations here: [OpenAI Moderations](https://platform.openai.com/docs/api-reference/moderations)
-
-## List engines
-
-**_(Deprecated)_**
-
-> The Engines endpoints are deprecated.
-> Please use their replacement, [Models](#list-models), instead. [Learn more](TODO?).
-
-Lists the currently available engines, and provides basic information about each one such as the owner and availability.
-
- ```php
-$engines = $open_ai->engines();
-```
+Know more about Content Moderations here: [OpenAI Moderations](https://developers.openai.com/api/reference/resources/moderations)
 
 ## Audio
 
 ### Text To Speech (TTS)
 
-```php
-
-$result = $open_ai->tts([
-    "model" => "tts-1", // tts-1-hd
-    "input" => "I'm going to use the stones again. Hey, we'd be going in short-handed, you know",
-    "voice" => "alloy", // echo, fable, onyx, nova, and shimmer
-]);
-
-// Save audio file
-file_put_contents('tts-result.mp3', $result);
-```
+`tts($opts)` wraps `/v1/audio/speech` for existing integrations. Its currently documented speech models are deprecated;
+see [OpenAI's deprecations](https://developers.openai.com/api/docs/deprecations) and the
+[Realtime guide](https://developers.openai.com/api/docs/guides/realtime) when planning a new voice integration.
+Pass a model supported by the speech endpoint explicitly; Realtime models use a different API.
 
 ### Create Transcription
 
-Transcribes audio into the input language.
+Transcribe a recording using a file you supply:
 
 ```php
-$c_file = curl_file_create(__DIR__ . '/files/en-marvel-endgame.m4a');
-
 $result = $open_ai->transcribe([
-    "model" => "whisper-1",
-    "file" => $c_file,
+    'model' => 'gpt-transcribe',
+    'file' => new CURLFile('/path/to/recording.mp3', 'audio/mpeg', 'recording.mp3'),
 ]);
 ```
-#### Response
 
-```json
-{
-  "text": "I'm going to use the stones again. Hey, we'd be going in short-handed, you know. Look, he's still got the stones, so... So let's get them. Use them to bring everyone back. Just like that? Yeah, just like that. Even if there's a small chance that we can undo this, I mean, we owe it to everyone who's not in this room to try. If we do this, how do we know it's going to end any differently than it did before? Because before you didn't have me. Hey, little girl, everybody in this room is about that superhero life. And if you don't mind my asking, where the hell have you been all this time? There are a lot of other planets in the universe. But unfortunately, they didn't have you guys. I like this one. Let's go get this son of a bitch."
-}
-```
+See the [official file transcription guide](https://developers.openai.com/api/docs/guides/speech-to-text).
 
 ### Create Translation
 
-Translates audio into English.
-
-_I use Turkish voice for translation thanks to famous science YouTuber [Barış Özcan](https://youtu.be/r2dQgdktUJg?t=90)_
-
-```php
-$c_file = curl_file_create(__DIR__ . '/files/tr-baris-ozcan-youtuber.m4a');
-
-$result = $open_ai->translate([
-    "model" => "whisper-1",
-    "file" => $c_file,
-]);
-```
-#### Response
-
-```json
-{
-  "text": "GPT-3. Last month, the biggest leap in the world of artificial intelligence in recent years happened silently. Maybe the biggest leap of all time. GPT-3's beta version was released by OpenAI. When you hear such a sentence, you may think, what kind of leap is this? But be sure, this is the most advanced language model with the most advanced language model with the most advanced language ability. It can answer these artificial intelligence questions, it can translate and even write poetry. Those who have gained access to the API or API of GPT-3 have already started to make very interesting experiments. Let's look at a few examples together. Let's start with an example of aphorism. This site produces beautiful words that you can tweet. Start to actually do things with your words instead of just thinking about them."
-}
-```
-
- #### Need HTML upload for audio? Check [this](#upload-file-with-html-form) section and change api references. Example :
-
-```php
-...
-    echo $open_ai->translate(
-        [
-            "purpose" => "answers",
-            "file" => $c_file,
-        ]
-    );
-...
-// OR
-...
-    echo $open_ai->transcribe(
-        [
-            "purpose" => "answers",
-            "file" => $c_file,
-        ]
-    );
-...
-```
+`translate($opts)` wraps `/v1/audio/translations` for existing integrations. For new workflows, transcribe with
+`gpt-transcribe`, then send the transcript to `createResponse()` with translation instructions.
+Check the [translation endpoint's supported models](https://developers.openai.com/api/reference/resources/audio/subresources/translations/methods/create)
+before using the compatibility wrapper.
 
 ## Files
 
-Files are used to upload documents that can be used across features like Answers, Search, and Classifications
+Upload files for model input, vector store file search, batch processing, or fine-tuning. Choose a purpose accepted by the [Files API](https://developers.openai.com/api/reference/resources/files/methods/create).
 
 ### List files
 
@@ -789,15 +571,17 @@ $files = $open_ai->listFiles();
 
 ### Upload file
 
-Upload a file that contains document(s) to be used across various endpoints/features. Currently, the size of all the
-files uploaded by one organization can be up to 1 GB. Please contact OpenAI if you need to increase the storage limit.
+Upload a file you supply, and retain the returned ID for later operations. For larger files, use the Uploads API.
+See the [Files reference](https://developers.openai.com/api/reference/resources/files/methods/create) for current size limits.
 
 ```php
-$c_file = curl_file_create(__DIR__ . 'files/sample_file_1.jsonl');
 $result = $open_ai->uploadFile([
-            "purpose" => "answers",
-            "file" => $c_file,
+    'purpose' => 'user_data',
+    'file' => new CURLFile('/path/to/document.txt', 'text/plain', 'document.txt'),
 ]);
+
+$uploaded = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+$fileId = $uploaded['id'];
 ```
 
 ### Upload file with HTML Form
@@ -815,7 +599,7 @@ use Orhanerday\OpenAi\OpenAi;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ob_clean();
-    $open_ai = new OpenAi(env('OPEN_AI_API_KEY'));
+    $open_ai = new OpenAi(getenv('OPENAI_API_KEY'));
     $tmp_file = $_FILES['fileToUpload']['tmp_name'];
     $file_name = basename($_FILES['fileToUpload']['name']);
     $c_file = curl_file_create($tmp_file, $_FILES['fileToUpload']['type'], $file_name);
@@ -823,7 +607,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo "[";
     echo $open_ai->uploadFile(
         [
-            "purpose" => "answers",
+            "purpose" => "user_data",
             "file" => $c_file,
         ]
     );
@@ -838,73 +622,87 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ### Delete file
 
  ```php
-$result = $open_ai->deleteFile('file-xxxxxxxx');
+$result = $open_ai->deleteFile($fileId);
 ```
 
 ### Retrieve file
 
  ```php
-$file = $open_ai->retrieveFile('file-xxxxxxxx');
+$file = $open_ai->retrieveFile($fileId);
 ```
 
 ### Retrieve file content
 
+Use an ID for a downloadable file purpose, such as a fine-tuning or batch file. OpenAI rejects
+content downloads for `user_data` files, even though retrieving their metadata succeeds.
+
  ```php
-$file = $open_ai->retrieveFileContent('file-xxxxxxxx');
+$file = $open_ai->retrieveFileContent($downloadableFileId);
 ```
 
 ## Fine-tunes
 
-Manage fine-tuning jobs to tailor a model to your specific training data.
+These methods manage `/v1/fine_tuning/jobs`. Fine-tuning access is restricted by OpenAI's
+[availability policy](https://developers.openai.com/api/docs/deprecations).
+Use a model supported for fine-tuning and a training file containing valid chat-format examples.
 
 ### Create fine-tune
 
- ```php
-$result = $open_ai->createFineTune([
-        "model" => "gpt-3.5-turbo-1106",
-        "training_file" => "file-U3KoAAtGsjUKSPXwEUDdtw86",
+```php
+$upload = $open_ai->uploadFile([
+    'purpose' => 'fine-tune',
+    'file' => new CURLFile('/path/to/training.jsonl', 'application/jsonl', 'training.jsonl'),
 ]);
+$trainingFileId = json_decode($upload, true, 512, JSON_THROW_ON_ERROR)['id'];
+
+$result = $open_ai->createFineTune([
+    'model' => 'gpt-4o-mini',
+    'training_file' => $trainingFileId,
+]);
+$jobId = json_decode($result, true, 512, JSON_THROW_ON_ERROR)['id'];
 ```
 
 ### List fine-tune
 
- ```php
-$fine_tunes = $open_ai->listFineTunes();
+```php
+$jobs = $open_ai->listFineTunes();
 ```
 
 ### Retrieve fine-tune
 
- ```php
-$fine_tune = $open_ai->retrieveFineTune('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
+```php
+$job = $open_ai->retrieveFineTune($jobId);
 ```
 
 ### Cancel fine-tune
 
- ```php
-$result = $open_ai->cancelFineTune('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
+```php
+$result = $open_ai->cancelFineTune($jobId);
 ```
 
 ### List fine-tune events
 
- ```php
-$fine_tune_events = $open_ai->listFineTuneEvents('ft-AF1WoRqd3aJAHsqc9NY7iL8F');
+```php
+$events = $open_ai->listFineTuneEvents($jobId);
 ```
 
 ### Delete fine-tune model
 
- ```php
-$result = $open_ai->deleteFineTune('curie:ft-acmeco-2021-03-03-21-44-20');
+Delete the model ID returned by a completed job, using `DELETE /v1/models/{model}`:
+
+```php
+$completedJob = json_decode($open_ai->retrieveFineTune($jobId), true, 512, JSON_THROW_ON_ERROR);
+if (!empty($completedJob['fine_tuned_model'])) {
+    $result = $open_ai->deleteFineTune($completedJob['fine_tuned_model']);
+}
 ```
 
-## Retrieve engine
+### Checkpoint permissions
 
-**_(Deprecated)_**
-
-Retrieves an engine instance, providing basic information about the engine such as the owner and availability.
-
- ```php
-$engine = $open_ai->engine('davinci');
-```
+Construct a separate `OpenAi` client with an **admin API key** for checkpoint permissions.
+`listFineTuningCheckpointPermissions()`, `createFineTuningCheckpointPermission()`, and
+`deleteFineTuningCheckpointPermission()` manage access across projects;
+`listFineTuningCheckpoints()` lists a job's checkpoints.
 
 ## Models
 
@@ -923,361 +721,140 @@ $result = $open_ai->listModels();
 Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
 
  ```php
-$result = $open_ai->retrieveModel("text-ada-001");
+$result = $open_ai->retrieveModel("gpt-4o-mini");
 ```
 
-## Printing results *i.e.* `$search`
+## Handling results
 
- ```php
-echo $search;
-```
-## Assistants (beta)
+Nonstreaming methods return raw response bodies; streaming methods deliver raw chunks to the callback.
+Inspect `getCURLInfo()['http_code']` before decoding success fields;
+HTTP API errors are returned as response bodies, while connection failures throw `Exception`.
+Malformed JSON request data throws `JsonException`.
 
-Allows you to build AI assistants within your own applications.
-
-### Create assistant
-
-Create an assistant with a model and instructions.
+## Responses API
 
 ```php
-$data = [
-    'model' => 'gpt-3.5-turbo',
-    'name' => 'my assistant',
-    'description' => 'my assistant description',
-    'instructions' => 'you should cordially help me',
-    'tools' => [],
-    'file_ids' => [],
-];
-
-$assistant = $open_ai->createAssistant($data);
+$result = $open_ai->createResponse([
+    "model" => "gpt-4o-mini",
+    "input" => "Hello",
+    "max_output_tokens" => 100,
+]);
 ```
 
-### Retrieve assistant
+Token counting and explicit compaction use `countResponseInputTokens($opts)` and `compactResponse($opts)`.
+File inputs, tools, structured output, conversation state, automatic compaction, and background mode are
+passed through as request options; see [endpoint support](README.md#endpoint-support).
+To resume a response created with `background => true` and `stream => true`:
 
 ```php
-$assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
-
-$assistant = $open_ai->retrieveAssistant($assistantId);
+$open_ai->retrieveResponse($responseId, [
+    'stream' => true,
+    'starting_after' => $lastSequenceNumber,
+], function ($curl, $data) {
+    echo $data;
+    return strlen($data);
+});
 ```
 
-### Modify assistant
+For the Responses multi-agent HTTP beta, add its header with
+`$open_ai->setHeader(['OpenAI-Beta' => 'responses_multi_agent=v1'])` and pass the documented
+`multi_agent` options to `createResponse()`. The application handles tool execution and SSE events.
+
+## Conversations API
 
 ```php
-$assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
-$data = [
-    'name' => 'my modified assistant',
-    'instructions' => 'you should cordially help me again',
-];
-
-$assistant = $open_ai->modifyAssistant($assistantId, $data);
+$result = $open_ai->createConversation();
 ```
 
-### Delete assistant
+## Vector Stores API
 
 ```php
-$assistantId = 'asst_DgiOnXK7nRfyvqoXWpFlwESc';
-
-$assistant = $open_ai->deleteAssistant($assistantId);
+$result = $open_ai->createVectorStore([
+    "name" => "Support FAQs"
+]);
 ```
 
-### Lists assistants
-
-Returns a list of assistants.
+## Batches API
 
 ```php
-$query = ['limit' => 10];
+$upload = $open_ai->uploadFile([
+    'purpose' => 'batch',
+    'file' => new CURLFile('/path/to/requests.jsonl', 'application/jsonl', 'requests.jsonl'),
+]);
+$batchFileId = json_decode($upload, true, 512, JSON_THROW_ON_ERROR)['id'];
 
-$assistants = $open_ai->listAssistants($query);
+$result = $open_ai->createBatch([
+    "completion_window" => "24h",
+    "endpoint" => "/v1/responses",
+    "input_file_id" => $batchFileId,
+]);
 ```
 
-### Create assistant file
+## Uploads API
 
-Create an assistant file by attaching a File to an assistant.
+Create an upload, add its bytes as multipart parts, then complete it with the ordered part IDs.
+Each part must be at most 64 MB. This example uploads one part:
 
 ```php
-$assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
-$fileId = 'file-jrNZZZBAPGnhYUKma7CblGoR';
+$path = '/path/to/document.txt';
+$upload = json_decode($open_ai->createUpload([
+    'filename' => 'document.txt',
+    'purpose' => 'assistants', // Accepted for vector store files.
+    'bytes' => filesize($path),
+    'mime_type' => 'text/plain',
+]), true, 512, JSON_THROW_ON_ERROR);
 
-$file = $open_ai->createAssistantFile($assistantId, $fileId);
+$part = json_decode($open_ai->addUploadPart($upload['id'], [
+    'data' => new CURLFile($path, 'application/octet-stream', 'part.bin'),
+]), true, 512, JSON_THROW_ON_ERROR);
+
+$result = $open_ai->completeUpload($upload['id'], ['part_ids' => [$part['id']]]);
 ```
 
-### Retrieve assistant file
+## Realtime API
+
+Create a short-lived client secret with a nested session configuration:
 
 ```php
-$assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
-$fileId = 'file-jrNZZZBAPGnhYUKma7CblGoR';
-
-$file = $open_ai->retrieveAssistantFile($assistantId, $fileId);
-```
-
-### Delete assistant file
-
-```php
-$assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
-$fileId = 'file-jrNZZZBAPGnhYUKma7CblGoR';
-
-$file = $open_ai->deleteAssistantFile($assistantId, $fileId);
-```
-
-### List assistant files
-
-Returns a list of assistant files.
-
-```php
-$assistantId = 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz';
-$query = ['limit' => 10];
-
-$files = $open_ai->listAssistantFiles($assistantId, $query);
-```
-
-## Threads (beta)
-
-Create threads that assistants can interact with.
-
-### Create thread
-
-```php
-$data = [
-    'messages' => [
-        [
-            'role' => 'user',
-            'content' => 'Hello, what is AI?',
-            'file_ids' => [],
-        ],
+$result = $open_ai->createRealtimeClientSecret([
+    'session' => [
+        'type' => 'realtime',
+        'model' => 'gpt-realtime-2.1-mini',
+        'instructions' => 'You are a helpful assistant.',
     ],
-];
-
-$thread = $open_ai->createThread($data);
+    'expires_after' => ['anchor' => 'created_at', 'seconds' => 600],
+]);
 ```
 
-### Retrieve thread
-
-```php
-$threadId = 'thread_YKDArENVWFDO2Xz3POifFYlp';
-
-$thread = $open_ai->retrieveThread($threadId);
-```
-
-### Modify thread
-
-```php
-$threadId = 'thread_YKDArENVWFDO2Xz3POifFYlp';
-$data = [
-    'metadata' => ['test' => '1234abcd'],
-];
-
-$thread = $open_ai->modifyThread($threadId, $data);
-```
-
-### Delete thread
-
-```php
-$threadId = 'thread_YKDArENVWFDO2Xz3POifFYlp';
-
-$thread = $open_ai->deleteThread($threadId);
-```
-
-## Messages (beta)
-
-Create messages within threads.
-
-### Create message
-
-```php
-$threadId = 'thread_YKDArENVWFDO2Xz3POifFYlp';
-$data = [
-    'role' => 'user',
-    'content' => 'How does AI work? Explain it in simple terms.',
-];
-
-$message = $open_ai->createThreadMessage($threadId, $data);
-```
-
-### Retrieve message
-
-```php
-$threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
-$messageId = 'msg_d37P5XgREsm6BItOcppnBO1b';
-
-$message = $open_ai->retrieveThreadMessage($threadId, $messageId);
-```
-
-### Modify message
-
-```php
-$threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
-$messageId = 'msg_d37P5XgREsm6BItOcppnBO1b';
-$data = [
-    'metadata' => ['test' => '1234abcd'],
-];
-
-$message = $open_ai->modifyThreadMessage($threadId, $messageId, $data);
-```
-
-### Lists messages
-
-Returns a list of messages for a given thread.
-
-```php
-$threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
-$query = ['limit' => 10];
-
-$messages = $open_ai->listThreadMessages($threadId, $query);
-```
-
-### Retrieve message file
-
-```php
-$threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
-$messageId = 'msg_CZ47kAGZugAfeHMX6bmJIukP';
-$fileId = 'file-CRLcY63DiHphWuBrmDWZVCgA';
-
-$file = $open_ai->retrieveMessageFile($threadId, $messageId, $fileId);
-```
-
-### List message files
-
-Returns a list of message files.
-
-```php
-$threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
-$messageId = 'msg_CZ47kAGZugAfeHMX6bmJIukP';
-$query = ['limit' => 10];
-
-$files = $open_ai->listMessageFiles($threadId, $messageId, $query);
-```
-
-## Runs (beta)
-
-Represents an execution run on a thread.
-
-### Create run
-
-```php
-$threadId = 'thread_d86alfR2rfF7rASyV4V7hicz';
-$data = ['assistant_id' => 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz'];
-
-$run = $open_ai->createRun($threadId, $data);
-```
-
-### Retrieve run
-
-```php
-$threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
-$runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
-
-$run = $open_ai->retrieveRun($threadId, $runId);
-```
-
-### Modify run
-
-```php
-$threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
-$runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
-$data = [
-    'metadata' => ['test' => 'abcd1234'],
-];
-
-$run = $open_ai->modifyRun($threadId, $runId, $data);
-```
-
-### Lists runs
-
-Returns a list of runs belonging to a thread.
-
-```php
-$threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
-$query = ['limit' => 10];
-
-$runs = $open_ai->listRuns($threadId, $query);
-```
-
-### Submit tool outputs
-
-When a run has the status: "requires_action" and required_action.type is submit_tool_outputs, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.
-
-```php
-$threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
-$runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
-$outputs = [
-    'tool_outputs' => [
-        ['tool_call_id' => 'call_abc123', 'output' => '28C'],
-    ],
-];
-
-$run = $open_ai->submitToolOutputs($threadId, $runId, $outputs);
-```
-
-### Cancel run
-
-Cancels a run that is "in_progress".
-
-```php
-$threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
-$runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
-
-$run = $open_ai->cancelRun($threadId, $runId);
-```
-
-### Create thread and run
-
-Create a thread and run it in one request.
-
-```php
-$data = [
-    'assistant_id' => 'asst_zT1LLZ8dWnuFCrMFzqxFOhzz',
-    'thread' => [
-        'messages' => [
-            [
-                'role' => 'user',
-                'content' => 'Hello, what is AI?',
-                'file_ids' => [],
-            ],
-        ],
-    ],
-];
-
-$run = $open_ai->createThreadAndRun($data);
-```
-
-### Retrieve run step
-
-Retrieves a step in execution of a run.
-
-```php
-$threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
-$runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
-$stepId = 'step_kwLG0vPQjqVyQHVoL7GVK3aG';
-
-$step = $open_ai->retrieveRunStep($threadId, $runId, $stepId);
-```
-
-### List run steps
-
-Returns a list of run steps belonging to a run.
-
-```php
-$threadId = 'thread_JZbzCYpYgpNb79FNeneO3cGI';
-$runId = 'run_xBKYFcD2Jg3gnfrje6fhiyXj';
-$query = ['limit' => 10];
-
-$steps = $open_ai->listRunSteps($threadId, $runId, $query);
-```
+See the [client-secret API reference](https://developers.openai.com/api/reference/resources/realtime/subresources/client_secrets/methods/create).
 
 ## Testing
 
-To run all tests:
+Composer selects a compatible Pest version for your PHP runtime. The library continues to support PHP 7.4+.
+
+Run the actual API tests with a key from the environment or your local `.env`:
 
 ```bash
+export OPENAI_API_KEY='your-api-key'
 composer test
 ```
 
-To run only those tests that work for most user (exclude those that require a missing folder or that hit deprecated
-endpoints no longer available to most users):
+`composer test-live` runs only live API tests. Without a key, API tests are explicitly skipped.
+To run native cURL transport and webhook signature checks without API calls:
 
 ```bash
-./vendor/bin/pest --group=working
+vendor/bin/pest --exclude-group=live
 ```
+
+There are no cURL mocks. Live tests may incur API charges. They create and delete their own files,
+Responses, conversations, stored chats, uploads, and vector stores. They never launch a training job.
+Stored chat tests poll briefly because persistence can be asynchronous.
+
+Models can be selected with `OPENAI_CHAT_MODEL`, `OPENAI_IMAGE_MODEL`, `OPENAI_COMPACTION_MODEL`,
+and `OPENAI_REALTIME_MODEL`. Defaults follow the examples and current guides.
+Additional account-dependent tests and required fixtures are documented in [endpoint support](README.md#endpoint-support).
+Push/PR CI runs native transport and signature checks on PHP 7.4 and 8.4; manually dispatch the Tests
+workflow with an `OPENAI_API_KEY` repository secret to run the live suite.
 
 ## Changelog
 
