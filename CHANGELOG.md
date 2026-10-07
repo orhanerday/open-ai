@@ -2,6 +2,20 @@
 
 All notable changes to `open-ai` will be documented in this file.
 
+## Unreleased - 6.0.0
+
+- Remove the legacy Completions integration, sunset Assistants APIs, retired image variations, and obsolete endpoint wrappers and URL helpers.
+- Add Responses, Conversations, Vector Stores, Batches, Uploads, Realtime client secrets, and fine-tuning checkpoint operations.
+- Use current chat and embedding defaults; update examples and package metadata.
+- Add stored chat completion CRUD, Decisions, webhook management and signature verification, Audio voices and consents, fine-tuning graders and pause/resume, and Realtime REST call control and translation client secrets.
+- Support per-request streaming callbacks for Chat, Responses, Images, and transcription; multipart Upload Parts; GET query arrays and pagination; and background Response stream resumption.
+- Preserve cURL connection errors and valid empty response bodies; reject malformed JSON request data.
+- Allow construction without an API key; add `setApiKey()` for deferred configuration and key replacement, and reject requests without configured authentication (#156).
+- Add all ten organization Usage endpoints and Costs, with query filters and cursor pagination (#155).
+- Add custom cURL options and configurable API path prefixes for compatible providers (#149, #152).
+- Remove cURL mocks; run real API tests when a key is available, with test-owned resource cleanup and explicit skips for missing credentials or fixtures.
+- See [MIGRATING.md](MIGRATING.md) for breaking changes.
+
 ## 3.5 - 2023-02-10
 
 ### What's Changed

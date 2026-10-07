@@ -1,6 +1,6 @@
 {
     "name": "orhanerday/open-ai",
-    "description": "OpenAI GPT-3 Api Client in PHP",
+    "description": "OpenAI API client for PHP, with Responses, Chat, Images, and more",
     "keywords": [
         "orhanerday",
         "open-ai"
@@ -21,8 +21,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
-        "pestphp/pest": "^1.20",
-        "spatie/ray": "^1.28"
+        "pestphp/pest": "^1.23.1 || ^2.0 || ^3.0 || ^4.0"
     },
     "autoload": {
         "psr-4": {
@@ -36,7 +35,8 @@
     },
     "scripts": {
         "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage",
+        "test-live": "vendor/bin/pest --group=live",
+        "test-coverage": "vendor/bin/pest --exclude-group=live --coverage --coverage-filter=src --coverage-html=build/coverage --coverage-clover=build/logs/clover.xml",
         "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
     },
     "config": {

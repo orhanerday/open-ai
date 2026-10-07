@@ -1,6 +1,6 @@
 name: Tests
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   test:
@@ -8,9 +8,13 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [windows-latest]
-        php: [7.4]
-        stability: [prefer-lowest]
+        include:
+          - os: windows-latest
+            php: '7.4'
+            stability: prefer-lowest
+          - os: windows-latest
+            php: '8.4'
+            stability: prefer-stable
 
     name: P${{ matrix.php }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -34,4 +38,25 @@ jobs:
         run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Execute tests
-        run: vendor/bin/pest
+        run: vendor/bin/pest --exclude-group=live
+
+  live:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: curl, mbstring, dom, fileinfo
+          coverage: none
+      - run: composer update --prefer-stable --prefer-dist --no-interaction
+      - name: Require the live API credential
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: test -n "$OPENAI_API_KEY"
+      - name: Execute real API tests
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_ADMIN_KEY: ${{ secrets.OPENAI_ADMIN_KEY }}
+        run: composer test-live

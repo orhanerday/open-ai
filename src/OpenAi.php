@@ -6,19 +6,17 @@ use Exception;
 
 class OpenAi
 {
-    private string $engine = "davinci";
-    private string $model = "text-davinci-002";
-    private string $chatModel = "gpt-3.5-turbo";
-    private string $assistantsBetaVersion = "v1";
+    private string $chatModel = "gpt-4o-mini";
     private array $headers;
     private array $contentTypes;
     private int $timeout = 0;
-    private object $stream_method;
     private string $customUrl = "";
     private string $proxy = "";
     private array $curlInfo = [];
+    private array $customCurlOptions = [];
+    private string $customVersion = "";
 
-    public function __construct($OPENAI_API_KEY)
+    public function __construct($OPENAI_API_KEY = '')
     {
         $this->contentTypes = [
             "application/json" => "Content-Type: application/json",
@@ -27,17 +25,37 @@ class OpenAi
 
         $this->headers = [
             $this->contentTypes["application/json"],
-            "Authorization: Bearer $OPENAI_API_KEY",
         ];
+
+        if ((string) $OPENAI_API_KEY !== '') {
+            $this->setApiKey((string) $OPENAI_API_KEY);
+        }
+    }
+
+    public function setApiKey(string $apiKey): void
+    {
+        if (trim($apiKey) === '') {
+            throw new \InvalidArgumentException('API key must not be empty.');
+        }
+        $this->setHeader(['Authorization' => 'Bearer ' . $apiKey]);
     }
 
     /**
      * @return array
-     * Remove this method from your code before deploying
+     * Metadata from the most recent completed cURL request.
      */
     public function getCURLInfo()
     {
         return $this->curlInfo;
+    }
+
+    /**
+     * @param array $options
+     * Set custom cURL options to be applied to all requests.
+     */
+    public function setCURLOptions(array $options)
+    {
+        $this->customCurlOptions = $options;
     }
 
     /**
@@ -67,130 +85,25 @@ class OpenAi
     /**
      * @param $opts
      * @return bool|string
-     * @deprecated
      */
-    public function complete($opts)
-    {
-        $engine = $opts['engine'] ?? $this->engine;
-        $url = Url::completionURL($engine);
-        unset($opts['engine']);
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $opts);
-    }
-
-    /**
-     * @param        $opts
-     * @param  null  $stream
-     * @return bool|string
-     * @throws Exception
-     */
-    public function completion($opts, $stream = null)
-    {
-        if (array_key_exists('stream', $opts) && $opts['stream']) {
-            if ($stream == null) {
-                throw new Exception(
-                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
-                );
-            }
-
-            $this->stream_method = $stream;
-        }
-
-        $opts['model'] = $opts['model'] ?? $this->model;
-        $url = Url::completionsURL();
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $opts);
-    }
-
-    /**
-     * @param $opts
-     * @return bool|string
-     */
-    public function createEdit($opts)
-    {
-        $url = Url::editsUrl();
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $opts);
-    }
-
-    /**
-     * @param $opts
-     * @return bool|string
-     */
-    public function image($opts)
+    public function image($opts, ?callable $stream = null)
     {
         $url = Url::imageUrl()."/generations";
         $this->baseUrl($url);
 
-        return $this->sendRequest($url, 'POST', $opts);
+        return $this->sendRequest($url, 'POST', $opts, $stream);
     }
 
     /**
      * @param $opts
      * @return bool|string
      */
-    public function imageEdit($opts)
+    public function imageEdit($opts, ?callable $stream = null)
     {
         $url = Url::imageUrl()."/edits";
         $this->baseUrl($url);
 
-        return $this->sendRequest($url, 'POST', $opts);
-    }
-
-    /**
-     * @param $opts
-     * @return bool|string
-     */
-    public function createImageVariation($opts)
-    {
-        $url = Url::imageUrl()."/variations";
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $opts);
-    }
-
-    /**
-     * @param $opts
-     * @return bool|string
-     * @deprecated
-     */
-    public function search($opts)
-    {
-        $engine = $opts['engine'] ?? $this->engine;
-        $url = Url::searchURL($engine);
-        unset($opts['engine']);
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $opts);
-    }
-
-    /**
-     * @param $opts
-     * @return bool|string
-     * @deprecated
-     */
-    public function answer($opts)
-    {
-        $url = Url::answersUrl();
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $opts);
-    }
-
-    /**
-     * @param $opts
-     * @return bool|string
-     * @deprecated
-     */
-    public function classification($opts)
-    {
-        $url = Url::classificationsUrl();
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $opts);
+        return $this->sendRequest($url, 'POST', $opts, $stream);
     }
 
     /**
@@ -207,39 +120,29 @@ class OpenAi
 
     /**
      * @param        $opts
-     * @param  null  $stream
+     * @param  callable|null  $stream
      * @return bool|string
      * @throws Exception
      */
-    public function chat($opts, $stream = null)
+    public function chat($opts, ?callable $stream = null)
     {
-        if ($stream != null && array_key_exists('stream', $opts)) {
-            if (! $opts['stream']) {
-                throw new Exception(
-                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
-                );
-            }
-
-            $this->stream_method = $stream;
-        }
-
         $opts['model'] = $opts['model'] ?? $this->chatModel;
         $url = Url::chatUrl();
         $this->baseUrl($url);
 
-        return $this->sendRequest($url, 'POST', $opts);
+        return $this->sendRequest($url, 'POST', $opts, $stream);
     }
 
     /**
      * @param $opts
      * @return bool|string
      */
-    public function transcribe($opts)
+    public function transcribe($opts, ?callable $stream = null)
     {
         $url = Url::transcriptionsUrl();
         $this->baseUrl($url);
 
-        return $this->sendRequest($url, 'POST', $opts);
+        return $this->sendRequest($url, 'POST', $opts, $stream);
     }
 
     /**
@@ -269,12 +172,12 @@ class OpenAi
     /**
      * @return bool|string
      */
-    public function listFiles()
+    public function listFiles($opts = [])
     {
         $url = Url::filesUrl();
         $this->baseUrl($url);
 
-        return $this->sendRequest($url, 'GET');
+        return $this->sendRequest($url, 'GET', $opts);
     }
 
     /**
@@ -331,12 +234,12 @@ class OpenAi
     /**
      * @return bool|string
      */
-    public function listFineTunes()
+    public function listFineTunes($opts = [])
     {
         $url = Url::fineTuneUrl();
         $this->baseUrl($url);
 
-        return $this->sendRequest($url, 'GET');
+        return $this->sendRequest($url, 'GET', $opts);
     }
 
     /**
@@ -369,13 +272,13 @@ class OpenAi
      * @param $fine_tune_id
      * @return bool|string
      */
-    public function listFineTuneEvents($fine_tune_id)
+    public function listFineTuneEvents($fine_tune_id, $opts = [])
     {
         $fine_tune_id = "/$fine_tune_id/events";
         $url = Url::fineTuneUrl().$fine_tune_id;
         $this->baseUrl($url);
 
-        return $this->sendRequest($url, 'GET');
+        return $this->sendRequest($url, 'GET', $opts);
     }
 
     /**
@@ -392,37 +295,12 @@ class OpenAi
     }
 
     /**
-     * @param
-     * @return bool|string
-     * @deprecated
-     */
-    public function engines()
-    {
-        $url = Url::enginesUrl();
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param $engine
-     * @return bool|string
-     * @deprecated
-     */
-    public function engine($engine)
-    {
-        $url = Url::engineUrl($engine);
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
      * @param $opts
      * @return bool|string
      */
     public function embeddings($opts)
     {
+        $opts['model'] = $opts['model'] ?? 'text-embedding-3-small';
         $url = Url::embeddings();
         $this->baseUrl($url);
 
@@ -430,445 +308,15 @@ class OpenAi
     }
 
     /**
-     * @param array $data
-     * @return bool|string
-     */
-    public function createAssistant($data)
-    {
-        $data['model'] = $data['model'] ?? $this->chatModel;
-        $this->addAssistantsBetaHeader();
-        $url = Url::assistantsUrl();
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $data);
-    }
-
-    /**
-     * @param string $assistantId
-     * @return bool|string
-     */
-    public function retrieveAssistant($assistantId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::assistantsUrl() . '/' . $assistantId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $assistantId
-     * @param array $data
-     * @return bool|string
-     */
-    public function modifyAssistant($assistantId, $data)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::assistantsUrl() . '/' . $assistantId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $data);
-    }
-
-    /**
-     * @param string $assistantId
-     * @return bool|string
-     */
-    public function deleteAssistant($assistantId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::assistantsUrl() . '/' . $assistantId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'DELETE');
-    }
-
-    /**
-     * @param array $query
-     * @return bool|string
-     */
-    public function listAssistants($query = [])
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::assistantsUrl();
-        if (count($query) > 0) {
-            $url .= '?' . http_build_query($query);
-        }
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $assistantId
-     * @param string $fileId
-     * @return bool|string
-     */
-    public function createAssistantFile($assistantId, $fileId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::assistantsUrl() . '/' . $assistantId . '/files';
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', ['file_id' => $fileId]);
-    }
-
-    /**
-     * @param string $assistantId
-     * @param string $fileId
-     * @return bool|string
-     */
-    public function retrieveAssistantFile($assistantId, $fileId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::assistantsUrl() . '/' . $assistantId . '/files/' . $fileId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $assistantId
-     * @param array $query
-     * @return bool|string
-     */
-    public function listAssistantFiles($assistantId, $query = [])
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::assistantsUrl() . '/' . $assistantId . '/files';
-        if (count($query) > 0) {
-            $url .= '?' . http_build_query($query);
-        }
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $assistantId
-     * @param string $fileId
-     * @return bool|string
-     */
-    public function deleteAssistantFile($assistantId, $fileId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::assistantsUrl() . '/' . $assistantId . '/files/' . $fileId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'DELETE');
-    }
-
-    /**
-     * @param array $data
-     * @return bool|string
-     */
-    public function createThread($data = [])
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl();
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $data);
-    }
-
-    /**
-     * @param string $threadId
-     * @return bool|string
-     */
-    public function retrieveThread($threadId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $threadId
-     * @param array $data
-     * @return bool|string
-     */
-    public function modifyThread($threadId, $data)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $data);
-    }
-
-    /**
-     * @param string $threadId
-     * @return bool|string
-     */
-    public function deleteThread($threadId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'DELETE');
-    }
-
-    /**
-     * @param string $threadId
-     * @param array $data
-     * @return bool|string
-     */
-    public function createThreadMessage($threadId, $data)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/messages';
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $data);
-    }
-
-    /**
-     * @param string $threadId
-     * @param string $messageId
-     * @return bool|string
-     */
-    public function retrieveThreadMessage($threadId, $messageId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/messages/' . $messageId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $threadId
-     * @param string $messageId
-     * @param array $data
-     * @return bool|string
-     */
-    public function modifyThreadMessage($threadId, $messageId, $data)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/messages/' . $messageId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $data);
-    }
-
-    /**
-     * @param string $threadId
-     * @param array $query
-     * @return bool|string
-     */
-    public function listThreadMessages($threadId, $query = [])
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/messages';
-        if (count($query) > 0) {
-            $url .= '?' . http_build_query($query);
-        }
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $threadId
-     * @param string $messageId
-     * @param string $fileId
-     * @return bool|string
-     */
-    public function retrieveMessageFile($threadId, $messageId, $fileId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/messages/' . $messageId . '/files/' . $fileId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $threadId
-     * @param string $messageId
-     * @param array $query
-     * @return bool|string
-     */
-    public function listMessageFiles($threadId, $messageId, $query = [])
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/messages/' . $messageId . '/files';
-        if (count($query) > 0) {
-            $url .= '?' . http_build_query($query);
-        }
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $threadId
-     * @param array $data
-     * @return bool|string
-     */
-    public function createRun($threadId, $data, $stream = null)
-    {
-        if (array_key_exists('stream', $data) && $data['stream']) {
-            if ($stream == null) {
-                throw new Exception(
-                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
-                );
-            }
-
-            $this->stream_method = $stream;
-        }
-        
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/runs';
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $data);
-    }
-
-    /**
-     * @param string $threadId
-     * @param string $runId
-     * @return bool|string
-     */
-    public function retrieveRun($threadId, $runId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $threadId
-     * @param string $runId
-     * @param array $data
-     * @return bool|string
-     */
-    public function modifyRun($threadId, $runId, $data)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $data);
-    }
-
-    /**
-     * @param string $threadId
-     * @param array $query
-     * @return bool|string
-     */
-    public function listRuns($threadId, $query = [])
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/runs';
-        if (count($query) > 0) {
-            $url .= '?' . http_build_query($query);
-        }
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $threadId
-     * @param string $runId
-     * @param array $outputs
-     * @return bool|string
-     */
-    public function submitToolOutputs($threadId, $runId, $outputs, $stream = null)
-    {
-        if (array_key_exists('stream', $outputs) && $outputs['stream']) {
-            if ($stream == null) {
-                throw new Exception(
-                    'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
-                );
-            }
-
-            $this->stream_method = $stream;
-        }
-        
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/submit_tool_outputs';
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $outputs);
-    }
-
-    /**
-     * @param string $threadId
-     * @param string $runId
-     * @return bool|string
-     */
-    public function cancelRun($threadId, $runId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/cancel';
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST');
-    }
-
-    /**
-     * @param array $data
-     * @return bool|string
-     */
-    public function createThreadAndRun($data)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/runs';
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'POST', $data);
-    }
-
-    /**
-     * @param string $threadId
-     * @param string $runId
-     * @param string $stepId
-     * @return bool|string
-     */
-    public function retrieveRunStep($threadId, $runId, $stepId)
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/steps/' . $stepId;
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
-     * @param string $threadId
-     * @param string $runId
-     * @param array $query
-     * @return bool|string
-     */
-    public function listRunSteps($threadId, $runId, $query = [])
-    {
-        $this->addAssistantsBetaHeader();
-        $url = Url::threadsUrl() . '/' . $threadId . '/runs/' . $runId . '/steps';
-        if (count($query) > 0) {
-            $url .= '?' . http_build_query($query);
-        }
-        $this->baseUrl($url);
-
-        return $this->sendRequest($url, 'GET');
-    }
-
-    /**
      * @param $opts
      * @return bool|string
      */
-    public function tts($opts)
+    public function tts($opts, ?callable $stream = null)
     {
         $url = Url::ttsUrl();
         $this->baseUrl($url);
 
-        return $this->sendRequest($url, 'POST', $opts);
+        return $this->sendRequest($url, 'POST', $opts, $stream);
     }
 
     /**
@@ -892,12 +340,8 @@ class OpenAi
 
     /**
      * @param  string  $customUrl
-     * @deprecated
-     */
-
-    /**
-     * @param  string  $customUrl
      * @return void
+     * @deprecated Use setBaseURL() instead.
      */
     public function setCustomURL(string $customUrl)
     {
@@ -918,14 +362,44 @@ class OpenAi
     }
 
     /**
+     * @param string $version
+     */
+    public function setApiVersion(string $version)
+    {
+        if ($version != '') {
+            $this->customVersion = $version;
+        }
+    }
+
+    /**
      * @param  array  $header
      * @return void
      */
     public function setHeader(array $header)
     {
-        if ($header) {
-            foreach ($header as $key => $value) {
-                $this->headers[$key] = $value;
+        foreach ($header as $key => $value) {
+            if (! is_string($value)) {
+                throw new \InvalidArgumentException('Header values must be strings.');
+            }
+            $line = is_string($key) ? $key . ': ' . $value : $value;
+            if (! is_string($line) || strpos($line, ':') === false || preg_match('/[\r\n]/', $line)) {
+                throw new \InvalidArgumentException('Headers must be name: value strings or an associative array.');
+            }
+            $name = strtolower(trim(explode(':', $line, 2)[0]));
+            if (! preg_match('/^[!#$%&\'*+.^_`|~0-9a-z-]+$/', $name)) {
+                throw new \InvalidArgumentException('Invalid header name.');
+            }
+            $replaced = false;
+            foreach ($this->headers as $index => $existing) {
+                if (strtolower(trim(explode(':', $existing, 2)[0])) === $name) {
+                    $this->headers[$index] = $line;
+                    $replaced = true;
+
+                    break;
+                }
+            }
+            if (! $replaced) {
+                $this->headers[] = $line;
             }
         }
     }
@@ -936,43 +410,53 @@ class OpenAi
     public function setORG(string $org)
     {
         if ($org != "") {
-            $this->headers[] = "OpenAI-Organization: $org";
+            $this->setHeader(['OpenAI-Organization' => $org]);
         }
     }
-    
-    /**
-     * @param  string  $org
-     */
-    public function setAssistantsBetaVersion(string $version)
-    {
-        if ($version != "") {
-            $this->assistantsBetaVersion = $version;
-        }
-    }
-
-    /**
-     * @return void
-     */
-    private function addAssistantsBetaHeader(){ 
-        $this->headers[] = 'OpenAI-Beta: assistants='.$this->assistantsBetaVersion;
-    }
-    
 
     /**
      * @param  string  $url
      * @param  string  $method
-     * @param  array   $opts
+     * @param  array|null  $opts
      * @return bool|string
      */
-    private function sendRequest(string $url, string $method, array $opts = [])
+    private function sendRequest(string $url, string $method, ?array $opts = null, ?callable $stream = null, bool $multipart = false)
     {
-        $post_fields = json_encode($opts);
+        $authorization = '';
+        foreach ($this->headers as $header) {
+            [$name, $value] = explode(':', $header, 2);
+            if (strcasecmp(trim($name), 'Authorization') === 0) {
+                $authorization = trim($value);
 
-        if (array_key_exists('file', $opts) || array_key_exists('image', $opts)) {
+                break;
+            }
+        }
+        if ($authorization === '' || strcasecmp($authorization, 'Bearer') === 0) {
+            throw new Exception('Please provide an API key using the constructor or setApiKey().');
+        }
+
+        $hasBody = $opts !== null;
+        $opts = $opts ?? [];
+        $isStreaming = ! empty($opts['stream']) || ($opts['stream_format'] ?? null) === 'sse';
+        if ($isStreaming && $stream === null) {
+            throw new Exception(
+                'Please provide a stream function. Check https://github.com/orhanerday/open-ai#stream-example for an example.'
+            );
+        }
+
+        if ($method === 'GET' || ! $hasBody) {
+            $query = $this->buildQuery($opts);
+            if ($query !== '') {
+                $url .= (strpos($url, '?') === false ? '?' : '&') . $query;
+            }
+            $this->headers[0] = $this->contentTypes['application/json'];
+            $post_fields = null;
+        } elseif ($multipart || array_key_exists('file', $opts) || array_key_exists('image', $opts)) {
             $this->headers[0] = $this->contentTypes["multipart/form-data"];
-            $post_fields = $opts;
+            $post_fields = $this->buildMultipart($opts);
         } else {
             $this->headers[0] = $this->contentTypes["application/json"];
+            $post_fields = json_encode($opts === [] ? (object) [] : $opts, JSON_THROW_ON_ERROR);
         }
         $curl_info = [
             CURLOPT_URL => $url,
@@ -987,7 +471,7 @@ class OpenAi
             CURLOPT_HTTPHEADER => $this->headers,
         ];
 
-        if ($opts == []) {
+        if ($post_fields === null || ($method === 'DELETE' && $opts === [])) {
             unset($curl_info[CURLOPT_POSTFIELDS]);
         }
 
@@ -995,25 +479,81 @@ class OpenAi
             $curl_info[CURLOPT_PROXY] = $this->proxy;
         }
 
-        if (array_key_exists('stream', $opts) && $opts['stream']) {
-            $curl_info[CURLOPT_WRITEFUNCTION] = $this->stream_method;
+        if ($isStreaming) {
+            $curl_info[CURLOPT_WRITEFUNCTION] = $stream;
         }
 
         $curl = curl_init();
 
         curl_setopt_array($curl, $curl_info);
+        if (! empty($this->customCurlOptions)) {
+            curl_setopt_array($curl, $this->customCurlOptions);
+        }
         $response = curl_exec($curl);
 
         $info = curl_getinfo($curl);
         $this->curlInfo = $info;
+        $error = curl_error($curl);
+        $errno = curl_errno($curl);
 
-        curl_close($curl);
+        if (PHP_VERSION_ID < 80000) {
+            curl_close($curl);
+        }
 
-        if (! $response) {
-            throw new Exception(curl_error($curl));
+        if ($response === false) {
+            throw new Exception($error, $errno);
         }
 
         return $response;
+    }
+
+    private function buildMultipart(array $opts): array
+    {
+        $fields = [];
+        $append = function ($key, $value) use (&$append, &$fields) {
+            if ($value === null) {
+                return;
+            }
+            if (is_array($value)) {
+                foreach ($value as $index => $item) {
+                    $append($key . '[' . $index . ']', $item);
+                }
+
+                return;
+            }
+            $fields[$key] = is_bool($value) ? ($value ? 'true' : 'false') : $value;
+        };
+        foreach ($opts as $key => $value) {
+            $append($key, $value);
+        }
+
+        return $fields;
+    }
+
+    private function buildQuery(array $opts): string
+    {
+        $parts = [];
+        $append = function ($key, $value) use (&$append, &$parts) {
+            if ($value === null) {
+                return;
+            }
+            if (is_array($value)) {
+                foreach ($value as $index => $item) {
+                    $append($key . '[' . (is_int($index) ? '' : $index) . ']', $item);
+                }
+
+                return;
+            }
+            if (is_bool($value)) {
+                $value = $value ? 'true' : 'false';
+            }
+            $parts[] = rawurlencode($key) . '=' . rawurlencode((string) $value);
+        };
+        foreach ($opts as $key => $value) {
+            $append($key, $value);
+        }
+
+        return implode('&', $parts);
     }
 
     /**
@@ -1024,5 +564,693 @@ class OpenAi
         if ($this->customUrl != "") {
             $url = str_replace(Url::ORIGIN, $this->customUrl, $url);
         }
+        if ($this->customVersion != "") {
+            $url = str_replace('/' . Url::API_VERSION . '/', '/' . $this->customVersion . '/', $url);
+        }
+    }
+
+    // Responses API
+    public function createResponse($opts, ?callable $stream = null)
+    {
+        $url = Url::responsesUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts, $stream);
+    }
+
+    public function retrieveResponse($responseId, $opts = [], ?callable $stream = null)
+    {
+        $url = Url::responsesUrl() . '/' . $responseId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts, $stream);
+    }
+
+    public function deleteResponse($responseId)
+    {
+        $url = Url::responsesUrl() . '/' . $responseId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function cancelResponse($responseId)
+    {
+        $url = Url::responsesUrl() . '/' . $responseId . '/cancel';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    public function compactResponse($opts = [])
+    {
+        $url = Url::responsesUrl() . '/compact';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function countResponseInputTokens($opts)
+    {
+        $url = Url::responsesUrl() . '/input_tokens';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function listResponseInputItems($responseId, $opts = [])
+    {
+        $url = Url::responsesUrl() . '/' . $responseId . '/input_items';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    // Conversations API
+    public function createConversation($opts = [])
+    {
+        $url = Url::conversationsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function retrieveConversation($conversationId)
+    {
+        $url = Url::conversationsUrl() . '/' . $conversationId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    public function updateConversation($conversationId, $opts)
+    {
+        $url = Url::conversationsUrl() . '/' . $conversationId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function deleteConversation($conversationId)
+    {
+        $url = Url::conversationsUrl() . '/' . $conversationId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function createConversationItem($conversationId, $opts)
+    {
+        $url = Url::conversationsUrl() . '/' . $conversationId . '/items';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function retrieveConversationItem($conversationId, $itemId, $opts = [])
+    {
+        $url = Url::conversationsUrl() . '/' . $conversationId . '/items/' . $itemId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function listConversationItems($conversationId, $opts = [])
+    {
+        $url = Url::conversationsUrl() . '/' . $conversationId . '/items';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function deleteConversationItem($conversationId, $itemId)
+    {
+        $url = Url::conversationsUrl() . '/' . $conversationId . '/items/' . $itemId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    // Vector Stores API
+    public function createVectorStore($opts = [])
+    {
+        $url = Url::vectorStoresUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function listVectorStores($opts = [])
+    {
+        $url = Url::vectorStoresUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function retrieveVectorStore($vectorStoreId)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    public function updateVectorStore($vectorStoreId, $opts = [])
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function deleteVectorStore($vectorStoreId)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function searchVectorStore($vectorStoreId, $opts = [])
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/search';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function createVectorStoreFile($vectorStoreId, $opts)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/files';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function listVectorStoreFiles($vectorStoreId, $opts = [])
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/files';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function retrieveVectorStoreFile($vectorStoreId, $fileId)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/files/' . $fileId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    public function updateVectorStoreFile($vectorStoreId, $fileId, $opts)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/files/' . $fileId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function deleteVectorStoreFile($vectorStoreId, $fileId)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/files/' . $fileId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function retrieveVectorStoreFileContent($vectorStoreId, $fileId, $opts = [])
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/files/' . $fileId . '/content';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function createVectorStoreFileBatch($vectorStoreId, $opts)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/file_batches';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function retrieveVectorStoreFileBatch($vectorStoreId, $batchId)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/file_batches/' . $batchId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    public function cancelVectorStoreFileBatch($vectorStoreId, $batchId)
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/file_batches/' . $batchId . '/cancel';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    public function listVectorStoreFileBatchFiles($vectorStoreId, $batchId, $opts = [])
+    {
+        $url = Url::vectorStoresUrl() . '/' . $vectorStoreId . '/file_batches/' . $batchId . '/files';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    // Batches API
+    public function createBatch($opts)
+    {
+        $url = Url::batchesUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function retrieveBatch($batchId)
+    {
+        $url = Url::batchesUrl() . '/' . $batchId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    public function cancelBatch($batchId)
+    {
+        $url = Url::batchesUrl() . '/' . $batchId . '/cancel';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    public function listBatches($opts = [])
+    {
+        $url = Url::batchesUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    // Uploads API
+    public function createUpload($opts)
+    {
+        $url = Url::uploadsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function addUploadPart($uploadId, $opts)
+    {
+        $url = Url::uploadsUrl() . '/' . $uploadId . '/parts';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts, null, true);
+    }
+
+    public function completeUpload($uploadId, $opts)
+    {
+        $url = Url::uploadsUrl() . '/' . $uploadId . '/complete';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function cancelUpload($uploadId)
+    {
+        $url = Url::uploadsUrl() . '/' . $uploadId . '/cancel';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    // Realtime API
+    public function createRealtimeClientSecret($opts)
+    {
+        $url = Url::realtimeClientSecretsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    // Fine-tuning checkpoints and permissions
+    public function createFineTuningCheckpointPermission($checkpointId, $opts)
+    {
+        $url = Url::fineTuningCheckpointsUrl() . '/' . $checkpointId . '/permissions';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function deleteFineTuningCheckpointPermission($checkpointId, $permissionId)
+    {
+        $url = Url::fineTuningCheckpointsUrl() . '/' . $checkpointId . '/permissions/' . $permissionId;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function listFineTuningCheckpoints($jobId, $opts = [])
+    {
+        $url = Url::fineTuneUrl() . '/' . $jobId . '/checkpoints';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function pauseFineTune($jobId)
+    {
+        $url = Url::fineTuneUrl() . '/' . rawurlencode($jobId) . '/pause';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    public function resumeFineTune($jobId)
+    {
+        $url = Url::fineTuneUrl() . '/' . rawurlencode($jobId) . '/resume';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    public function listFineTuningCheckpointPermissions($checkpointId, $opts = [])
+    {
+        $url = Url::fineTuningCheckpointsUrl() . '/' . rawurlencode($checkpointId) . '/permissions';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function retrieveChatCompletion($completionId, $opts = [])
+    {
+        $url = Url::chatUrl() . '/' . rawurlencode($completionId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function listChatCompletions($opts = [])
+    {
+        $url = Url::chatUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function updateChatCompletion($completionId, $opts)
+    {
+        $url = Url::chatUrl() . '/' . rawurlencode($completionId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function deleteChatCompletion($completionId)
+    {
+        $url = Url::chatUrl() . '/' . rawurlencode($completionId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function listChatCompletionMessages($completionId, $opts = [])
+    {
+        $url = Url::chatUrl() . '/' . rawurlencode($completionId) . '/messages';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function createDecision($opts)
+    {
+        $url = Url::decisionsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function createWebhookEndpoint($opts)
+    {
+        $url = Url::webhookEndpointsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function listWebhookEndpoints($opts = [])
+    {
+        $url = Url::webhookEndpointsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function retrieveWebhookEndpoint($endpointId)
+    {
+        $url = Url::webhookEndpointsUrl() . '/' . rawurlencode($endpointId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    public function updateWebhookEndpoint($endpointId, $opts)
+    {
+        $url = Url::webhookEndpointsUrl() . '/' . rawurlencode($endpointId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function deleteWebhookEndpoint($endpointId)
+    {
+        $url = Url::webhookEndpointsUrl() . '/' . rawurlencode($endpointId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function rotateWebhookEndpointSecret($endpointId, $opts = [])
+    {
+        $url = Url::webhookEndpointsUrl() . '/' . rawurlencode($endpointId) . '/rotate_secret';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function testWebhookEndpoint($endpointId, $opts)
+    {
+        $url = Url::webhookEndpointsUrl() . '/' . rawurlencode($endpointId) . '/test';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    // Audio voices, fine-tuning graders, and Realtime REST operations
+
+    public function createVoice($opts)
+    {
+        $url = Url::voicesUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts, null, array_key_exists('audio_sample', $opts));
+    }
+
+    public function createVoiceConsent($opts)
+    {
+        $url = Url::voiceConsentsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts, null, true);
+    }
+
+    public function listVoiceConsents($opts = [])
+    {
+        $url = Url::voiceConsentsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function retrieveVoiceConsent($consentId)
+    {
+        $url = Url::voiceConsentsUrl() . '/' . rawurlencode($consentId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET');
+    }
+
+    public function updateVoiceConsent($consentId, $opts)
+    {
+        $url = Url::voiceConsentsUrl() . '/' . rawurlencode($consentId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function deleteVoiceConsent($consentId)
+    {
+        $url = Url::voiceConsentsUrl() . '/' . rawurlencode($consentId);
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'DELETE');
+    }
+
+    public function runFineTuningGrader($opts)
+    {
+        $url = Url::fineTuningGradersUrl() . '/run';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function validateFineTuningGrader($opts)
+    {
+        $url = Url::fineTuningGradersUrl() . '/validate';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function createRealtimeTranslationClientSecret($opts)
+    {
+        $url = Url::realtimeTranslationClientSecretsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function acceptRealtimeCall($callId, $opts)
+    {
+        $url = Url::realtimeCallsUrl() . '/' . rawurlencode($callId) . '/accept';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function hangupRealtimeCall($callId)
+    {
+        $url = Url::realtimeCallsUrl() . '/' . rawurlencode($callId) . '/hangup';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST');
+    }
+
+    public function referRealtimeCall($callId, $opts)
+    {
+        $url = Url::realtimeCallsUrl() . '/' . rawurlencode($callId) . '/refer';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function rejectRealtimeCall($callId, $opts = [])
+    {
+        $url = Url::realtimeCallsUrl() . '/' . rawurlencode($callId) . '/reject';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts);
+    }
+
+    public function createRealtimeCall($opts)
+    {
+        if (isset($opts['session']) && is_array($opts['session'])) {
+            $opts['session'] = json_encode($opts['session'], JSON_THROW_ON_ERROR);
+        }
+        $url = Url::realtimeCallsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'POST', $opts, null, true);
+    }
+
+    // Organization Usage and Costs APIs (admin API key required).
+    public function getCompletionsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/completions';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getEmbeddingsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/embeddings';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getModerationsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/moderations';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getImagesUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/images';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getAudioSpeechesUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/audio_speeches';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getAudioTranscriptionsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/audio_transcriptions';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getVectorStoresUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/vector_stores';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getCodeInterpreterSessionsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/code_interpreter_sessions';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getFileSearchCallsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/file_search_calls';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getWebSearchCallsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/web_search_calls';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getCosts($opts)
+    {
+        $url = Url::organizationCostsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
     }
 }
