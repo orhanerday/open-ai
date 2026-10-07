@@ -149,12 +149,32 @@ Set the origin for an OpenAI-compatible API:
 $open_ai->setBaseURL('https://ai.example.com');
 ```
 
+### Custom API Version
+
+By default, the client appends `/v1` to the Base URL. You can override this to support alternative API versions (e.g., ByteDance Ark uses `/api/v3`):
+
+```php
+$open_ai->setBaseURL('https://ark.cn-beijing.volces.com');
+$open_ai->setApiVersion('api/v3');
+```
+
 ### Proxy
 
 Route requests through a proxy:
 
 ```php
 $open_ai->setProxy("http://127.0.0.1:1086");
+```
+
+### Custom cURL options
+
+Inject custom options directly into the underlying cURL requests (useful for bypassing SSL in local dev or adding complex proxy authentication):
+
+```php
+$open_ai->setCURLOptions([
+    CURLOPT_SSL_VERIFYPEER => false,
+    CURLOPT_TIMEOUT => 300,
+]);
 ```
 
 ### Headers

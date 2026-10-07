@@ -50,6 +50,20 @@ it('applies custom cURL options', function () {
     }
 })->group('transport');
 
+it('applies custom API versions', function () {
+    $client = new OpenAi('unused-local-key');
+    // We override both URL and Version to ensure they stack correctly
+    $client->setBaseURL('unsupported-protocol://custom-api-version-test');
+    $client->setApiVersion('api/v3');
+
+    try {
+        $client->listModels();
+        $this->fail('Expected custom API version to override URL and fail.');
+    } catch (Exception $exception) {
+        expect($exception->getCode())->toBe(CURLE_UNSUPPORTED_PROTOCOL);
+    }
+})->group('transport');
+
 it('returns empty and zero-valued content through native cURL', function ($content) {
     $root = sys_get_temp_dir() . '/openai-curl-' . bin2hex(random_bytes(8));
     $directory = $root . '/v1/files/test';

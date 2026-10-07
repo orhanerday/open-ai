@@ -13,6 +13,8 @@ class OpenAi
     private string $customUrl = "";
     private string $proxy = "";
     private array $curlInfo = [];
+    private array $customCurlOptions = [];
+    private string $customVersion = "";
 
     public function __construct($OPENAI_API_KEY = '')
     {
@@ -45,6 +47,15 @@ class OpenAi
     public function getCURLInfo()
     {
         return $this->curlInfo;
+    }
+
+    /**
+     * @param array $options
+     * Set custom cURL options to be applied to all requests.
+     */
+    public function setCURLOptions(array $options)
+    {
+        $this->customCurlOptions = $options;
     }
 
     /**
@@ -351,6 +362,16 @@ class OpenAi
     }
 
     /**
+     * @param string $version
+     */
+    public function setApiVersion(string $version)
+    {
+        if ($version != '') {
+            $this->customVersion = $version;
+        }
+    }
+
+    /**
      * @param  array  $header
      * @return void
      */
@@ -465,6 +486,9 @@ class OpenAi
         $curl = curl_init();
 
         curl_setopt_array($curl, $curl_info);
+        if (! empty($this->customCurlOptions)) {
+            curl_setopt_array($curl, $this->customCurlOptions);
+        }
         $response = curl_exec($curl);
 
         $info = curl_getinfo($curl);
@@ -539,6 +563,9 @@ class OpenAi
     {
         if ($this->customUrl != "") {
             $url = str_replace(Url::ORIGIN, $this->customUrl, $url);
+        }
+        if ($this->customVersion != "") {
+            $url = str_replace('/' . Url::API_VERSION . '/', '/' . $this->customVersion . '/', $url);
         }
     }
 
