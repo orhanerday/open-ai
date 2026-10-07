@@ -107,6 +107,8 @@ Run it with `php example.php`. See [Handling results](#handling-results) for HTT
     - [x] [Decisions](#decisions-api)
 - Webhooks
     - [x] [Endpoint management and signature verification](#webhooks)
+- Organization reporting
+    - [x] [Usage and Costs](#usage-and-costs)
 
 See [API_COVERAGE.md](API_COVERAGE.md) for exact routes, guide support, and testing limits.
 WebSocket mode and mid-turn steering require a separate WebSocket client.
@@ -639,6 +641,74 @@ Verification throws on invalid signatures, missing headers, or timestamps outsid
 Your application should handle retries idempotently using the webhook ID. See the
 [webhooks guide](https://developers.openai.com/api/docs/guides/webhooks).
 
+## Usage and Costs
+
+Use an organization admin API key for these read-only reporting endpoints:
+
+```php
+$reporting = new OpenAi(getenv('OPENAI_ADMIN_KEY'));
+$options = [
+    'start_time' => time() - 7 * 86400,
+    'end_time' => time(),
+    'bucket_width' => '1d',
+    'group_by' => ['model', 'project_id'],
+    'batch' => false,
+    'limit' => 7,
+];
+
+$page = json_decode($reporting->getCompletionsUsage($options), true, 512, JSON_THROW_ON_ERROR);
+if ($reporting->getCURLInfo()['http_code'] !== 200) {
+    throw new RuntimeException('Usage request failed; check the decoded API error.');
+}
+
+// Each entry in data is a time bucket containing aggregated results.
+foreach ($page['data'] as $bucket) {
+    foreach ($bucket['results'] as $result) {
+        echo $result['input_tokens'] . PHP_EOL;
+    }
+}
+
+// To fetch the next page, preserve the filters and pass the returned cursor.
+if ($page['has_more']) {
+    $options['page'] = $page['next_page'];
+    $nextPage = $reporting->getCompletionsUsage($options);
+}
+```
+
+All methods require an options array with `start_time` (Unix seconds). Filters, array-valued
+`group_by`, time buckets, limits, and the `page` cursor pass through as GET query parameters.
+Each method returns the raw response body; pagination is controlled by the caller.
+
+| Report | Method |
+| --- | --- |
+| Completions | `getCompletionsUsage($options)` |
+| Embeddings | `getEmbeddingsUsage($options)` |
+| Moderations | `getModerationsUsage($options)` |
+| Images | `getImagesUsage($options)` |
+| Audio speeches | `getAudioSpeechesUsage($options)` |
+| Audio transcriptions | `getAudioTranscriptionsUsage($options)` |
+| Vector stores | `getVectorStoresUsage($options)` |
+| Code interpreter sessions | `getCodeInterpreterSessionsUsage($options)` |
+| File search calls | `getFileSearchCallsUsage($options)` |
+| Web search calls | `getWebSearchCallsUsage($options)` |
+| Costs | `getCosts($options)` |
+
+For costs, use the same time-range and pagination fields, with cost-specific grouping:
+
+```php
+$costs = $reporting->getCosts([
+    'start_time' => time() - 7 * 86400,
+    'bucket_width' => '1d',
+    'group_by' => ['project_id', 'line_item'],
+]);
+```
+
+Costs supports daily buckets and should be used for spend reporting. Usage supports minute,
+hour, and day buckets; usage aggregates may differ from billing totals. Filters and grouping
+fields vary by endpoint. See the [official Usage and Costs reference](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage).
+The `/organization/usage/completions` reporting route remains supported independently of
+the removed legacy text-generation integration.
+
 ## Testing
 
 Composer selects a compatible Pest version for your PHP runtime. The library continues to support PHP 7.4+.
@@ -651,6 +721,8 @@ composer test
 ```
 
 `composer test-live` runs only live API tests. Without a key, API tests are explicitly skipped.
+Usage and Costs tests require `OPENAI_ADMIN_KEY`; run them separately with
+`vendor/bin/pest tests/UsageLiveTest.php`. Without that admin key, those cases are explicitly skipped.
 To run native cURL transport and webhook signature checks without API calls:
 
 ```bash
@@ -665,7 +737,8 @@ Models can be selected with `OPENAI_CHAT_MODEL`, `OPENAI_IMAGE_MODEL`, `OPENAI_C
 `OPENAI_DECISION_MODEL`, and `OPENAI_REALTIME_MODEL`. Defaults follow the examples and current guides.
 Additional account-dependent tests and required fixtures are documented in [API_COVERAGE.md](API_COVERAGE.md).
 Push/PR CI runs native transport and signature checks on PHP 7.4 and 8.4; manually dispatch the Tests
-workflow with an `OPENAI_API_KEY` repository secret to run the live suite.
+workflow with an `OPENAI_API_KEY` repository secret to run the live suite. Add the optional
+`OPENAI_ADMIN_KEY` secret to include organization Usage and Costs tests.
 
 ## Changelog
 

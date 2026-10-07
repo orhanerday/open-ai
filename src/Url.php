@@ -175,4 +175,14 @@ class Url
     {
         return self::OPEN_AI_URL . '/realtime/translations/client_secrets';
     }
+
+    public static function organizationUsageUrl(): string
+    {
+        return self::OPEN_AI_URL . '/organization/usage';
+    }
+
+    public static function organizationCostsUrl(): string
+    {
+        return self::OPEN_AI_URL . '/organization/costs';
+    }
 }

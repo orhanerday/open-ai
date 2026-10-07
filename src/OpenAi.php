@@ -1137,4 +1137,93 @@ class OpenAi
 
         return $this->sendRequest($url, 'POST', $opts, null, true);
     }
+
+    // Organization Usage and Costs APIs (admin API key required).
+    public function getCompletionsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/completions';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getEmbeddingsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/embeddings';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getModerationsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/moderations';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getImagesUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/images';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getAudioSpeechesUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/audio_speeches';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getAudioTranscriptionsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/audio_transcriptions';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getVectorStoresUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/vector_stores';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getCodeInterpreterSessionsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/code_interpreter_sessions';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getFileSearchCallsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/file_search_calls';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getWebSearchCallsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/web_search_calls';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getCosts($opts)
+    {
+        $url = Url::organizationCostsUrl();
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
 }

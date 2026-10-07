@@ -3,6 +3,7 @@
 Audited 2026-10-07 against the supplied guides and the current official OpenAI API reference.
 The scope is the pasted documentation and existing endpoint families, including their current REST
 subresources. This is an HTTP/cURL client. It does not implement every OpenAI product or transport.
+The scope now also includes the separately requested organization Usage and Costs reference (#155).
 
 ## Pasted guides
 
@@ -124,11 +125,29 @@ which use multipart where appropriate. A call's session array is serialized as a
 | Webhooks | `deleteWebhookEndpoint` | `DELETE /webhook_endpoints/{endpoint_id}` |
 | Webhooks | `rotateWebhookEndpointSecret` | `POST /webhook_endpoints/{endpoint_id}/rotate_secret` |
 | Webhooks | `testWebhookEndpoint` | `POST /webhook_endpoints/{endpoint_id}/test` |
+| Usage | `getCompletionsUsage` | `GET /organization/usage/completions` |
+| Usage | `getEmbeddingsUsage` | `GET /organization/usage/embeddings` |
+| Usage | `getModerationsUsage` | `GET /organization/usage/moderations` |
+| Usage | `getImagesUsage` | `GET /organization/usage/images` |
+| Usage | `getAudioSpeechesUsage` | `GET /organization/usage/audio_speeches` |
+| Usage | `getAudioTranscriptionsUsage` | `GET /organization/usage/audio_transcriptions` |
+| Usage | `getVectorStoresUsage` | `GET /organization/usage/vector_stores` |
+| Usage | `getCodeInterpreterSessionsUsage` | `GET /organization/usage/code_interpreter_sessions` |
+| Usage | `getFileSearchCallsUsage` | `GET /organization/usage/file_search_calls` |
+| Usage | `getWebSearchCallsUsage` | `GET /organization/usage/web_search_calls` |
+| Costs | `getCosts` | `GET /organization/costs` |
 
 ## Real tests and remaining validation
 
 `composer test` uses native cURL and makes actual OpenAI calls when `OPENAI_API_KEY` is set.
 Without that key, API cases are skipped explicitly. No cURL functions are replaced or mocked.
+
+Organization Usage and Costs tests are in `tests/UsageLiveTest.php` and use `OPENAI_ADMIN_KEY`.
+On 2026-10-07, all **16 reporting tests passed without skips** on the host and in Docker
+with PHP 7.4.33 and PHP 8.4.26. These cover all eleven routes, grouping query arrays,
+`batch=false`, real cursors for Usage and Costs, and the API's missing-`start_time` error.
+Empty reporting periods are valid responses. Both containers also passed all 20 native
+transport/webhook cases; logs and JUnit reports are saved locally under ignored `build/docker/usage/`.
 
 Live lifecycle coverage includes Responses (stream/resume, stored retrieval, input items, deletion, cancellation,
 token count and compaction), Conversations/items, stored Chat CRUD/messages, Files, Uploads, Vector Stores/files
@@ -148,6 +167,7 @@ Account- or fixture-dependent cases must not be reported as verified merely beca
 | Fine-tuning jobs/checkpoints/permissions | Training fixture, owned job/checkpoint; admin key for permissions | Default suite lists jobs and runs graders; it does not create training jobs, pause user jobs, or change checkpoint access |
 | Webhook create/update/delete/rotate/test | An owned receiver URL and subscription | Default suite lists endpoints and verifies signatures locally; it does not send events to arbitrary receivers |
 | Multi-agent | Supported beta model and beta header | HTTP fields and header pass through; orchestration and every beta event are not separately tested |
+| Organization Usage and Costs | `OPENAI_ADMIN_KEY` with organization reporting access | Real tests cover all eleven endpoints, grouping, boolean filters, and cursor pagination when the key is configured |
 
 ## Observed API failure
 
@@ -187,11 +207,12 @@ Audio translation/speech compatibility wrappers remain while their API routes ex
 model requirements are documented rather than replaced with a model belonging to a different transport.
 `setCustomURL()` remains a deprecated compatibility alias for `setBaseURL()`.
 
-Administration, Agents, Live, Evals, ChatKit, Containers, Skills, Safety, and other separate API families
+Administration other than Usage/Costs, Agents, Live, Evals, ChatKit, Containers, Skills, Safety, and other separate API families
 are outside this audit's agreed scope. Do not describe this release as implementing every OpenAI API endpoint.
 
 ## Official references
 
+- [Organization Usage and Costs](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage)
 - [Responses API](https://developers.openai.com/api/reference/resources/responses)
 - [Conversations API](https://developers.openai.com/api/reference/resources/conversations)
 - [Background mode](https://developers.openai.com/api/docs/guides/background)
