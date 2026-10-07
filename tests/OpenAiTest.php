@@ -35,6 +35,21 @@ it('captures a real cURL protocol error', function () {
     }
 })->group('transport');
 
+it('applies custom cURL options', function () {
+    $client = new OpenAi('unused-local-key');
+    // Using a custom curl option to intentionally break the request
+    $client->setCURLOptions([
+        CURLOPT_URL => 'unsupported-protocol://custom-curl-options-test'
+    ]);
+
+    try {
+        $client->listModels();
+        $this->fail('Expected custom cURL option to override URL and fail.');
+    } catch (Exception $exception) {
+        expect($exception->getCode())->toBe(CURLE_UNSUPPORTED_PROTOCOL);
+    }
+})->group('transport');
+
 it('returns empty and zero-valued content through native cURL', function ($content) {
     $root = sys_get_temp_dir() . '/openai-curl-' . bin2hex(random_bytes(8));
     $directory = $root . '/v1/files/test';
