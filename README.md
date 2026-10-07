@@ -121,6 +121,16 @@ use Orhanerday\OpenAi\OpenAi;
 $open_ai = new OpenAi(getenv('OPENAI_API_KEY'));
 ```
 
+You can also configure or replace the key after construction:
+
+```php
+$open_ai = new OpenAi();
+$open_ai->setApiKey(getenv('OPENAI_API_KEY'));
+```
+
+`setApiKey()` replaces the Authorization header and rejects blank keys. Requests fail locally
+if no key is configured.
+
 ### Organization
 
 Specify the organization for API requests:

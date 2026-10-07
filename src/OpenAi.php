@@ -14,7 +14,7 @@ class OpenAi
     private string $proxy = "";
     private array $curlInfo = [];
 
-    public function __construct($OPENAI_API_KEY)
+    public function __construct($OPENAI_API_KEY = '')
     {
         $this->contentTypes = [
             "application/json" => "Content-Type: application/json",
@@ -23,8 +23,19 @@ class OpenAi
 
         $this->headers = [
             $this->contentTypes["application/json"],
-            "Authorization: Bearer $OPENAI_API_KEY",
         ];
+
+        if ((string) $OPENAI_API_KEY !== '') {
+            $this->setApiKey((string) $OPENAI_API_KEY);
+        }
+    }
+
+    public function setApiKey(string $apiKey): void
+    {
+        if (trim($apiKey) === '') {
+            throw new \InvalidArgumentException('API key must not be empty.');
+        }
+        $this->setHeader(['Authorization' => 'Bearer ' . $apiKey]);
     }
 
     /**
@@ -390,6 +401,19 @@ class OpenAi
      */
     private function sendRequest(string $url, string $method, ?array $opts = null, ?callable $stream = null, bool $multipart = false)
     {
+        $authorization = '';
+        foreach ($this->headers as $header) {
+            [$name, $value] = explode(':', $header, 2);
+            if (strcasecmp(trim($name), 'Authorization') === 0) {
+                $authorization = trim($value);
+
+                break;
+            }
+        }
+        if ($authorization === '' || strcasecmp($authorization, 'Bearer') === 0) {
+            throw new Exception('Please provide an API key using the constructor or setApiKey().');
+        }
+
         $hasBody = $opts !== null;
         $opts = $opts ?? [];
         $isStreaming = ! empty($opts['stream']) || ($opts['stream_format'] ?? null) === 'sse';

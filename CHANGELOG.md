@@ -10,6 +10,7 @@ All notable changes to `open-ai` will be documented in this file.
 - Add stored chat completion CRUD, Decisions, webhook management and signature verification, Audio voices and consents, fine-tuning graders and pause/resume, and Realtime REST call control and translation client secrets.
 - Support per-request streaming callbacks for Chat, Responses, Images, and transcription; multipart Upload Parts; GET query arrays and pagination; and background Response stream resumption.
 - Preserve cURL connection errors and valid empty response bodies; reject malformed JSON request data.
+- Allow construction without an API key; add `setApiKey()` for deferred configuration and key replacement, and reject requests without configured authentication (#156).
 - Remove cURL mocks; run real API tests when a key is available, with test-owned resource cleanup and explicit skips for missing credentials or fixtures.
 - See [MIGRATING.md](MIGRATING.md) for breaking changes.
 

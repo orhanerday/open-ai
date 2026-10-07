@@ -53,6 +53,7 @@ Callbacks receive raw SSE chunks and must return `strlen($data)`. Responses uses
 
 - `chat()` defaults to `gpt-4o-mini`; embeddings defaults to `text-embedding-3-small`.
 - Explicitly supplied models are preserved. Responses and image requests require an explicit model.
+- The constructor key is optional; use `setApiKey()` to configure or replace it later. Requests without configured authentication fail locally, and `setApiKey()` rejects blank keys.
 - Connection failures throw `Exception` with the cURL error message and code. Valid empty bodies are returned unchanged.
 - Invalid UTF-8 or otherwise unencodable JSON request data throws `JsonException` before making a request.
 - HTTP API errors remain raw response bodies. Check `getCURLInfo()['http_code']` and the decoded `error` field.
