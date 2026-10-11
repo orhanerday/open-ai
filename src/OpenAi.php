@@ -15,6 +15,10 @@ class OpenAi
     private array $curlInfo = [];
     private array $customCurlOptions = [];
     private string $customVersion = "";
+    private bool $throwOnError = false;
+    private int $maxRetries = 0;
+    private int $retryDelayMs = 500;
+    private ?Response $lastResponse = null;
 
     public function __construct($OPENAI_API_KEY = '')
     {
@@ -83,7 +87,8 @@ class OpenAi
     }
 
     /**
-     * @param $opts
+     * @param  array<string, mixed>  $opts  Common keys: model, prompt, n, size, quality, stream
+     * @param  callable|null  $stream
      * @return bool|string
      */
     public function image($opts, ?callable $stream = null)
@@ -107,7 +112,7 @@ class OpenAi
     }
 
     /**
-     * @param $opts
+     * @param  array<string, mixed>  $opts  Common keys: model, input
      * @return bool|string
      */
     public function moderation($opts)
@@ -119,8 +124,9 @@ class OpenAi
     }
 
     /**
-     * @param        $opts
-     * @param  callable|null  $stream
+     * @param  array<string, mixed>  $opts  Common keys: model, messages (list of role/content arrays),
+     *                                      temperature, max_completion_tokens, stream, tools, response_format
+     * @param  callable|null  $stream  Required when `stream` is true; receives raw SSE chunks
      * @return bool|string
      * @throws Exception
      */
@@ -295,7 +301,7 @@ class OpenAi
     }
 
     /**
-     * @param $opts
+     * @param  array<string, mixed>  $opts  Common keys: model, input (string or list), dimensions, encoding_format
      * @return bool|string
      */
     public function embeddings($opts)
@@ -382,7 +388,7 @@ class OpenAi
                 throw new \InvalidArgumentException('Header values must be strings.');
             }
             $line = is_string($key) ? $key . ': ' . $value : $value;
-            if (! is_string($line) || strpos($line, ':') === false || preg_match('/[\r\n]/', $line)) {
+            if (strpos($line, ':') === false || preg_match('/[\r\n]/', $line)) {
                 throw new \InvalidArgumentException('Headers must be name: value strings or an associative array.');
             }
             $name = strtolower(trim(explode(':', $line, 2)[0]));
@@ -402,6 +408,48 @@ class OpenAi
                 $this->headers[] = $line;
             }
         }
+    }
+
+    /**
+     * Throw an OpenAiException for HTTP error responses (status 400 and above).
+     * Disabled by default, so existing code keeps receiving the raw error body.
+     *
+     * @param  bool  $throw
+     * @return void
+     */
+    public function setThrowOnError(bool $throw = true)
+    {
+        $this->throwOnError = $throw;
+    }
+
+    /**
+     * Retry rate-limited (429) and temporary server errors (500, 502, 503, 504) with exponential backoff.
+     * Honors Retry-After delays up to 60 seconds; longer waits return the original response.
+     * Quota and billing errors are not retried. Server errors are retried only for GET, PUT, and
+     * DELETE. Requests with streaming, body callbacks, or custom output destinations are not retried.
+     *
+     * @param  int  $maxRetries  Retries after the first attempt; 0 disables retrying
+     * @param  int  $baseDelayMs  Delay before the first retry; doubled for each further retry
+     * @return void
+     */
+    public function setRetries(int $maxRetries, int $baseDelayMs = 500)
+    {
+        if ($maxRetries < 0 || $baseDelayMs < 0) {
+            throw new \InvalidArgumentException('Retries and delay must not be negative.');
+        }
+        $this->maxRetries = $maxRetries;
+        $this->retryDelayMs = $baseDelayMs;
+    }
+
+    /**
+     * The most recent HTTP response, with status, headers, and a JSON helper. Null before any response.
+     * A transport failure leaves the previous response available. Successful streams have no stored body.
+     *
+     * @return Response|null
+     */
+    public function getLastResponse(): ?Response
+    {
+        return $this->lastResponse;
     }
 
     /**
@@ -483,28 +531,153 @@ class OpenAi
             $curl_info[CURLOPT_WRITEFUNCTION] = $stream;
         }
 
-        $curl = curl_init();
-
-        curl_setopt_array($curl, $curl_info);
-        if (! empty($this->customCurlOptions)) {
-            curl_setopt_array($curl, $this->customCurlOptions);
+        $curlOptions = array_replace($curl_info, $this->customCurlOptions);
+        $retryMethod = $this->retryMethod($curlOptions);
+        $headerCallback = $curlOptions[CURLOPT_HEADERFUNCTION] ?? null;
+        if ($headerCallback !== null && ! is_callable($headerCallback)) {
+            throw new \InvalidArgumentException('The cURL header callback must be callable.');
         }
-        $response = curl_exec($curl);
+        $writeCallback = $curlOptions[CURLOPT_WRITEFUNCTION] ?? null;
 
-        $info = curl_getinfo($curl);
-        $this->curlInfo = $info;
-        $error = curl_error($curl);
-        $errno = curl_errno($curl);
+        $attempt = 0;
+        while (true) {
+            $responseHeaders = [];
+            $responseStatus = 0;
+            $errorBody = '';
+            $options = $curlOptions;
+            $curl = curl_init();
 
-        if (PHP_VERSION_ID < 80000) {
-            curl_close($curl);
+            $options[CURLOPT_HEADERFUNCTION] = function ($handle, $line) use (&$responseHeaders, &$responseStatus, &$errorBody, $headerCallback) {
+                if ($this->captureResponseHeader($responseHeaders, $responseStatus, $line)) {
+                    $errorBody = '';
+                }
+
+                return $headerCallback === null ? strlen($line) : $headerCallback($handle, $line);
+            };
+            if (is_callable($writeCallback)) {
+                $options[CURLOPT_WRITEFUNCTION] = function ($handle, $chunk) use ($writeCallback, &$responseStatus, &$errorBody) {
+                    if ($responseStatus >= 400) {
+                        $errorBody .= $chunk;
+                    }
+
+                    return $writeCallback($handle, $chunk);
+                };
+            }
+            curl_setopt_array($curl, $options);
+            $response = curl_exec($curl);
+
+            $info = curl_getinfo($curl);
+            $this->curlInfo = $info;
+            $error = curl_error($curl);
+            $errno = curl_errno($curl);
+
+            if (PHP_VERSION_ID < 80000) {
+                curl_close($curl);
+            }
+
+            if ($response === false) {
+                throw new Exception($error, $errno);
+            }
+
+            $status = (int) $info['http_code'];
+            $body = is_string($response) ? $response : $errorBody;
+            if (! $isStreaming && $retryMethod !== null && $attempt < $this->maxRetries && $this->shouldRetry($status, $retryMethod, $body)) {
+                $delay = $this->retryDelayMicroseconds($attempt, $responseHeaders);
+                if ($delay !== null) {
+                    usleep($delay);
+                    $attempt++;
+
+                    continue;
+                }
+            }
+
+            break;
         }
 
-        if ($response === false) {
-            throw new Exception($error, $errno);
+        $this->lastResponse = new Response($status, $responseHeaders, $body);
+        if ($this->throwOnError && $status >= 400) {
+            throw new OpenAiException($status, $body);
         }
 
         return $response;
+    }
+
+    private function retryMethod(array $options): ?string
+    {
+        foreach ([CURLOPT_WRITEFUNCTION, CURLOPT_READFUNCTION, CURLOPT_FILE, CURLOPT_INFILE] as $option) {
+            if (array_key_exists($option, $options)) {
+                return null;
+            }
+        }
+        if (empty($options[CURLOPT_RETURNTRANSFER]) || ! empty($options[CURLOPT_FAILONERROR]) || ! empty($options[CURLOPT_HEADER]) || ! empty($options[CURLOPT_UPLOAD])) {
+            return null;
+        }
+
+        $method = $options[CURLOPT_CUSTOMREQUEST] ?? null;
+
+        return is_string($method) && in_array($method, ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'], true) ? $method : null;
+    }
+
+    private function captureResponseHeader(array &$headers, int &$status, string $line): bool
+    {
+        if (preg_match('/^HTTP\/\S+\s+(\d{3})(?:\s|$)/i', $line, $matches)) {
+            $headers = [];
+            $status = (int) $matches[1];
+
+            return true;
+        }
+        $parts = explode(':', $line, 2);
+        if (count($parts) === 2) {
+            $headers[strtolower(trim($parts[0]))] = trim($parts[1]);
+        }
+
+        return false;
+    }
+
+    private function shouldRetry(int $status, string $method, string $body = ''): bool
+    {
+        if ($status === 429) {
+            $decoded = json_decode($body, true);
+            $error = is_array($decoded) ? ($decoded['error'] ?? null) : null;
+            if (is_array($error)) {
+                foreach (['code', 'type'] as $field) {
+                    if (isset($error[$field]) && is_string($error[$field]) && preg_match('/quota|billing|spend_limit|usage_limit/i', $error[$field])) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        return in_array($status, [500, 502, 503, 504], true) && in_array($method, ['GET', 'PUT', 'DELETE'], true);
+    }
+
+    private function retryDelayMicroseconds(int $attempt, array $responseHeaders): ?int
+    {
+        $retryAfter = trim($responseHeaders['retry-after'] ?? '');
+        $seconds = null;
+        if ($retryAfter !== '') {
+            if (preg_match('/^\d+(?:\.\d+)?$/D', $retryAfter)) {
+                $seconds = (float) $retryAfter;
+            } else {
+                $date = strtotime($retryAfter);
+                if ($date !== false) {
+                    $seconds = max(0, $date - time());
+                }
+            }
+        }
+        if ($seconds !== null) {
+            if ($seconds > 60) {
+                return null;
+            }
+            $delay = (int) ceil($seconds * 1000000);
+        } else {
+            $delay = (int) min($this->retryDelayMs * (2 ** min($attempt, 30)), 60000) * 1000;
+        }
+        $jitter = min((int) ($delay / 10), 1000000, 60000000 - $delay);
+
+        return $delay + ($jitter > 0 ? random_int(0, $jitter) : 0);
     }
 
     private function buildMultipart(array $opts): array
@@ -749,6 +922,15 @@ class OpenAi
     }
 
     // Responses API
+
+    /**
+     * @param  array<string, mixed>  $opts  Common keys: model, input, instructions, tools, previous_response_id,
+     *                                      conversation, store, background, stream
+     * @param  callable|null  $stream  Required when `stream` is true; receives raw SSE chunks
+     * @return bool|string
+     *
+     * @throws Exception
+     */
     public function createResponse($opts, ?callable $stream = null)
     {
         $url = Url::responsesUrl();
@@ -1348,6 +1530,14 @@ class OpenAi
     public function getCompletionsUsage($opts)
     {
         $url = Url::organizationUsageUrl() . '/completions';
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, 'GET', $opts);
+    }
+
+    public function getDecisionsUsage($opts)
+    {
+        $url = Url::organizationUsageUrl() . '/decisions';
         $this->baseUrl($url);
 
         return $this->sendRequest($url, 'GET', $opts);

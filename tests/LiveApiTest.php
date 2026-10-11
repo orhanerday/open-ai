@@ -514,8 +514,12 @@ it('creates retrieves lists and cancels its own vector store file batch', functi
 })->group('live');
 
 it('reaches endpoints through the generic request method', function () {
-    $models = ($this->decode)($this->client->request('GET', '/models'));
+    $models = ($this->decode)($this->client->request('GET', '/models', [
+        'limit' => 5,
+        'include' => ['a', 'b'],
+    ]));
     expect($models['data'])->toBeArray()->not->toBeEmpty();
+    expect($this->client->getCURLInfo()['url'])->toContain('?limit=5&include%5B%5D=a&include%5B%5D=b');
 
     $moderation = ($this->decode)($this->client->request('POST', '/moderations', [
         'model' => 'omni-moderation-latest',
@@ -529,5 +533,221 @@ it('lists agent sessions and environments', function () {
         $body = ($this->decode)($this->client->$method(['limit' => 1]));
         expect($body['object'])->toBe('list');
         expect($body['data'])->toBeArray();
+    }
+})->group('live', 'working');
+
+it('creates retrieves updates and deletes its own idle agent session', function () {
+    $sessionId = null;
+    $tag = 'openai-php-agent-' . bin2hex(random_bytes(8));
+    $artifacts = getenv('OPENAI_TEST_ARTIFACT_DIR') ?: dirname(__DIR__) . '/build/logs';
+    if (! is_dir($artifacts) && ! mkdir($artifacts, 0700, true) && ! is_dir($artifacts)) {
+        throw new RuntimeException('Cannot create the live test artifact directory.');
+    }
+    $journal = $artifacts . '/' . $tag . '.json';
+    $record = ['test' => 'openai-php-agent-session', 'run' => $tag, 'php' => PHP_VERSION, 'session_id' => null, 'deleted' => false];
+    $writeJournal = function () use (&$record, $journal) {
+        if (file_put_contents($journal, json_encode($record, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR), LOCK_EX) === false) {
+            throw new RuntimeException('Cannot write the live test resource journal: ' . $journal);
+        }
+    };
+    $writeJournal();
+
+    $deleteOwnSession = function (string $id) {
+        $deadline = microtime(true) + 60;
+        $delay = 1;
+        while (true) {
+            $raw = $this->client->deleteAgentSession($id);
+            $status = $this->client->getCURLInfo()['http_code'];
+            $body = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+            $message = $body['error']['message'] ?? '';
+            // Hosted resources may still be provisioning after the session is created.
+            $provisioning = $status === 409 && is_string($message)
+                && strpos($message, 'provisioning or resource creation has not settled') !== false;
+            if (! $provisioning || microtime(true) >= $deadline) {
+                $deleted = ($this->decode)($raw);
+                expect($deleted['id'])->toBe($id);
+                expect($deleted['deleted'])->toBeTrue();
+
+                return $deleted;
+            }
+
+            // The Agents error guide recommends retrieving current state before retrying a conflict.
+            $current = ($this->decode)($this->client->retrieveAgentSession($id));
+            expect($current['id'])->toBe($id);
+            $wait = min($delay, max(0, $deadline - microtime(true)));
+            if ($wait > 0) {
+                usleep((int) ($wait * 1000000));
+            }
+            $delay = min($delay * 2, 5);
+        }
+    };
+    $failure = null;
+    $this->client->setHeader(['OpenAI-Beta' => 'responses_multi_agent=v1']);
+    $this->client->setCURLOptions([CURLINFO_HEADER_OUT => true]);
+
+    try {
+        $raw = $this->client->createAgentSession([
+            'agent' => ['model' => getenv('OPENAI_AGENT_MODEL') ?: 'gpt-6-astra'],
+            'environment' => ['type' => 'openai_hosted'],
+            'metadata' => ['test' => 'openai-php-agent-session', 'run' => $tag],
+        ]);
+        $created = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+        if (isset($created['id']) && is_string($created['id'])) {
+            $sessionId = $created['id'];
+            $record['session_id'] = $sessionId;
+            $writeJournal();
+        }
+        $session = ($this->decode)($raw);
+        $sessionId = $session['id'];
+        expect($session['object'])->toBe('agent.session');
+        expect($session['metadata']['run'])->toBe($tag);
+
+        preg_match('/^OpenAI-Beta:\s*([^\r\n]+)/mi', $this->client->getCURLInfo()['request_header'], $sentBeta);
+        expect($sentBeta[1] ?? null)->toBe('agents=v1');
+
+        $retrieved = ($this->decode)($this->client->retrieveAgentSession($sessionId));
+        expect($retrieved['id'])->toBe($sessionId);
+
+        $updated = ($this->decode)($this->client->updateAgentSession($sessionId, [
+            'metadata' => ['test' => 'openai-php-agent-session', 'run' => $tag, 'updated' => 'yes'],
+        ]));
+        expect($updated['id'])->toBe($sessionId);
+        expect($updated['metadata']['updated'])->toBe('yes');
+
+        $items = ($this->decode)($this->client->listAgentSessionItems($sessionId, ['limit' => 1]));
+        expect($items['data'])->toBeArray();
+        $turns = ($this->decode)($this->client->listAgentSessionTurns($sessionId, ['limit' => 1]));
+        expect($turns['data'])->toBeArray();
+
+        $deleteOwnSession($sessionId);
+        $sessionId = null;
+        $record['deleted'] = true;
+        $writeJournal();
+
+        ($this->decode)($this->client->listModels());
+        preg_match('/^OpenAI-Beta:\s*([^\r\n]+)/mi', $this->client->getCURLInfo()['request_header'], $restoredBeta);
+        expect($restoredBeta[1] ?? null)->toBe('responses_multi_agent=v1');
+    } catch (Throwable $error) {
+        $failure = $error;
+
+        throw $error;
+    } finally {
+        if ($sessionId !== null) {
+            try {
+                $deleteOwnSession($sessionId);
+                $record['deleted'] = true;
+                $writeJournal();
+            } catch (Throwable $cleanupError) {
+                $message = 'Cleanup failed for agent session ' . $sessionId . '; resource journal: ' . $journal
+                    . '. Cleanup error: ' . $cleanupError->getMessage();
+                if ($failure !== null) {
+                    $message .= '. Original test error: ' . $failure->getMessage();
+                }
+
+                throw new RuntimeException($message, 0, $failure ?? $cleanupError);
+            }
+        }
+    }
+})->group('live', 'working');
+
+it('provides response metadata and throws OpenAiException on error in real calls', function () {
+    $this->client->listModels();
+    $response = $this->client->getLastResponse();
+
+    expect($response)->toBeInstanceOf(\Orhanerday\OpenAi\Response::class);
+    expect($response->ok())->toBeTrue();
+    expect($response->status())->toBe(200);
+    expect($response->header('content-type'))->toContain('application/json');
+    expect($response->json()['data'])->toBeArray();
+
+    // Now test setThrowOnError(true) with an intentional 404
+    $this->client->setThrowOnError(true);
+
+    try {
+        $this->client->retrieveModel('model-does-not-exist-' . bin2hex(random_bytes(4)));
+        $this->fail('Expected OpenAiException');
+    } catch (\Orhanerday\OpenAi\OpenAiException $e) {
+        expect($e->getStatusCode())->toBe(404);
+        expect($e->getErrorType())->toBe('invalid_request_error');
+        expect($e->getApiError())->toBeArray();
+        $failedResponse = $this->client->getLastResponse();
+        expect($failedResponse->status())->toBe(404);
+        expect($failedResponse->ok())->toBeFalse();
+        expect($failedResponse->body())->toBe($e->getResponseBody());
+        expect($failedResponse->json()['error'])->toBe($e->getApiError());
+    } finally {
+        $this->client->setThrowOnError(false);
+    }
+})->group('live', 'working');
+
+it('collects response headers while forwarding them to a custom cURL header callback', function () {
+    $receivedHeaders = [];
+    $this->client->setCURLOptions([
+        CURLOPT_HEADERFUNCTION => function ($curl, $line) use (&$receivedHeaders) {
+            $parts = explode(':', $line, 2);
+            if (count($parts) === 2) {
+                $receivedHeaders[strtolower(trim($parts[0]))] = trim($parts[1]);
+            }
+
+            return strlen($line);
+        },
+    ]);
+
+    ($this->decode)($this->client->listModels());
+    $response = $this->client->getLastResponse();
+    expect($receivedHeaders['content-type'] ?? '')->toContain('application/json');
+    expect($response->header('content-type'))->toBe($receivedHeaders['content-type']);
+    expect($response->header('x-request-id'))->toBeString()->not->toBeEmpty();
+    expect($response->header('x-request-id'))->toBe($receivedHeaders['x-request-id']);
+})->group('live', 'working');
+
+it('preserves HTTP error bodies and callback bytes when a streaming request fails', function () {
+    $received = '';
+    $this->client->setThrowOnError(true);
+
+    try {
+        $this->client->chat([
+            'model' => 'model-does-not-exist-' . bin2hex(random_bytes(4)),
+            'messages' => [['role' => 'user', 'content' => 'Hello']],
+            'stream' => true,
+        ], function ($curl, $chunk) use (&$received) {
+            $received .= $chunk;
+
+            return strlen($chunk);
+        });
+        $this->fail('Expected OpenAiException');
+    } catch (\Orhanerday\OpenAi\OpenAiException $e) {
+        expect($e->getStatusCode())->toBe(404);
+        expect($e->getErrorType())->toBe('invalid_request_error');
+        expect($e->getApiError())->toBeArray();
+        expect($e->getResponseBody())->not->toBeEmpty();
+        expect($received)->toBe($e->getResponseBody());
+        expect(json_decode($received, true, 512, JSON_THROW_ON_ERROR)['error'])->toBe($e->getApiError());
+        $response = $this->client->getLastResponse();
+        expect($response->status())->toBe(404);
+        expect($response->ok())->toBeFalse();
+        expect($response->body())->toBe($e->getResponseBody());
+    } finally {
+        $this->client->setThrowOnError(false);
+    }
+})->group('live', 'working');
+
+it('honors a streaming callback that stops the transfer with a short byte count', function () {
+    $called = false;
+
+    try {
+        $this->client->chat([
+            'model' => 'model-does-not-exist-' . bin2hex(random_bytes(4)),
+            'messages' => [['role' => 'user', 'content' => 'Hello']],
+            'stream' => true,
+        ], function ($curl, $chunk) use (&$called) {
+            $called = true;
+
+            return 0;
+        });
+        $this->fail('Expected the callback to stop the cURL transfer.');
+    } catch (Exception $e) {
+        expect($e->getCode())->toBe(CURLE_WRITE_ERROR);
+        expect($called)->toBeTrue();
     }
 })->group('live', 'working');

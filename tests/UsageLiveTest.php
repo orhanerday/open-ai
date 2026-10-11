@@ -53,6 +53,7 @@ it('retrieves real organization usage and costs pages', function ($method, $resu
     }
 })->with([
     'completions' => ['getCompletionsUsage', 'organization.usage.completions.result'],
+    'decisions' => ['getDecisionsUsage', 'organization.usage.decisions.result'],
     'embeddings' => ['getEmbeddingsUsage', 'organization.usage.embeddings.result'],
     'moderations' => ['getModerationsUsage', 'organization.usage.moderations.result'],
     'images' => ['getImagesUsage', 'organization.usage.images.result'],

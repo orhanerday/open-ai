@@ -2,14 +2,22 @@
 
 All notable changes to `open-ai` will be documented in this file.
 
+## 6.3.0 - 2026-10-11
+
+- Add `setThrowOnError(bool $throw = true)` and `OpenAiException` to cleanly throw and catch API error responses (status 400+) with error type, code, and status.
+- Add `getLastResponse()` returning a `Response` object with `->status()`, `->ok()`, `->headers()`, `->header($name)`, `->body()`, and `->json()`.
+- Add `setRetries(int $maxRetries, int $baseDelayMs = 500)` with exponential backoff, jitter, and numeric/HTTP-date `Retry-After` support. Retry rate limits except billing/quota errors, and server errors only for effective GET/PUT/DELETE requests; exclude streaming, body/upload callbacks, custom output files, and non-returning transfers, and leave waits above 60 seconds to the application.
+- Add organization Decisions usage reporting with `getDecisionsUsage()`.
+- Add static analysis with PHPStan (level 5) and PHPDoc option annotations on core methods while retaining PHP 7.4 support and no third-party runtime dependencies.
+- Preserve custom response-header callbacks while collecting final-response metadata, and retain HTTP error bodies for streaming calls. Remove local echo-server tests and clarify Agents streaming and prewarming examples.
+
 ## 6.2.0 - 2026-10-11
 
 - Add the Agents API (beta): sessions (create, list, retrieve, update, delete), event streaming and input events, items, turns, trace export, and environments. Methods send `OpenAI-Beta: agents=v1` for that request only and restore your headers afterwards.
-- Add tests that run against a real local HTTP server and assert the exact method, path, headers, and body.
 
 ## 6.1.0 - 2026-10-11
 
-- Add `request($method, $path, $opts, $stream, $multipart)` to call any API endpoint without a dedicated method (Containers, Evals, Administration, Vaults, Agents, and future routes). Paths must be relative; absolute URLs are rejected.
+- Add `request($method, $path, $opts, $stream, $multipart)` for compatible REST operations without dedicated methods (Containers, Evals, Administration, Vaults, Agents, and future routes). Paths must be relative; absolute URLs are rejected.
 
 ## 6.0.1 - 2026-10-11
 
@@ -24,7 +32,7 @@ All notable changes to `open-ai` will be documented in this file.
 - Support per-request streaming callbacks for Chat, Responses, Images, and transcription; multipart Upload Parts; GET query arrays and pagination; and background Response stream resumption.
 - Preserve cURL connection errors and valid empty response bodies; reject malformed JSON request data.
 - Allow construction without an API key; add `setApiKey()` for deferred configuration and key replacement, and reject requests without configured authentication (#156).
-- Add all ten organization Usage endpoints and Costs, with query filters and cursor pagination (#155).
+- Add the ten organization Usage endpoints available in the original audit and Costs, with query filters and cursor pagination (#155).
 - Add custom cURL options and configurable API path prefixes for compatible providers (#149, #152).
 - Remove cURL mocks; run real API tests when a key is available, with test-owned resource cleanup and explicit skips for missing credentials or fixtures.
 - See [MIGRATING.md](MIGRATING.md) for breaking changes.
