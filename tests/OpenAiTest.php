@@ -123,8 +123,9 @@ it('sends request() to a custom path through native cURL', function () {
         expect($client->request('get', '/containers/abc'))->toBe('{"id":"abc"}');
         expect($client->getCURLInfo()['url'])->toBe($baseUrl . '/api/v3/containers/abc');
 
-        $client->request('GET', '/containers/abc', ['limit' => 5, 'include' => ['a', 'b']]);
-        expect($client->getCURLInfo()['url'])->toContain('?limit=5&include%5B%5D=a&include%5B%5D=b');
+        // Older libcurl versions remove file:// queries from CURLINFO_EFFECTIVE_URL.
+        expect($client->request('GET', '/containers/abc', ['limit' => 5, 'include' => ['a', 'b']]))
+            ->toBe('{"id":"abc"}');
     } finally {
         unlink($directory . '/abc');
         rmdir($directory);
@@ -137,4 +138,32 @@ it('sends request() to a custom path through native cURL', function () {
 it('requires an API key for request()', function () {
     $client = new OpenAi();
     expect(fn () => $client->request('GET', '/containers'))->toThrow(Exception::class, 'API key');
+})->group('transport');
+
+it('records getLastResponse through native cURL', function () {
+    $root = sys_get_temp_dir() . '/openai-response-' . bin2hex(random_bytes(8));
+    $directory = $root . '/v1/files/test';
+    mkdir($directory, 0700, true);
+    file_put_contents($directory . '/content', '{"status":"ok"}');
+
+    try {
+        $client = new OpenAi('unused-local-key');
+        expect($client->getLastResponse())->toBeNull();
+
+        $normalizedPath = str_replace('\\', '/', $root);
+        $client->setBaseURL('file://' . ($normalizedPath[0] === '/' ? '' : '/') . $normalizedPath);
+
+        $result = $client->retrieveFileContent('test');
+        $response = $client->getLastResponse();
+
+        expect($response)->toBeInstanceOf(\Orhanerday\OpenAi\Response::class);
+        expect($response->body())->toBe('{"status":"ok"}');
+        expect($response->json())->toBe(['status' => 'ok']);
+    } finally {
+        unlink($directory . '/content');
+        rmdir($directory);
+        rmdir($root . '/v1/files');
+        rmdir($root . '/v1');
+        rmdir($root);
+    }
 })->group('transport');

@@ -3,10 +3,10 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/orhanerday/open-ai.svg?style=flat-square)](https://packagist.org/packages/orhanerday/open-ai)
 
 A community-maintained PHP client for the OpenAI REST API, with streaming support.
-Requires PHP 7.4+ and the cURL and JSON extensions.
+Requires PHP 7.4+ and the native cURL and JSON extensions, with no third-party runtime dependencies.
 
 See [API_COVERAGE.md](API_COVERAGE.md) for endpoint coverage and
-[MIGRATING.md](MIGRATING.md) for the upcoming 6.0.0 breaking changes.
+[MIGRATING.md](MIGRATING.md) for breaking changes from earlier versions.
 
 ## Installation
 
@@ -61,7 +61,9 @@ Run it with `php example.php`. See [Handling results](#handling-results) for HTT
 
 The SDK has dedicated methods for the most common APIs (see [Supported APIs](#supported-apis)).
 
-> If you can't find the endpoint you need, create your own with `request()`. It works for any route, such as Containers, Evals, organization administration, Vaults, or routes OpenAI adds later, so you do not have to wait for a new SDK release.
+Use `request()` for REST endpoints without dedicated methods, such as Containers, Evals,
+organization administration, and Vaults. It supports JSON and multipart requests under the
+configured API prefix. WebSocket connections and workload identity token exchange need a separate client.
 
 ```php
 public function request(
@@ -80,14 +82,15 @@ public function request(
 - The full URL is `base URL` + `/v1` + `path`, so `request('GET', '/models')` calls `https://api.openai.com/v1/models`.
 - Your API key, `setORG()`, `setHeader()`, `setProxy()`, `setTimeout()`, and `setCURLOptions()` apply.
 - `setBaseURL()` and `setApiVersion()` apply, so it also works with OpenAI-compatible providers.
-- It returns the raw response body as a string. Decode it yourself with `json_decode()`.
+- Ordinary calls return the raw response body as a string. Streaming calls deliver chunks to
+  the callback; decode JSON responses with `json_decode()`.
 
 | `$method` | What `$opts` becomes |
 | --- | --- |
 | `GET` | Query string. Nested arrays are encoded as `filter[key]=value`, lists as `include[]=a&include[]=b`, booleans as `true`/`false`. |
 | `POST`, `PUT`, `PATCH` | JSON body. An empty array sends `{}`. |
 | `DELETE` | No body unless you pass `$opts`. |
-| Any, with `$multipart = true` or a `file`/`image` key | `multipart/form-data` body. |
+| Non-`GET`, with `$multipart = true` or a `file`/`image` key | `multipart/form-data` body. |
 
 ### Examples
 
@@ -152,7 +155,10 @@ $open_ai->request('POST', '/files', [
 
 ### Error handling
 
-`request()` throws an `Exception` for an unsupported method, an invalid path, a missing API key, or a cURL failure such as a timeout. HTTP errors from the API (4xx and 5xx) do not throw; check the status code and the `error` field in the body:
+`request()` throws an `Exception` for an unsupported method, an invalid path, a missing API key,
+or a cURL failure such as a timeout. By default, HTTP errors from the API (4xx and 5xx) return
+their response bodies; check the status code and the `error` field, or enable
+[`setThrowOnError(true)`](#2-automatic-exception-handling-setthrowonerror):
 
 ```php
 try {
@@ -169,12 +175,14 @@ try {
 
 ### Security notes
 
-- Paths must start with a single `/`. Absolute URLs, `//host/...` paths, and any path containing `://` are rejected, so your API key can never be sent to another host by mistake. To target another host, call `setBaseURL()` once.
+- Paths must start with a single `/`. Absolute URLs, `//host/...` paths, and any path containing `://` are rejected. To target another host, call `setBaseURL()` once.
 - Do not pass untrusted user input directly as `$path`. Validate or encode IDs first, for example with `rawurlencode()`.
 
 ### Finding the right route
 
-Look up the path, method, and parameters in the [API reference](https://developers.openai.com/api/reference/overview). The dedicated methods are listed in [API_COVERAGE.md](API_COVERAGE.md). Anything not listed there is a good fit for `request()`.
+Look up the path, method, parameters, and any required beta headers in the
+[API reference](https://developers.openai.com/api/reference/overview). Dedicated methods and
+transport limitations are listed in [API_COVERAGE.md](API_COVERAGE.md).
 
 ## Supported APIs
 
@@ -231,7 +239,7 @@ Look up the path, method, and parameters in the [API reference](https://develope
 - Organization reporting
     - [x] [Usage and Costs](#usage-and-costs)
 - Any other endpoint
-    - [x] [Generic `request()`](#any-other-endpoint) for Containers, Evals, Administration, Vaults, Agents, and routes added later
+    - [x] [Generic `request()`](#any-other-endpoint) for compatible REST operations in Containers, Evals, Administration, Vaults, and other families
 
 See [API_COVERAGE.md](API_COVERAGE.md) for exact routes, guide support, and testing limits.
 WebSocket mode and mid-turn steering require a separate WebSocket client.
@@ -638,10 +646,95 @@ $result = $open_ai->retrieveModel("gpt-4o-mini");
 
 ## Handling results
 
-Nonstreaming methods return raw response bodies; streaming methods deliver raw chunks to the callback.
-Inspect `getCURLInfo()['http_code']` before decoding success fields;
-HTTP API errors are returned as response bodies, while connection failures throw `Exception`.
-Malformed JSON request data throws `JsonException`.
+By default, nonstreaming methods return the raw response body as a string, and HTTP API errors
+(4xx/5xx) do not throw exceptions. JSON, downloaded files, and audio keep their original format.
+
+### 1. Structured Response Object
+
+Inspect the most recent response via `getLastResponse()`:
+
+```php
+$raw = $open_ai->chat([
+    'model' => 'gpt-4o-mini',
+    'messages' => [['role' => 'user', 'content' => 'Hello']],
+]);
+
+$response = $open_ai->getLastResponse();
+
+if ($response->ok()) {
+    $data = $response->json(); // Decoded JSON array
+    echo $data['choices'][0]['message']['content'];
+} else {
+    echo "HTTP Status: " . $response->status() . "\n";
+    echo "Error Body: " . $response->body() . "\n";
+}
+
+// Access headers (case-insensitive)
+echo $response->header('openai-processing-ms');
+```
+
+The `Response` object provides:
+
+- `$response->status()`: HTTP status code integer
+- `$response->ok()`: `true` for 2xx status codes
+- `$response->json(bool $assoc = true)`: Decodes JSON directly
+- `$response->body()`: Raw response body string
+- `$response->headers()`: Headers from the final HTTP response, keyed by lowercase names
+- `$response->header(string $name)`: Case-insensitive header lookup
+
+Header collection also works when you configure your own `CURLOPT_HEADERFUNCTION`; the callback
+still runs and must return the number of bytes consumed. Successful streaming responses deliver
+their body to the callback, so `Response::body()` is empty. HTTP error bodies remain available
+in `Response` and `OpenAiException`.
+
+`getLastResponse()` returns `null` before the first completed request. A transport failure leaves
+the previous response available; catch the exception before treating that response as the current result.
+`json()` throws `JsonException` for an empty body, binary download, or other invalid JSON.
+
+### 2. Automatic Exception Handling (`setThrowOnError`)
+
+If you prefer exceptions over manual status code checking, enable `setThrowOnError(true)`. When enabled, any HTTP 4xx or 5xx status throws an `OpenAiException`:
+
+```php
+use Orhanerday\OpenAi\OpenAiException;
+
+$open_ai->setThrowOnError(true);
+
+try {
+    $raw = $open_ai->chat([
+        'model' => 'gpt-4o-mini',
+        'messages' => [['role' => 'user', 'content' => 'Hello']],
+    ]);
+} catch (OpenAiException $e) {
+    echo "HTTP Status: " . $e->getStatusCode() . "\n";
+    echo "Error Type: " . $e->getErrorType() . "\n";   // e.g. 'invalid_request_error'
+    echo "Error Code: " . $e->getErrorCode() . "\n";   // e.g. 'rate_limit_exceeded'
+    echo "Message: " . $e->getMessage() . "\n";
+    print_r($e->getApiError());                       // Decoded error object
+} catch (Exception $e) {
+    // Network / cURL failures (e.g. timeout, connection dropped)
+    echo "Connection error: " . $e->getMessage();
+}
+```
+
+### 3. Automatic Retries & Rate-Limit Backoff
+
+Enable automatic retries for rate limits (HTTP 429) and transient server errors (HTTP 500, 502, 503, 504 on idempotent requests):
+
+```php
+// Retry up to 3 times, starting with a 500ms exponential backoff
+$open_ai->setRetries(3, 500);
+```
+
+- `maxRetries` counts extra attempts after the initial request; `0` disables retries.
+- Uses exponential backoff with small random jitter, capped at 60 seconds. Numeric and HTTP-date
+  `Retry-After` values set a minimum wait. A server-requested wait above 60 seconds ends automatic
+  retrying and returns the error for the application to handle later.
+- Retries rate-limit HTTP 429 responses, excluding billing/quota exhaustion. Retries HTTP 500,
+  502, 503, and 504 only for `GET`, `PUT`, and `DELETE`, using the effective method after custom
+  cURL options. `POST` and `PATCH` are not retried on server errors.
+- Disables retries for streaming, response-body/upload/read callbacks, custom output files, and
+  requests with `CURLOPT_RETURNTRANSFER` disabled. These transfers cannot safely be replayed.
 
 ## Responses API
 
@@ -682,7 +775,9 @@ $result = $open_ai->createConversation();
 
 Run hosted agents in sandboxed environments. The Agents API is in beta. Every method sends the
 `OpenAI-Beta: agents=v1` header for that request only, and your own headers are restored afterwards.
-See the [Agents guide](https://developers.openai.com/api/docs/guides/agents) for models, environments, and tools.
+See the [Agents guide](https://developers.openai.com/api/docs/guides/agents-api/overview) for models, environments, and tools.
+With `environment.type` set to `openai_hosted`, OpenAI runs the sandbox. Self-hosted environments
+require your own executor; custom function tools are handled by your application.
 
 ### Create a session and read the result
 
@@ -705,7 +800,7 @@ $open_ai->createAgentSession([
 });
 ```
 
-Or create the session without streaming, keep its ID, and follow it separately:
+For follow-up input, create an idle session and share its ID with a subscriber and a sender:
 
 ```php
 $session = json_decode($open_ai->createAgentSession([
@@ -713,8 +808,14 @@ $session = json_decode($open_ai->createAgentSession([
     'environment' => ['type' => 'openai_hosted'],
 ]), true, 512, JSON_THROW_ON_ERROR);
 $sessionId = $session['id'];
+echo $sessionId . PHP_EOL;
+```
 
-// Open the event stream (blocks until the stream ends)
+Run the subscriber in a **separate process** with this ID. Wait until its event-stream connection
+is established before running the sender. Streams deliver live events and do not replay missed events:
+
+```php
+$sessionId = getenv('OPENAI_AGENT_SESSION_ID'); // ID from session creation
 $open_ai->streamAgentSessionEvents($sessionId, function ($curl, $chunk) {
     echo $chunk;
 
@@ -724,9 +825,10 @@ $open_ai->streamAgentSessionEvents($sessionId, function ($curl, $chunk) {
 
 ### Send input and approve actions
 
-Send events to a running session. The body is `{"events": [...]}`:
+Run this sender in another process after the subscriber connects. The body is `{"events": [...]}`.
 
 ```php
+$sessionId = getenv('OPENAI_AGENT_SESSION_ID');
 $open_ai->sendAgentSessionEvents($sessionId, [
     [
         'type' => 'agent.session.input.message',
@@ -752,18 +854,24 @@ $open_ai->listAgentSessionItems($sessionId, ['order' => 'asc', 'limit' => 100]);
 $open_ai->listAgentSessionTurns($sessionId, ['limit' => 20]);
 $open_ai->retrieveAgentSessionTurn($sessionId, 'turn_123');
 $open_ai->exportAgentSessionTraces($sessionId, ['limit' => 20]); // OTLP JSON; needs trace export enabled
-$open_ai->deleteAgentSession($sessionId); // requests environment cleanup
+$open_ai->deleteAgentSession($sessionId); // cancel active execution before deleting
 ```
 
 ### Environments
 
-Prepare a reusable workspace (packages, files, setup commands) and attach it to sessions:
+Prewarming requires access to the prewarming beta. Prepare a workspace before attaching it to a
+session; unattached environments expire after five minutes. Supply any files the task needs:
 
 ```php
 $environment = json_decode($open_ai->createAgentEnvironment([
     'environment' => [
         'type' => 'openai_hosted',
         'packages' => ['python' => ['pandas==2.2.3']],
+        'files' => [[
+            'type' => 'inline',
+            'path' => '/workspace/data.csv',
+            'data' => base64_encode("category,amount\nbooks,10\nbooks,20\n"),
+        ]],
     ],
 ]), true, 512, JSON_THROW_ON_ERROR);
 
@@ -772,7 +880,11 @@ $open_ai->createAgentSession([
     'environment' => ['type' => 'openai_hosted', 'environment_id' => $environment['id']],
     'input' => 'Use pandas to summarize /workspace/data.csv.',
     'stream' => true,
-], $callback);
+], function ($curl, $chunk) {
+    echo $chunk;
+
+    return strlen($chunk);
+});
 
 $open_ai->listAgentEnvironments();
 $open_ai->retrieveAgentEnvironment($environment['id']);
@@ -929,6 +1041,7 @@ Each method returns the raw response body; pagination is controlled by the calle
 | Report | Method |
 | --- | --- |
 | Completions | `getCompletionsUsage($options)` |
+| Decisions | `getDecisionsUsage($options)` |
 | Embeddings | `getEmbeddingsUsage($options)` |
 | Moderations | `getModerationsUsage($options)` |
 | Images | `getImagesUsage($options)` |

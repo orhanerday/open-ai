@@ -1,9 +1,10 @@
 # API coverage audit
 
-Audited 2026-10-07 against the supplied guides and the current official OpenAI API reference.
+Originally audited 2026-10-07; updated 2026-10-11 against the supplied guides and official OpenAI API reference.
 The scope is the pasted documentation and existing endpoint families, including their current REST
 subresources. This is an HTTP/cURL client. It does not implement every OpenAI product or transport.
-The scope now also includes the separately requested organization Usage and Costs reference (#155).
+The scope also includes the separately requested organization Usage and Costs reference (#155),
+the generic REST request method, and the fourteen dedicated Agents beta operations added in 6.2.0.
 
 ## Pasted guides
 
@@ -28,6 +29,8 @@ Every path below is relative to `https://api.openai.com/v1`. Optional options on
 query parameters, with repeated `include[]` fields, nested filters, and textual boolean values.
 POST bodies use JSON except file/part/voice uploads, image edits, transcription, and WebRTC call creation,
 which use multipart where appropriate. A call's session array is serialized as a JSON multipart field.
+The fourteen Agents methods below add `OpenAI-Beta: agents=v1` per request and URL-encode
+session, turn, and environment IDs in their path segments.
 
 | Family | Method | HTTP route |
 | --- | --- | --- |
@@ -140,6 +143,7 @@ which use multipart where appropriate. A call's session array is serialized as a
 | Webhooks | `rotateWebhookEndpointSecret` | `POST /webhook_endpoints/{endpoint_id}/rotate_secret` |
 | Webhooks | `testWebhookEndpoint` | `POST /webhook_endpoints/{endpoint_id}/test` |
 | Usage | `getCompletionsUsage` | `GET /organization/usage/completions` |
+| Usage | `getDecisionsUsage` | `GET /organization/usage/decisions` |
 | Usage | `getEmbeddingsUsage` | `GET /organization/usage/embeddings` |
 | Usage | `getModerationsUsage` | `GET /organization/usage/moderations` |
 | Usage | `getImagesUsage` | `GET /organization/usage/images` |
@@ -158,10 +162,11 @@ Without that key, API cases are skipped explicitly. No cURL functions are replac
 
 Organization Usage and Costs tests are in `tests/UsageLiveTest.php` and use `OPENAI_ADMIN_KEY`.
 On 2026-10-07, all **16 reporting tests passed without skips** on the host and in Docker
-with PHP 7.4.33 and PHP 8.4.26. These cover all eleven routes, grouping query arrays,
+with PHP 7.4.33 and PHP 8.4.26. These cover the ten original Usage routes plus Costs, grouping query arrays,
 `batch=false`, real cursors for Usage and Costs, and the API's missing-`start_time` error.
 Empty reporting periods are valid responses. Both containers also passed all 20 native
 transport/webhook cases; logs and JUnit reports are saved locally under ignored `build/docker/usage/`.
+`getDecisionsUsage()` was added after that run; those historical results do not validate the new route.
 
 Live lifecycle coverage includes Responses (stream/resume, stored retrieval, input items, deletion, cancellation,
 token count and compaction), Conversations/items, stored Chat CRUD/messages, Files, Uploads, Vector Stores/files
@@ -181,7 +186,8 @@ Account- or fixture-dependent cases must not be reported as verified merely beca
 | Fine-tuning jobs/checkpoints/permissions | Training fixture, owned job/checkpoint; admin key for permissions | Default suite lists jobs and runs graders; it does not create training jobs, pause user jobs, or change checkpoint access |
 | Webhook create/update/delete/rotate/test | An owned receiver URL and subscription | Default suite lists endpoints and verifies signatures locally; it does not send events to arbitrary receivers |
 | Multi-agent | Supported beta model and beta header | HTTP fields and header pass through; orchestration and every beta event are not separately tested |
-| Organization Usage and Costs | `OPENAI_ADMIN_KEY` with organization reporting access | Real tests cover all eleven endpoints, grouping, boolean filters, and cursor pagination when the key is configured |
+| Agents | Agents-enabled account; prewarming beta access for environment creation; owned session and trace export access | Default live tests list sessions and environments; creation, streaming, input, history, trace export, and cleanup require separate lifecycle validation |
+| Organization Usage and Costs | `OPENAI_ADMIN_KEY` with organization reporting access | Historical real tests cover ten Usage routes plus Costs, grouping, boolean filters, and cursors; Decisions usage is newly added |
 
 ## Observed API failure
 
@@ -192,7 +198,7 @@ This points to an API-side problem; cancellation has not been successfully valid
 The real test stays enabled and fails when the API returns that error.
 One reproducible request ID was `req_1904dc07962a4c949bb8b194e7cc0786`.
 
-Latest full Docker verification on Linux ARM64 completed on 2026-10-07, including both configured
+Full Docker verification on Linux ARM64 completed on 2026-10-07, including both configured
 API credentials, Usage/Costs, deferred key configuration, custom cURL options, and API path prefixes:
 
 | Runtime | Native transport and webhook tests | Full suite | Assertions |
@@ -207,7 +213,7 @@ Custom voice consent listing was skipped because the account capability flag was
 Image generation/edit streaming and all sixteen organization reporting cases passed on both runtimes.
 All source and test files passed syntax checks in both containers. Docker logs and JUnit reports
 are saved locally under ignored `build/docker/pr-validation/`; no cURL mocks were used.
-All 29 official documentation links in the current guides resolved successfully during this audit.
+All 29 official documentation links checked during the original 2026-10-07 audit resolved successfully.
 
 Run `vendor/bin/pest --group=live --filter 'vector store file batch'` with your key to reproduce.
 No mock, expected-error assertion, or skip is used to turn this failure into a pass.
@@ -224,16 +230,27 @@ model requirements are documented rather than replaced with a model belonging to
 
 Administration other than Usage/Costs, Live, Evals, ChatKit, Containers, Skills, Safety, and other separate API families
 are outside this audit's agreed scope. Do not describe this release as implementing every OpenAI API endpoint.
-These families have no dedicated methods, but are reachable through the generic `request()` method.
+Compatible REST operations in these families can use `request()` with their documented headers
+and request fields. This does not provide persistent WebSocket connections or workload identity
+token exchange at the separate authentication host.
+
+Agents support is partial: reusable agent CRUD, environment files/templates, session artifacts,
+subagents and their histories, session turn items, and vaults/credentials have no dedicated wrappers.
+Their compatible REST operations can use `request()` with `OpenAI-Beta: agents=v1`.
+OpenAI-hosted environments do not need an application-run executor; self-hosted environments do.
 
 ## Official references
 
 - [Organization Usage and Costs](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage)
+- [Decisions usage](https://developers.openai.com/api/reference/resources/admin/subresources/organization/subresources/usage/methods/decisions)
 - [Responses API](https://developers.openai.com/api/reference/resources/responses)
 - [Conversations API](https://developers.openai.com/api/reference/resources/conversations)
 - [Background mode](https://developers.openai.com/api/docs/guides/background)
 - [Decisions](https://developers.openai.com/api/docs/guides/decisions)
-- [Agents](https://developers.openai.com/api/docs/guides/agents)
+- [Agents API](https://developers.openai.com/api/docs/guides/agents-api/overview)
+- [Agent sessions](https://developers.openai.com/api/reference/resources/beta/subresources/agents/subresources/sessions)
+- [Running agent sessions](https://developers.openai.com/api/docs/guides/agents-api/sessions)
+- [Prewarming environments](https://developers.openai.com/api/docs/guides/agents-api/environments/prewarmed)
 - [Webhooks](https://developers.openai.com/api/docs/guides/webhooks)
 - [Create a webhook endpoint](https://developers.openai.com/api/reference/resources/webhooks/methods/create)
 - [Stored Chat](https://developers.openai.com/api/reference/resources/chat/subresources/completions)

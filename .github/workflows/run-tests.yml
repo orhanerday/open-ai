@@ -37,6 +37,10 @@ jobs:
       - name: Install dependencies
         run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
+      - name: Static analysis
+        if: matrix.php == '8.4'
+        run: vendor/bin/phpstan analyse --no-progress
+
       - name: Execute tests
         run: vendor/bin/pest --exclude-group=live
 
