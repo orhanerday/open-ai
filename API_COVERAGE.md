@@ -210,6 +210,7 @@ model requirements are documented rather than replaced with a model belonging to
 
 Administration other than Usage/Costs, Agents, Live, Evals, ChatKit, Containers, Skills, Safety, and other separate API families
 are outside this audit's agreed scope. Do not describe this release as implementing every OpenAI API endpoint.
+These families have no dedicated methods, but are reachable through the generic `request()` method.
 
 ## Official references
 

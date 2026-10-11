@@ -569,6 +569,40 @@ class OpenAi
         }
     }
 
+    /**
+     * Send a request to any API endpoint, including ones without a dedicated method.
+     *
+     * The path is relative to the configured base URL and API version, for example
+     * `/containers`. Authentication, organization headers, setBaseURL(), setApiVersion()
+     * and setCURLOptions() all apply. On GET (or when $opts is null) $opts becomes the
+     * query string; otherwise it is sent as a JSON body, or as multipart when $multipart
+     * is true or it contains a `file` or `image` key.
+     *
+     * @param  string  $method  GET, POST, PUT, PATCH or DELETE
+     * @param  string  $path  Relative path starting with `/`, for example `/evals/{id}`
+     * @param  array|null  $opts  Query parameters or request body
+     * @param  callable|null  $stream  Required when $opts enables streaming
+     * @param  bool  $multipart  Force a multipart/form-data body
+     * @return bool|string
+     *
+     * @throws Exception When the method or path is invalid, or the request fails
+     */
+    public function request(string $method, string $path, ?array $opts = null, ?callable $stream = null, bool $multipart = false)
+    {
+        $method = strtoupper($method);
+        if (! in_array($method, ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], true)) {
+            throw new Exception('Unsupported HTTP method. Use GET, POST, PUT, PATCH or DELETE.');
+        }
+        if ($path === '' || $path[0] !== '/' || strpos($path, '//') === 0 || strpos($path, '://') !== false) {
+            throw new Exception('The path must be relative and start with a single "/", for example "/containers".');
+        }
+
+        $url = Url::OPEN_AI_URL . $path;
+        $this->baseUrl($url);
+
+        return $this->sendRequest($url, $method, $opts, $stream, $multipart);
+    }
+
     // Responses API
     public function createResponse($opts, ?callable $stream = null)
     {

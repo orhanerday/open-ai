@@ -512,3 +512,14 @@ it('creates retrieves lists and cancels its own vector store file batch', functi
         }
     }
 })->group('live');
+
+it('reaches endpoints through the generic request method', function () {
+    $models = ($this->decode)($this->client->request('GET', '/models'));
+    expect($models['data'])->toBeArray()->not->toBeEmpty();
+
+    $moderation = ($this->decode)($this->client->request('POST', '/moderations', [
+        'model' => 'omni-moderation-latest',
+        'input' => 'Hello',
+    ]));
+    expect($moderation['results'])->toBeArray()->not->toBeEmpty();
+})->group('live', 'working');
