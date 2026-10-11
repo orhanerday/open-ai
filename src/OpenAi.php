@@ -603,6 +603,151 @@ class OpenAi
         return $this->sendRequest($url, $method, $opts, $stream, $multipart);
     }
 
+    /**
+     * Agents API (beta). Agents methods send the `OpenAI-Beta: agents=v1` header for that
+     * request only; headers configured with setHeader() are restored afterwards.
+     */
+    private function agentsRequest(string $url, string $method, ?array $opts = null, ?callable $stream = null, bool $eventStream = false)
+    {
+        $original = $this->headers;
+
+        try {
+            $this->setHeader(['OpenAI-Beta' => 'agents=v1']);
+            if ($eventStream) {
+                $this->setHeader(['Accept' => 'text/event-stream']);
+            }
+
+            return $this->sendRequest($url, $method, $opts, $stream);
+        } finally {
+            $this->headers = $original;
+        }
+    }
+
+    public function createAgentSession($opts, ?callable $stream = null)
+    {
+        $url = Url::agentsUrl() . '/sessions';
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'POST', $opts, $stream);
+    }
+
+    public function listAgentSessions($opts = [])
+    {
+        $url = Url::agentsUrl() . '/sessions';
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'GET', $opts);
+    }
+
+    public function retrieveAgentSession($sessionId)
+    {
+        $url = Url::agentsUrl() . '/sessions/' . rawurlencode($sessionId);
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'GET');
+    }
+
+    public function updateAgentSession($sessionId, $opts)
+    {
+        $url = Url::agentsUrl() . '/sessions/' . rawurlencode($sessionId);
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'POST', $opts);
+    }
+
+    public function deleteAgentSession($sessionId)
+    {
+        $url = Url::agentsUrl() . '/sessions/' . rawurlencode($sessionId);
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'DELETE');
+    }
+
+    /**
+     * Open the session event stream. The callback receives raw server-sent event chunks and
+     * must return the number of bytes it handled.
+     */
+    public function streamAgentSessionEvents($sessionId, callable $stream, $opts = [])
+    {
+        $url = Url::agentsUrl() . '/sessions/' . rawurlencode($sessionId) . '/events';
+        $this->baseUrl($url);
+        $opts['stream'] = true;
+
+        return $this->agentsRequest($url, 'GET', $opts, $stream, true);
+    }
+
+    /**
+     * Send input events to a session, for example a user message or an approval result.
+     *
+     * @param  array  $events  List of event objects, sent as {"events": [...]}
+     */
+    public function sendAgentSessionEvents($sessionId, array $events)
+    {
+        $url = Url::agentsUrl() . '/sessions/' . rawurlencode($sessionId) . '/events';
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'POST', ['events' => $events]);
+    }
+
+    public function listAgentSessionItems($sessionId, $opts = [])
+    {
+        $url = Url::agentsUrl() . '/sessions/' . rawurlencode($sessionId) . '/items';
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'GET', $opts);
+    }
+
+    public function listAgentSessionTurns($sessionId, $opts = [])
+    {
+        $url = Url::agentsUrl() . '/sessions/' . rawurlencode($sessionId) . '/turns';
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'GET', $opts);
+    }
+
+    public function retrieveAgentSessionTurn($sessionId, $turnId)
+    {
+        $url = Url::agentsUrl() . '/sessions/' . rawurlencode($sessionId) . '/turns/' . rawurlencode($turnId);
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'GET');
+    }
+
+    /**
+     * Export session traces as OpenTelemetry (OTLP) JSON. Requires trace export for the organization.
+     */
+    public function exportAgentSessionTraces($sessionId, $opts = [])
+    {
+        $url = Url::agentsUrl() . '/sessions/' . rawurlencode($sessionId) . '/traces';
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'GET', $opts);
+    }
+
+    public function createAgentEnvironment($opts)
+    {
+        $url = Url::agentsUrl() . '/environments';
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'POST', $opts);
+    }
+
+    public function listAgentEnvironments($opts = [])
+    {
+        $url = Url::agentsUrl() . '/environments';
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'GET', $opts);
+    }
+
+    public function retrieveAgentEnvironment($environmentId)
+    {
+        $url = Url::agentsUrl() . '/environments/' . rawurlencode($environmentId);
+        $this->baseUrl($url);
+
+        return $this->agentsRequest($url, 'GET');
+    }
+
     // Responses API
     public function createResponse($opts, ?callable $stream = null)
     {

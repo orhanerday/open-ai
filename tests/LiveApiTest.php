@@ -523,3 +523,11 @@ it('reaches endpoints through the generic request method', function () {
     ]));
     expect($moderation['results'])->toBeArray()->not->toBeEmpty();
 })->group('live', 'working');
+
+it('lists agent sessions and environments', function () {
+    foreach (['listAgentSessions', 'listAgentEnvironments'] as $method) {
+        $body = ($this->decode)($this->client->$method(['limit' => 1]));
+        expect($body['object'])->toBe('list');
+        expect($body['data'])->toBeArray();
+    }
+})->group('live', 'working');
