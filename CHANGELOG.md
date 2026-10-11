@@ -2,7 +2,11 @@
 
 All notable changes to `open-ai` will be documented in this file.
 
-## Unreleased - 6.0.0
+## 6.0.1 - 2026-10-11
+
+- Documentation: finalize the changelog for the 6.0 line. No code changes since 6.0.
+
+## 6.0 - 2026-10-07
 
 - Remove the legacy Completions integration, sunset Assistants APIs, retired image variations, and obsolete endpoint wrappers and URL helpers.
 - Add Responses, Conversations, Vector Stores, Batches, Uploads, Realtime client secrets, and fine-tuning checkpoint operations.
