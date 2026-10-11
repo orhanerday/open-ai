@@ -95,3 +95,46 @@ it('returns empty and zero-valued content through native cURL', function ($conte
         rmdir($root);
     }
 })->with(['', '0'])->group('transport');
+
+it('rejects unsupported methods and non-relative paths in request()', function ($method, $path) {
+    $client = new OpenAi('unused-local-key');
+    expect(fn () => $client->request($method, $path))->toThrow(Exception::class);
+})->with([
+    ['TRACE', '/containers'],
+    ['GET', 'containers'],
+    ['GET', ''],
+    ['GET', '//evil.example/containers'],
+    ['GET', '/x://evil.example'],
+])->group('transport');
+
+it('sends request() to a custom path through native cURL', function () {
+    $root = sys_get_temp_dir() . '/openai-request-' . bin2hex(random_bytes(8));
+    $directory = $root . '/api/v3/containers';
+    mkdir($directory, 0700, true);
+    file_put_contents($directory . '/abc', '{"id":"abc"}');
+
+    try {
+        $client = new OpenAi('unused-local-key');
+        $normalizedPath = str_replace('\\', '/', $root);
+        $baseUrl = 'file://' . ($normalizedPath[0] === '/' ? '' : '/') . $normalizedPath;
+        $client->setBaseURL($baseUrl);
+        $client->setApiVersion('api/v3');
+
+        expect($client->request('get', '/containers/abc'))->toBe('{"id":"abc"}');
+        expect($client->getCURLInfo()['url'])->toBe($baseUrl . '/api/v3/containers/abc');
+
+        $client->request('GET', '/containers/abc', ['limit' => 5, 'include' => ['a', 'b']]);
+        expect($client->getCURLInfo()['url'])->toContain('?limit=5&include%5B%5D=a&include%5B%5D=b');
+    } finally {
+        unlink($directory . '/abc');
+        rmdir($directory);
+        rmdir($root . '/api/v3');
+        rmdir($root . '/api');
+        rmdir($root);
+    }
+})->group('transport');
+
+it('requires an API key for request()', function () {
+    $client = new OpenAi();
+    expect(fn () => $client->request('GET', '/containers'))->toThrow(Exception::class, 'API key');
+})->group('transport');

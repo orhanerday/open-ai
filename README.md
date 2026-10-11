@@ -109,6 +109,8 @@ Run it with `php example.php`. See [Handling results](#handling-results) for HTT
     - [x] [Endpoint management and signature verification](#webhooks)
 - Organization reporting
     - [x] [Usage and Costs](#usage-and-costs)
+- Any other endpoint
+    - [x] [Generic `request()`](#any-other-endpoint) for Containers, Evals, Administration, Vaults, Agents, and routes added later
 
 See [API_COVERAGE.md](API_COVERAGE.md) for exact routes, guide support, and testing limits.
 WebSocket mode and mid-turn steering require a separate WebSocket client.
@@ -192,6 +194,123 @@ $open_ai->listModels();
 $info = $open_ai->getCURLInfo();
 echo $info['http_code'];
 ```
+
+## Any other endpoint
+
+The SDK has dedicated methods for the most common APIs. For everything else, such as Containers, Evals, organization administration, Vaults, Agents, or routes OpenAI adds later, use the generic `request()` method. You do not have to wait for a new SDK release.
+
+```php
+public function request(
+    string $method,          // GET, POST, PUT, PATCH or DELETE (case-insensitive)
+    string $path,            // relative path starting with "/", e.g. "/containers/cntr_123"
+    ?array $opts = null,     // query parameters (GET) or request body (other methods)
+    ?callable $stream = null,// required when the request streams
+    bool $multipart = false  // force multipart/form-data
+);
+```
+
+### How it works
+
+`request()` runs through the same code as every built-in method. That means:
+
+- The full URL is `base URL` + `/v1` + `path`, so `request('GET', '/models')` calls `https://api.openai.com/v1/models`.
+- Your API key, `setORG()`, `setHeader()`, `setProxy()`, `setTimeout()`, and `setCURLOptions()` apply.
+- `setBaseURL()` and `setApiVersion()` apply, so it also works with OpenAI-compatible providers.
+- It returns the raw response body as a string. Decode it yourself with `json_decode()`.
+
+| `$method` | What `$opts` becomes |
+| --- | --- |
+| `GET` | Query string. Nested arrays are encoded as `filter[key]=value`, lists as `include[]=a&include[]=b`, booleans as `true`/`false`. |
+| `POST`, `PUT`, `PATCH` | JSON body. An empty array sends `{}`. |
+| `DELETE` | No body unless you pass `$opts`. |
+| Any, with `$multipart = true` or a `file`/`image` key | `multipart/form-data` body. |
+
+### Examples
+
+Create, list, and delete a resource:
+
+```php
+// POST with a JSON body
+$created = json_decode($open_ai->request('POST', '/containers', ['name' => 'my-container']), true);
+
+// GET with query parameters: /v1/containers?limit=10&order=desc
+$list = json_decode($open_ai->request('GET', '/containers', ['limit' => 10, 'order' => 'desc']), true);
+
+// DELETE a resource by ID
+$open_ai->request('DELETE', '/containers/' . $created['id']);
+```
+
+Evals:
+
+```php
+$evals = json_decode($open_ai->request('GET', '/evals', ['limit' => 5]), true);
+```
+
+Organization administration (requires an admin key; replace the key with an admin key for these calls):
+
+```php
+$admin = new OpenAi(getenv('OPENAI_ADMIN_KEY'));
+$projects = json_decode($admin->request('GET', '/organization/projects', ['limit' => 20]), true);
+```
+
+Query parameters with arrays and booleans:
+
+```php
+// /v1/responses/resp_123?include[]=message.output_text.logprobs&stream=false
+$open_ai->request('GET', '/responses/resp_123', [
+    'include' => ['message.output_text.logprobs'],
+    'stream' => false,
+]);
+```
+
+Streaming. Pass a callback as the fourth argument. It receives raw server-sent event chunks and must return the number of bytes it handled:
+
+```php
+$open_ai->request('POST', '/responses', [
+    'model' => 'gpt-4o-mini',
+    'input' => 'Write a haiku about PHP.',
+    'stream' => true,
+], function ($curl, $chunk) {
+    echo $chunk;
+
+    return strlen($chunk);
+});
+```
+
+File upload. A `file` key switches to multipart automatically. Pass `true` as the fifth argument when your body needs multipart without a `file` or `image` key:
+
+```php
+$open_ai->request('POST', '/files', [
+    'purpose' => 'user_data',
+    'file' => new CURLFile('/path/to/data.jsonl'),
+]);
+```
+
+### Error handling
+
+`request()` throws an `Exception` for an unsupported method, an invalid path, a missing API key, or a cURL failure such as a timeout. HTTP errors from the API (4xx and 5xx) do not throw; check the status code and the `error` field in the body:
+
+```php
+try {
+    $body = json_decode($open_ai->request('GET', '/containers/unknown'), true);
+    $status = $open_ai->getCURLInfo()['http_code'];
+
+    if ($status >= 400) {
+        echo "API error $status: " . ($body['error']['message'] ?? 'unknown error');
+    }
+} catch (Exception $e) {
+    echo 'Request failed: ' . $e->getMessage();
+}
+```
+
+### Security notes
+
+- Paths must start with a single `/`. Absolute URLs, `//host/...` paths, and any path containing `://` are rejected, so your API key can never be sent to another host by mistake. To target another host, call `setBaseURL()` once.
+- Do not pass untrusted user input directly as `$path`. Validate or encode IDs first, for example with `rawurlencode()`.
+
+### Finding the right route
+
+Look up the path, method, and parameters in the [API reference](https://developers.openai.com/api/reference/overview). The dedicated methods are listed in [API_COVERAGE.md](API_COVERAGE.md). Anything not listed there is a good fit for `request()`.
 
 ## Chat completions
 

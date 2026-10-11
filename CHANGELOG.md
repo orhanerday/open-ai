@@ -2,6 +2,10 @@
 
 All notable changes to `open-ai` will be documented in this file.
 
+## 6.1.0 - 2026-10-11
+
+- Add `request($method, $path, $opts, $stream, $multipart)` to call any API endpoint without a dedicated method (Containers, Evals, Administration, Vaults, Agents, and future routes). Paths must be relative; absolute URLs are rejected.
+
 ## 6.0.1 - 2026-10-11
 
 - Documentation: finalize the changelog for the 6.0 line. No code changes since 6.0.
