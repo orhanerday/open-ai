@@ -2,6 +2,11 @@
 
 All notable changes to `open-ai` will be documented in this file.
 
+## 6.2.0 - 2026-10-11
+
+- Add the Agents API (beta): sessions (create, list, retrieve, update, delete), event streaming and input events, items, turns, trace export, and environments. Methods send `OpenAI-Beta: agents=v1` for that request only and restore your headers afterwards.
+- Add tests that run against a real local HTTP server and assert the exact method, path, headers, and body.
+
 ## 6.1.0 - 2026-10-11
 
 - Add `request($method, $path, $opts, $stream, $multipart)` to call any API endpoint without a dedicated method (Containers, Evals, Administration, Vaults, Agents, and future routes). Paths must be relative; absolute URLs are rejected.

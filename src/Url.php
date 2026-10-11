@@ -141,6 +141,11 @@ class Url
         return self::OPEN_AI_URL . "/realtime/client_secrets";
     }
 
+    public static function agentsUrl(): string
+    {
+        return self::OPEN_AI_URL . "/agents";
+    }
+
     public static function decisionsUrl(): string
     {
         return self::OPEN_AI_URL . '/decisions';

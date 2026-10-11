@@ -118,6 +118,20 @@ which use multipart where appropriate. A call's session array is serialized as a
 | Realtime | `hangupRealtimeCall` | `POST /realtime/calls/{call_id}/hangup` |
 | Realtime | `referRealtimeCall` | `POST /realtime/calls/{call_id}/refer` |
 | Realtime | `rejectRealtimeCall` | `POST /realtime/calls/{call_id}/reject` |
+| Agents (beta) | `createAgentSession` | `POST /agents/sessions` |
+| Agents (beta) | `listAgentSessions` | `GET /agents/sessions` |
+| Agents (beta) | `retrieveAgentSession` | `GET /agents/sessions/{session_id}` |
+| Agents (beta) | `updateAgentSession` | `POST /agents/sessions/{session_id}` |
+| Agents (beta) | `deleteAgentSession` | `DELETE /agents/sessions/{session_id}` |
+| Agents (beta) | `streamAgentSessionEvents` | `GET /agents/sessions/{session_id}/events?stream=true` |
+| Agents (beta) | `sendAgentSessionEvents` | `POST /agents/sessions/{session_id}/events` |
+| Agents (beta) | `listAgentSessionItems` | `GET /agents/sessions/{session_id}/items` |
+| Agents (beta) | `listAgentSessionTurns` | `GET /agents/sessions/{session_id}/turns` |
+| Agents (beta) | `retrieveAgentSessionTurn` | `GET /agents/sessions/{session_id}/turns/{turn_id}` |
+| Agents (beta) | `exportAgentSessionTraces` | `GET /agents/sessions/{session_id}/traces` |
+| Agents (beta) | `createAgentEnvironment` | `POST /agents/environments` |
+| Agents (beta) | `listAgentEnvironments` | `GET /agents/environments` |
+| Agents (beta) | `retrieveAgentEnvironment` | `GET /agents/environments/{environment_id}` |
 | Webhooks | `createWebhookEndpoint` | `POST /webhook_endpoints` |
 | Webhooks | `listWebhookEndpoints` | `GET /webhook_endpoints` |
 | Webhooks | `retrieveWebhookEndpoint` | `GET /webhook_endpoints/{endpoint_id}` |
@@ -208,7 +222,7 @@ Audio translation/speech compatibility wrappers remain while their API routes ex
 model requirements are documented rather than replaced with a model belonging to a different transport.
 `setCustomURL()` remains a deprecated compatibility alias for `setBaseURL()`.
 
-Administration other than Usage/Costs, Agents, Live, Evals, ChatKit, Containers, Skills, Safety, and other separate API families
+Administration other than Usage/Costs, Live, Evals, ChatKit, Containers, Skills, Safety, and other separate API families
 are outside this audit's agreed scope. Do not describe this release as implementing every OpenAI API endpoint.
 These families have no dedicated methods, but are reachable through the generic `request()` method.
 
@@ -219,6 +233,7 @@ These families have no dedicated methods, but are reachable through the generic 
 - [Conversations API](https://developers.openai.com/api/reference/resources/conversations)
 - [Background mode](https://developers.openai.com/api/docs/guides/background)
 - [Decisions](https://developers.openai.com/api/docs/guides/decisions)
+- [Agents](https://developers.openai.com/api/docs/guides/agents)
 - [Webhooks](https://developers.openai.com/api/docs/guides/webhooks)
 - [Create a webhook endpoint](https://developers.openai.com/api/reference/resources/webhooks/methods/create)
 - [Stored Chat](https://developers.openai.com/api/reference/resources/chat/subresources/completions)

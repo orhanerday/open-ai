@@ -57,147 +57,11 @@ echo $response['choices'][0]['message']['content'];
 
 Run it with `php example.php`. See [Handling results](#handling-results) for HTTP errors.
 
-## Supported APIs
-
-- Chat
-    - [x] [Chat completions](#chat-completions)
-    - [x] Stored completions: retrieve, update, delete, list, and list messages
-- Models
-    - [x] [List models](https://developers.openai.com/api/reference/resources/models/methods/list)
-    - [x] [Retrieve model](https://developers.openai.com/api/reference/resources/models/methods/retrieve)
-- Images
-    - [x] [Create image](https://developers.openai.com/api/reference/resources/images/methods/generate)
-    - [x] [Create image edit](https://developers.openai.com/api/reference/resources/images/methods/edit)
-- Embeddings
-    - [x] [Create embeddings](https://developers.openai.com/api/reference/resources/embeddings/methods/create)
-- Audio
-    - [x] [Text to Speech (TTS)](#text-to-speech-tts)
-    - [x] [Create transcription](#create-transcription)
-    - [x] [Create translation](#create-translation)
-    - [x] Custom voice creation and voice consent CRUD
-- Files
-    - [x] [List files](#list-files)
-    - [x] [Upload file](#upload-file)
-    - [x] [Delete file](#delete-file)
-    - [x] [Retrieve file](#retrieve-file)
-    - [x] [Retrieve file content](#retrieve-file-content)
-- Fine-tunes
-    - [x] [Create fine-tune](#create-fine-tune)
-    - [x] [List fine-tunes](#list-fine-tune)
-    - [x] [Retrieve fine-tune](#retrieve-fine-tune)
-    - [x] [Cancel fine-tune](#cancel-fine-tune)
-    - [x] [List fine-tune events](#list-fine-tune-events)
-    - [x] [Delete fine-tune model](#delete-fine-tune-model)
-    - [x] Pause/resume, checkpoints and permissions, grader validation and execution
-- Moderation
-    - [x] [Create moderation](#content-moderations)
-- Responses API
-    - [x] [Responses](#responses-api)
-- Conversations API
-    - [x] [Conversations](#conversations-api)
-- Vector Stores API
-    - [x] [Vector Stores](#vector-stores-api)
-- Batches API
-    - [x] [Batches](#batches-api)
-- Uploads API
-    - [x] [Uploads](#uploads-api)
-- Realtime API
-    - [x] [Realtime REST operations](#realtime-api)
-- Decisions API
-    - [x] [Decisions](#decisions-api)
-- Webhooks
-    - [x] [Endpoint management and signature verification](#webhooks)
-- Organization reporting
-    - [x] [Usage and Costs](#usage-and-costs)
-- Any other endpoint
-    - [x] [Generic `request()`](#any-other-endpoint) for Containers, Evals, Administration, Vaults, Agents, and routes added later
-
-See [API_COVERAGE.md](API_COVERAGE.md) for exact routes, guide support, and testing limits.
-WebSocket mode and mid-turn steering require a separate WebSocket client.
-
-## Configuration
-
-The examples below use an `OpenAi` instance:
-
-```php
-use Orhanerday\OpenAi\OpenAi;
-
-$open_ai = new OpenAi(getenv('OPENAI_API_KEY'));
-```
-
-You can also configure or replace the key after construction:
-
-```php
-$open_ai = new OpenAi();
-$open_ai->setApiKey(getenv('OPENAI_API_KEY'));
-```
-
-`setApiKey()` replaces the Authorization header and rejects blank keys. Requests fail locally
-if no key is configured.
-
-### Organization
-
-Specify the organization for API requests:
-
-```php
-$open_ai->setORG('org-your-organization');
-```
-
-### Base URL
-
-Set the origin for an OpenAI-compatible API:
-
-```php
-$open_ai->setBaseURL('https://ai.example.com');
-```
-
-### Custom API Version
-
-By default, the client appends `/v1` to the Base URL. You can override this to support alternative API versions (e.g., ByteDance Ark uses `/api/v3`):
-
-```php
-$open_ai->setBaseURL('https://ark.cn-beijing.volces.com');
-$open_ai->setApiVersion('api/v3');
-```
-
-### Proxy
-
-Route requests through a proxy:
-
-```php
-$open_ai->setProxy("http://127.0.0.1:1086");
-```
-
-### Custom cURL options
-
-Set cURL options for each request:
-
-```php
-$open_ai->setCURLOptions([
-    CURLOPT_CONNECTTIMEOUT => 10,
-    CURLOPT_TIMEOUT => 300,
-]);
-```
-
-### Headers
-
-```php
-$open_ai->setHeader(["Connection: keep-alive"]);
-```
-
-### Request information
-
-Inspect transport metadata after a request:
-
-```php
-$open_ai->listModels();
-$info = $open_ai->getCURLInfo();
-echo $info['http_code'];
-```
-
 ## Any other endpoint
 
-The SDK has dedicated methods for the most common APIs. For everything else, such as Containers, Evals, organization administration, Vaults, Agents, or routes OpenAI adds later, use the generic `request()` method. You do not have to wait for a new SDK release.
+The SDK has dedicated methods for the most common APIs (see [Supported APIs](#supported-apis)).
+
+> If you can't find the endpoint you need, create your own with `request()`. It works for any route, such as Containers, Evals, organization administration, Vaults, or routes OpenAI adds later, so you do not have to wait for a new SDK release.
 
 ```php
 public function request(
@@ -311,6 +175,146 @@ try {
 ### Finding the right route
 
 Look up the path, method, and parameters in the [API reference](https://developers.openai.com/api/reference/overview). The dedicated methods are listed in [API_COVERAGE.md](API_COVERAGE.md). Anything not listed there is a good fit for `request()`.
+
+## Supported APIs
+
+- Chat
+    - [x] [Chat completions](#chat-completions)
+    - [x] Stored completions: retrieve, update, delete, list, and list messages
+- Models
+    - [x] [List models](https://developers.openai.com/api/reference/resources/models/methods/list)
+    - [x] [Retrieve model](https://developers.openai.com/api/reference/resources/models/methods/retrieve)
+- Images
+    - [x] [Create image](https://developers.openai.com/api/reference/resources/images/methods/generate)
+    - [x] [Create image edit](https://developers.openai.com/api/reference/resources/images/methods/edit)
+- Embeddings
+    - [x] [Create embeddings](https://developers.openai.com/api/reference/resources/embeddings/methods/create)
+- Audio
+    - [x] [Text to Speech (TTS)](#text-to-speech-tts)
+    - [x] [Create transcription](#create-transcription)
+    - [x] [Create translation](#create-translation)
+    - [x] Custom voice creation and voice consent CRUD
+- Files
+    - [x] [List files](#list-files)
+    - [x] [Upload file](#upload-file)
+    - [x] [Delete file](#delete-file)
+    - [x] [Retrieve file](#retrieve-file)
+    - [x] [Retrieve file content](#retrieve-file-content)
+- Fine-tunes
+    - [x] [Create fine-tune](#create-fine-tune)
+    - [x] [List fine-tunes](#list-fine-tune)
+    - [x] [Retrieve fine-tune](#retrieve-fine-tune)
+    - [x] [Cancel fine-tune](#cancel-fine-tune)
+    - [x] [List fine-tune events](#list-fine-tune-events)
+    - [x] [Delete fine-tune model](#delete-fine-tune-model)
+    - [x] Pause/resume, checkpoints and permissions, grader validation and execution
+- Moderation
+    - [x] [Create moderation](#content-moderations)
+- Responses API
+    - [x] [Responses](#responses-api)
+- Conversations API
+    - [x] [Conversations](#conversations-api)
+- Agents API (beta)
+    - [x] [Sessions, events, items, turns, traces, and environments](#agents-api)
+- Vector Stores API
+    - [x] [Vector Stores](#vector-stores-api)
+- Batches API
+    - [x] [Batches](#batches-api)
+- Uploads API
+    - [x] [Uploads](#uploads-api)
+- Realtime API
+    - [x] [Realtime REST operations](#realtime-api)
+- Decisions API
+    - [x] [Decisions](#decisions-api)
+- Webhooks
+    - [x] [Endpoint management and signature verification](#webhooks)
+- Organization reporting
+    - [x] [Usage and Costs](#usage-and-costs)
+- Any other endpoint
+    - [x] [Generic `request()`](#any-other-endpoint) for Containers, Evals, Administration, Vaults, Agents, and routes added later
+
+See [API_COVERAGE.md](API_COVERAGE.md) for exact routes, guide support, and testing limits.
+WebSocket mode and mid-turn steering require a separate WebSocket client.
+
+## Configuration
+
+The examples below use an `OpenAi` instance:
+
+```php
+use Orhanerday\OpenAi\OpenAi;
+
+$open_ai = new OpenAi(getenv('OPENAI_API_KEY'));
+```
+
+You can also configure or replace the key after construction:
+
+```php
+$open_ai = new OpenAi();
+$open_ai->setApiKey(getenv('OPENAI_API_KEY'));
+```
+
+`setApiKey()` replaces the Authorization header and rejects blank keys. Requests fail locally
+if no key is configured.
+
+### Organization
+
+Specify the organization for API requests:
+
+```php
+$open_ai->setORG('org-your-organization');
+```
+
+### Base URL
+
+Set the origin for an OpenAI-compatible API:
+
+```php
+$open_ai->setBaseURL('https://ai.example.com');
+```
+
+### Custom API Version
+
+By default, the client appends `/v1` to the Base URL. You can override this to support alternative API versions (e.g., ByteDance Ark uses `/api/v3`):
+
+```php
+$open_ai->setBaseURL('https://ark.cn-beijing.volces.com');
+$open_ai->setApiVersion('api/v3');
+```
+
+### Proxy
+
+Route requests through a proxy:
+
+```php
+$open_ai->setProxy("http://127.0.0.1:1086");
+```
+
+### Custom cURL options
+
+Set cURL options for each request:
+
+```php
+$open_ai->setCURLOptions([
+    CURLOPT_CONNECTTIMEOUT => 10,
+    CURLOPT_TIMEOUT => 300,
+]);
+```
+
+### Headers
+
+```php
+$open_ai->setHeader(["Connection: keep-alive"]);
+```
+
+### Request information
+
+Inspect transport metadata after a request:
+
+```php
+$open_ai->listModels();
+$info = $open_ai->getCURLInfo();
+echo $info['http_code'];
+```
 
 ## Chat completions
 
@@ -673,6 +677,110 @@ For the Responses multi-agent HTTP beta, add its header with
 ```php
 $result = $open_ai->createConversation();
 ```
+
+## Agents API
+
+Run hosted agents in sandboxed environments. The Agents API is in beta. Every method sends the
+`OpenAI-Beta: agents=v1` header for that request only, and your own headers are restored afterwards.
+See the [Agents guide](https://developers.openai.com/api/docs/guides/agents) for models, environments, and tools.
+
+### Create a session and read the result
+
+Create a session with `stream` enabled and pass a callback. It receives raw server-sent event chunks and
+must return the number of bytes it handled:
+
+```php
+$open_ai->createAgentSession([
+    'agent' => [
+        'model' => 'gpt-6-astra',
+        'instructions' => 'Write clean code, run it, and report the actual output.',
+    ],
+    'environment' => ['type' => 'openai_hosted'],
+    'input' => 'Create tree.py, a script that prints the files in this directory. Run it and show the output.',
+    'stream' => true,
+], function ($curl, $chunk) {
+    echo $chunk;
+
+    return strlen($chunk);
+});
+```
+
+Or create the session without streaming, keep its ID, and follow it separately:
+
+```php
+$session = json_decode($open_ai->createAgentSession([
+    'agent' => ['model' => 'gpt-6-astra'],
+    'environment' => ['type' => 'openai_hosted'],
+]), true, 512, JSON_THROW_ON_ERROR);
+$sessionId = $session['id'];
+
+// Open the event stream (blocks until the stream ends)
+$open_ai->streamAgentSessionEvents($sessionId, function ($curl, $chunk) {
+    echo $chunk;
+
+    return strlen($chunk);
+});
+```
+
+### Send input and approve actions
+
+Send events to a running session. The body is `{"events": [...]}`:
+
+```php
+$open_ai->sendAgentSessionEvents($sessionId, [
+    [
+        'type' => 'agent.session.input.message',
+        'input' => [[
+            'role' => 'user',
+            'content' => [['type' => 'input_text', 'text' => 'Now add a --depth option.']],
+        ]],
+    ],
+]);
+```
+
+Other input events include `agent.session.input.cancel`, `agent.session.input.tool_result`, and
+`agent.session.input.computer_use_approval_request_result`. See the
+[session events guide](https://developers.openai.com/api/docs/guides/agents-api/sessions/events) for payloads.
+
+### Manage sessions
+
+```php
+$open_ai->listAgentSessions(['limit' => 20, 'order' => 'desc']);
+$open_ai->retrieveAgentSession($sessionId);
+$open_ai->updateAgentSession($sessionId, ['agent' => ['reasoning' => ['effort' => 'low']]]);
+$open_ai->listAgentSessionItems($sessionId, ['order' => 'asc', 'limit' => 100]);
+$open_ai->listAgentSessionTurns($sessionId, ['limit' => 20]);
+$open_ai->retrieveAgentSessionTurn($sessionId, 'turn_123');
+$open_ai->exportAgentSessionTraces($sessionId, ['limit' => 20]); // OTLP JSON; needs trace export enabled
+$open_ai->deleteAgentSession($sessionId); // requests environment cleanup
+```
+
+### Environments
+
+Prepare a reusable workspace (packages, files, setup commands) and attach it to sessions:
+
+```php
+$environment = json_decode($open_ai->createAgentEnvironment([
+    'environment' => [
+        'type' => 'openai_hosted',
+        'packages' => ['python' => ['pandas==2.2.3']],
+    ],
+]), true, 512, JSON_THROW_ON_ERROR);
+
+$open_ai->createAgentSession([
+    'agent' => ['model' => 'gpt-6-astra'],
+    'environment' => ['type' => 'openai_hosted', 'environment_id' => $environment['id']],
+    'input' => 'Use pandas to summarize /workspace/data.csv.',
+    'stream' => true,
+], $callback);
+
+$open_ai->listAgentEnvironments();
+$open_ai->retrieveAgentEnvironment($environment['id']);
+```
+
+Request bodies are passed through unchanged, so new beta fields work without an SDK update. Session
+IDs are URL-encoded for you. Model names, environment options, and event types change during the beta;
+check the guide for current values.
 
 ## Vector Stores API
 
