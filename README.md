@@ -5,6 +5,14 @@
 A community-maintained PHP client for the OpenAI REST API, with streaming support.
 Requires PHP 7.4+ and the native cURL and JSON extensions, with no third-party runtime dependencies.
 
+> [!WARNING]
+> **PHP runtime security advisory (21 Oct 2026):** CVE-2026-109618 and CVE-2026-109619 allow
+> unauthenticated remote code execution in PHP itself, independent of this library. Update to
+> PHP 8.5.12, 8.4.27, 8.3.36 or 8.2.35, or your vendor's patched package. PHP 7.4–8.1 receive no
+> official releases; use an LTS vendor or the
+> [source backports](https://github.com/php/php-src/tree/PHP-8.1-CVE-2026-109618-109619).
+> See the [official advisory](https://www.php.net/archive/2026.php#2026-10-21-5).
+
 See [API_COVERAGE.md](API_COVERAGE.md) for endpoint coverage and
 [MIGRATING.md](MIGRATING.md) for breaking changes from earlier versions.
 
@@ -1096,7 +1104,7 @@ Stored chat tests poll briefly because persistence can be asynchronous.
 Models can be selected with `OPENAI_CHAT_MODEL`, `OPENAI_IMAGE_MODEL`, `OPENAI_COMPACTION_MODEL`,
 `OPENAI_DECISION_MODEL`, and `OPENAI_REALTIME_MODEL`. Defaults follow the examples and current guides.
 Additional account-dependent tests and required fixtures are documented in [API_COVERAGE.md](API_COVERAGE.md).
-Push/PR CI runs native transport and signature checks on PHP 7.4 and 8.4; manually dispatch the Tests
+Push/PR CI runs native transport and signature checks on PHP 7.4, 8.4 and 8.5; manually dispatch the Tests
 workflow with an `OPENAI_API_KEY` repository secret to run the live suite. Add the optional
 `OPENAI_ADMIN_KEY` secret to include organization Usage and Costs tests.
 

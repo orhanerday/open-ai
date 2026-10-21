@@ -2,6 +2,12 @@
 
 All notable changes to `open-ai` will be documented in this file.
 
+## 6.3.1 - 2026-10-21
+
+- Documentation: add a notice for the PHP runtime security advisory of 21 Oct 2026 (CVE-2026-109618, CVE-2026-109619). These are PHP engine vulnerabilities; no library code changes are required. Update PHP to 8.5.12, 8.4.27, 8.3.36 or 8.2.35 (or a vendor-patched package). See the [advisory](https://www.php.net/archive/2026.php#2026-10-21-5).
+- CI: add PHP 8.5 to the test matrix.
+- CI: bump `actions/checkout` to v7, `stefanzweifel/git-auto-commit-action` to v7, and `dependabot/fetch-metadata` to v3.1.0 (#172, #173, #174).
+
 ## 6.3.0 - 2026-10-11
 
 - Add `setThrowOnError(bool $throw = true)` and `OpenAiException` to cleanly throw and catch API error responses (status 400+) with error type, code, and status.
